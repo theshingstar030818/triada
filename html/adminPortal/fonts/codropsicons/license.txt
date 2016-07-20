@@ -1,0 +1,6 @@
+Icon Set:	Font Awesome -- https://fortawesome.github.com/Font-Awesome/
+License:	SIL -- https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL
+
+
+Icon Set:	Eco Ico -- https://dribbble.com/shots/665585-Eco-Ico
+License:	CC0 -- https://creativecommons.org/publicdomain/zero/1.0/

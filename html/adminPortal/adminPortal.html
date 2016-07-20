@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <!-- <link rel="stylesheet" type="text/css" href="index.css" /> -->
+        <script type="text/javascript" src="index.js"></script>
+        <!-- Parse Information -->
+        <script type="text/javascript" src="https://www.parsecdn.com/js/parse-1.6.14.min.js"></script>
+        <script type="text/javascript"></script>
+
+        <script type="text/javascript">
+            Parse.initialize("aeabfaa3a49e340251e16e04b573f9dd0ae6a07b", "acb0ac1ee21e335a9c273e1498af5375a73377f4");
+            Parse.serverURL = 'https://portal.bilgramigroup.com/parse';
+        </script>
+          
+        <link rel="stylesheet" href="jquery-ui.css">
+        <script src="jquery-1.10.2.js"></script>
+        <script src="jquery-ui.js"></script>
+        <link rel="stylesheet" href="style.css">
+        
+        <!-- imports from pending deliveries -->
+        <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+        <link rel="stylesheet" type="text/css" href="css/demo.css" />
+        <link rel="stylesheet" type="text/css" href="css/component.css" />
+        <link href="css/elements.css" rel="stylesheet">
+        <link href="css/datepicker.css" rel="stylesheet">
+        <link href="css/fuzzyDropdown.css" rel="stylesheet">
+        <link href="css/zerogrid.css" rel="stylesheet">
+
+        <!-- // <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script> -->
+        <!-- // <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script> -->
+        <!-- Parse Information -->
+        <script type="text/javascript" src="https://www.parsecdn.com/js/parse-1.6.14.min.js"></script>
+        <script type="text/javascript"></script>
+        <script type="text/javascript">
+            Parse.initialize("aeabfaa3a49e340251e16e04b573f9dd0ae6a07b", "acb0ac1ee21e335a9c273e1498af5375a73377f4");
+            Parse.serverURL = 'https://portal.bilgramigroup.com/parse';
+        </script>
+        <script src="js/my_js_pending_deliveries.js"></script>
+        <script src="js/database_pending_deliveries.js" type="text/javascript"></script>
+
+        <!-- // <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> -->
+        <script type="text/javascript" src="js/jquery.searchabledropdown-1.0.8.min.js"></script>
+        <!--  -->
+
+        <script>
+          $(function() {
+            $( "#tabs" ).tabs();
+          });
+        </script>
+        <title>Admin Portal</title>
+    </head>
+    <body>
+        <div class="app">
+            <div id="tabs">
+              <ul>
+                <li><a href="#tabs-1">Add New Pharmacy</a></li>
+                <li><a href="#tabs-2">Add New Driver</a></li>
+                <li><a href="#tabs-3">Generate Reports</a></li>
+                <li><a href="#tabs-5" onClick="manageDeliveriesTabClick()">Manage Deliveries</a></li>
+                <li><a href="#tabs-4">Logout</a></li>
+              </ul>
+            <div id="tabs-1">
+                <h2>Client Information</h2>
+                <label>Business name : </label>
+                <input id="businessName">
+                <br><br>
+                <label>Name of the owner : </label>
+                <input id="ownerName">
+                <br><br>
+                <label>Address of the Business : </label>
+                <input id="businessAddress">
+                <br><br>
+                <label>Zone : </label>
+                <select id="businessZone" multiple>
+                    <option>Ottawa East</option>
+                    <option>Ottawa West</option>
+                    <option>Ottawa South</option>
+                    <option>Ottawa Old South</option>
+                    <option>Ottawa Downtown</option>
+                </select>
+                <br><br>
+
+                <label>Pickup Times : </label>
+                <select id="pickupTimes" multiple>
+                    <option value="0500">5:00 AM</option>
+                    <option value="0515">5:15 AM</option>
+                    <option value="0530">5:30 AM</option>
+                    <option value="0545">5:45 AM</option>
+                    
+                    <option value="0600">6:00 AM</option>
+                    <option value="0615">6:15 AM</option>
+                    <option value="0630">6:30 AM</option>
+                    <option value="0645">6:45 AM</option>
+                    
+                    <option value="0700">7:00 AM</option>
+                    <option value="0715">7:15 AM</option>
+                    <option value="0730">7:30 AM</option>
+                    <option value="0745">7:45 AM</option>
+                    
+                    <option value="0800">8:00 AM</option>
+                    <option value="0815">8:15 AM</option>
+                    <option value="0830">8:30 AM</option>
+                    <option value="0845">8:45 AM</option>
+                    
+                    <option value="0900">9:00 AM</option>
+                    <option value="0915">9:15 AM</option>
+                    <option value="0930">9:30 AM</option>
+                    <option value="0945">9:45 AM</option>
+                    
+                    <option value="1000">10:00 AM</option>
+                    <option value="1015">10:15 AM</option>
+                    <option value="1030">10:30 AM</option>
+                    <option value="1045">10:45 AM</option>
+                    
+                    <option value="1100">11:00 AM</option>
+                    <option value="1115">11:15 AM</option>
+                    <option value="1130">11:30 AM</option>
+                    <option value="1145">11:45 AM</option>
+                    
+                    <option value="1200">12:00 PM</option>
+                    <option value="1215">12:15 PM</option>
+                    <option value="1230">12:30 PM</option>
+                    <option value="1245">12:45 PM</option>
+                    
+                    <option value="1300">1:00 PM</option>
+                    <option value="1315">1:15 PM</option>
+                    <option value="1330">1:30 PM</option>
+                    <option value="1345">1:45 PM</option>
+                    
+                    <option value="1400">2:00 PM</option>
+                    <option value="1415">2:15 PM</option>
+                    <option value="1430">2:30 PM</option>
+                    <option value="1445">2:45 PM</option>
+                    
+                    <option value="1500">3:00 PM</option>
+                    <option value="1515">3:15 PM</option>
+                    <option value="1530">3:30 PM</option>
+                    <option value="1545">3:45 PM</option>
+                    
+                    <option value="1600">4:00 PM</option>
+                    <option value="1615">4:15 PM</option>
+                    <option value="1630">4:30 PM</option>
+                    <option value="1645">4:45 PM</option>
+                    
+                    <option value="1700">5:00 PM</option>
+                    <option value="1715">5:15 PM</option>
+                    <option value="1730">5:30 PM</option>
+                    <option value="1745">5:45 PM</option>
+                    
+                    <option value="1800">6:00 PM</option>
+                    <option value="1815">6:15 PM</option>
+                    <option value="1830">6:30 PM</option>
+                    <option value="1845">6:45 PM</option>
+                    
+                    <option value="1900">7:00 PM</option>
+                    <option value="1915">7:15 PM</option>
+                    <option value="1930">7:30 PM</option>
+                    <option value="1945">7:45 PM</option>
+                    
+                    <option value="2000">8:00 PM</option>
+                    <option value="2015">8:15 PM</option>
+                    <option value="2030">8:30 PM</option>
+                    <option value="2045">8:45 PM</option>
+                    
+                    <option value="2100">9:00 PM</option>
+                    <option value="2115">9:15 PM</option>
+                    <option value="2130">9:30 PM</option>
+                    <option value="2145">9:45 PM</option>
+                    
+                    <option value="2200">10:00 PM</option>
+                    <option value="2215">10:15 PM</option>
+                    <option value="2230">10:30 PM</option>
+                    <option value="2245">10:45 PM</option>
+                    
+                    <option value="2300">11:00 PM</option>
+                    <option value="2315">11:15 PM</option>
+                    <option value="2330">11:30 PM</option>
+                    <option value="2345">11:45 PM</option>
+                </select>
+
+                <h2>Telephone Numbers/Contact Details</h2>
+                <label>Business number : </label>
+                <input id="businessNumber">
+                <br><br>
+                <label>Other number : </label>
+                <input id="otherNumber">
+                <br><br>
+                <label>Fax : </label>
+                <input id="fax">
+                <br><br>
+                <label>Email : </label>
+                <input id="email">
+                <br><br>
+                <label>Preferred Contact Mode/s : </label>
+                <input id="contactMode">
+                <h2>Employee's Information</h2>
+                <label>Employee name 1 : </label>
+                <input id="employee1">
+                <br><br>
+                <label>Employee name 2 : </label>
+                <input id="employee2">
+                <br><br>
+                <label>Employee name 3 : </label>
+                <input id="employee3">
+
+                <h2>Price Rates</h2>
+
+                <label>Regular Delivery Rate : $ </label>
+                <input type="number" id="priceRate">
+                <br><br>
+
+                <label>Over 10 KM Delivery Rate : $ </label>
+                <input type="number" id="priceRateOver10Km">
+                <br><br>
+                <label>Over 20 KM Delivery Rate : $ </label>
+                <input type="number" id="priceRateOver20Km">
+                <br><br>
+                <label>Over 30 KM Delivery Rate : $ </label>
+                <input type="number" id="priceRateOver30Km">
+                <br><br>
+                
+                <h2>Online Portal Information</h2>
+                <label>Username : </label>
+                <input id="userName">
+                <br><br>
+                <label>Password : </label>
+                <input id="password">
+                <br><br>
+                <label>Re-type Password : </label>
+                <input id="re_type_password">
+                <br><br>
+                <button onClick="createPharmacyAccount()">Create Account</button>
+            </div>
+            <div id="tabs-2">
+                <h2>Driver Personal Information</h2>
+                <label>First Name: </label>
+                <input style="text-transform:uppercase" id="driverFirstName">
+                <br><br>
+                <label>Last Name: </label>
+                <input style="text-transform:uppercase" id="driverLastName">
+                <br><br>
+                <label>D.O.B: </label>
+                <input type="date" id="driverDOB">
+                <br><br>
+                <label>SIN: </label>
+                <input type="number" id="driverSIN">
+                <br><br>
+                <label>License: </label>
+                <input style="text-transform:uppercase" id="driverLicense">
+                <br><br>
+                <label>Email: </label>
+                <input style="text-transform:lowercase" id="driverEmail" type="email">
+                <br><br>
+                <label>Mobile#: </label>
+                <input style="text-transform:uppercase" id="driverMobile" type="number">
+                <br><br>
+                <h2>Address Information</h2>
+                <label>Unit/Apartment #: </label>
+                <input style="text-transform:uppercase" id="driverAddressUnit">
+                <br><br>
+                <label>Street Address: </label>
+                <input style="text-transform:uppercase" id="driverStreetAddress">
+                <br><br>
+                <label>City: </label>
+                <input style="text-transform:uppercase" id="driverAddressCity">
+                <br><br>
+                <label>State: </label>
+                <input style="text-transform:uppercase" id="driverAddressState">
+                <br><br>
+                <label>Postal Code: </label>
+                <input style="text-transform:uppercase" id="driverAddressPostalCode">
+                <br><br>
+                <h2>Driver App Login Information</h2>
+                <label>Username : </label>
+                <input id="driverUserName">
+                <br><br>
+                <label>Password : </label>
+                <input id="driverPassword">
+                <br><br>
+                <label>Re-type Password : </label>
+                <input id="driver_re_type_password">     
+                <br><br>
+                <button onClick="createDriverAccount()">Create Driver Account</button>
+            </div>
+            <div id="tabs-3">
+
+            </div>
+              
+              <div id="tabs-5">
+                <h3>Orders </h3>
+                <div class="container">
+                    <!-- Top Navigation -->
+                    <div class="codrops-top clearfix">
+                        <!-- <button class="codrops-icon codrops-icon-prev" onClick="logout()" >Logout</button> -->
+                    </div>
+                    <header>
+                        <h1 id="pharmacy_name"> </h1>
+                        <h1><span id="pharmacy_address"></span></h1>
+                        <nav class="codrops-demos">
+                            <!-- <a href="userPortal.html" title="Basic Usage">Patients</a>
+                            <a class="current-demo" href="pendingDeliveries.html" title="Biaxial Headers">Deliveries</a> -->
+                        </nav>
+                    </header>
+                    <div class="component">
+                        <nav class="codrops-demos">                            
+                            <label>Date : </label>
+                            <select id="daydropdown">
+                                <option>1</option>       
+                                <option>2</option>       
+                                <option>3</option>       
+                                <option>4</option>       
+                                <option>5</option>       
+                                <option>6</option>       
+                                <option>7</option>       
+                                <option>8</option>       
+                                <option>9</option>       
+                                <option>10</option>       
+                                <option>11</option>       
+                                <option>12</option>       
+                                <option>13</option>       
+                                <option>14</option>       
+                                <option>15</option>       
+                                <option>16</option>       
+                                <option>17</option>       
+                                <option>18</option>       
+                                <option>19</option>       
+                                <option>20</option>       
+                                <option>21</option>       
+                                <option>22</option>       
+                                <option>23</option>       
+                                <option>24</option>       
+                                <option>25</option>       
+                                <option>26</option>       
+                                <option>27</option>       
+                                <option>28</option>       
+                                <option>29</option>       
+                                <option>30</option>       
+                                <option>31</option> 
+                            </select> 
+                            <select id="monthdropdown">
+                                <option>Jan</option>       
+                                <option>Feb</option>       
+                                <option>Mar</option>       
+                                <option>Apr</option>       
+                                <option>May</option>       
+                                <option>Jun</option>       
+                                <option>Jul</option>       
+                                <option>Aug</option>       
+                                <option>Sep</option>       
+                                <option>Oct</option>       
+                                <option>Nov</option>       
+                                <option>Dec</option>
+                            </select> 
+                            <select id="yeardropdown">
+                                    <option>2015</option>       
+                                    <option>2016</option>       
+                                    <option>2017</option>       
+                                    <option>2018</option>
+                            </select>
+                        </nav>
+                        <nav class="codrops-demos"> 
+                            <label>Pharmacy : </label>
+                            <select id="pharmacyDropDownFilter">
+                            </select>
+                            
+                            <label>Driver : </label>
+                            <select id="driverDropDownFilter">
+                            </select>
+                        </nav>
+                        <nav class="codrops-demos"> 
+                            <a class="current-demo" onClick="get_deliveries()" title="Basic Usage">Search</a>
+                        </nav>
+                        <div id="edit_orders_div" style="display:none;">
+                            <!-- edit_orders_div Popup Div Starts Here -->
+                            <div id="popupContact">
+                            <!-- Contact Us Form -->
+                            <form action="#" id="edit_delete_form" method="post" name="form">
+                            <img id="close" src="images/Remove_button_24.png" onclick ="edit_orders_div_hide()">
+                            <h2> Assign driver </h2>
+                            <hr>
+                            
+                            <div id="pharmacy_name_edit"></div>
+                            <div id="pharmacy_address_edit"></div>
+                            
+                            <div id="patient_name_edit"></div>
+                            <div id="patient_address_edit"></div>
+
+                            <div id="delivery_distance"></div>                                
+                            
+                            <div id="patient_status_edit"></div>
+                            
+                            <nav class="codrops-demos">
+                            <input id="connector_drop_off" type="checkbox" value="drop"> Drop to connector
+                            </nav>
+                            
+                            <nav class="codrops-demos">
+                                
+                                <label> Assign Driver : </label>
+                                <select name="driver" id="diverDropDown">
+
+                                </select>
+                            </nav>                                
+                            <div id="edit_delete_button_div"></div>
+                            </form>
+                            </div>
+                            <!-- edit_orders_div Popup Div Ends Here -->
+                        </div>
+                        
+                        <div id="table_div">
+                            <div class="sticky-wrap">
+                                <table id="patient_info_table">
+                                    <thead>
+                                        <tr>
+                                            <th>Pharmacy</th>
+                                            <th>Distance</th>
+                                            <th>Order date</th>
+                                            <th>Patient</th>
+                                            <th>Patient Address</th>
+                                            <th>Driver Assigned</th>
+                                            <th>Delivery Status </th>
+                                            <th>Pickup Time</th>
+                                            <th>Order Id</th>
+                                            <th>Patient Signature</th>
+                                            <th>Cost</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="pending_delivery_table_body" >
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p id="no_ddeliveries_message" class="related">No delivers in database for the date you have selected</p>
+                        </div>
+                    </div>
+
+                </div><!-- /container -->
+              </div>
+              
+              <div id="tabs-4">
+                <button id="logoutButton" onClick="logout()">Logout</button>
+              </div>
+            </div>
+        </div>
+    </body>
+</html>

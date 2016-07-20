@@ -1,0 +1,174 @@
+@import "https://fonts.googleapis.com/css?family=Raleway";
+/*----------------------------------------------
+CSS settings for HTML div Exact Center
+------------------------------------------------*/
+#patients_list {
+  width: 100%;
+  padding: 2%;
+  margin-top: 2%;
+  border: 1px solid #ccc;
+  padding-left: 2%;
+  font-size: 16px;
+  font-family: raleway;
+}
+
+#abc {
+width:100%;
+height:100%;
+opacity:.95;
+top:0;
+left:0;
+display:none;
+position:fixed;
+background-color: rgba(49, 49, 49, 0.52);
+overflow:auto
+}
+img#close {
+position: absolute;
+right:-14px;
+top:-14px;
+cursor:pointer}
+div#popupContact {
+position:absolute;
+left: 25%;
+right: 25%;
+top: 17%;
+margin-left: 0px;
+/* font-family:'Raleway',sans-serif
+ */}
+form {
+/* max-width: inherit; */
+/* min-width: 25%; */
+width: 100%;
+padding: 10%;
+/* margin-left: 25%; */
+/* margin-right: 25%; */
+border: 2px solid grey;
+border-radius:10px;
+/* font-family:raleway; */
+background-color: rgba(255, 255, 255, 0.99);}
+p {
+margin-top: 1%;
+/* float: right; */
+}
+h2 {
+/* background-color: rgba(148, 148, 148, 0.18); */
+/* padding: 3%; */
+/* margin: 3%; */
+/* text-align:center; */
+/* border-radius: 0%; */}
+hr {
+margin: 0;
+/* width: inherit; */
+border:0;
+border-top:1px solid #ccc
+}
+input[type=text] {
+width: 100%;
+/* padding: 4%; */
+margin-top: 3%;
+border:1px solid #ccc;
+padding-left: 3%;
+font-size:16px;
+font-family:raleway
+;text-align: center;
+}
+#name {
+background-image:url(../images/name.jpg);
+background-repeat:no-repeat;
+background-position:5px 7px
+}
+#email {
+background-image:url(../images/email.png);
+background-repeat:no-repeat;
+background-position:5px 7px
+}
+textarea {
+/* background-image:url(../images/msg.png); */
+/* background-repeat:no-repeat; */
+/* background-position:5px 7px; */
+width: 100%;
+/* height:95px; */
+padding:10px;
+resize:none;
+margin-top:30px;
+border:1px solid #ccc;
+padding-left:40px;
+font-size:16px;
+font-family:raleway;
+margin-bottom:30px
+}
+
+#add_new_patient_button, #edit_entry_button, #delete_entry_button {
+text-decoration:none;
+width:100%;
+text-align:center;
+display:block;
+background-color: #CECECE;
+color:#fff;
+border: 1px solid #A29E96;
+padding:10px 0;
+font-size:20px;
+cursor:pointer;
+border-radius:5px	
+;
+margin-top: 3%;
+}
+
+#submit_with_new_patient {
+text-decoration:none;
+width:100%;
+text-align:center;
+display:block;
+background-color: rgba(186, 186, 186, 0.74);
+color:#fff;
+border: 1px solid #82928D;
+padding:10px 0;
+font-size:20px;
+cursor:pointer;
+border-radius:5px	
+;
+margin-top: 3%;
+}
+
+#submit {
+text-decoration:none;
+width:100%;
+text-align:center;
+display:block;
+background-color: rgba(208, 208, 208, 1);
+color:#fff;
+border: 1px solid #9E9A92;
+padding:10px 0;
+font-size:20px;
+cursor:pointer;
+border-radius:5px
+;
+margin-top: 3%;
+}
+/*span {
+font-weight:700
+}*/
+button {
+/* width:10%; */
+height:45px;
+/* border-radius:3px; */
+/* background-color:#cd853f; */
+/* color:#fff; */
+font-family:'Raleway',sans-serif;
+font-size:18px;
+cursor:pointer}
+
+option {
+	 padding: 2%;
+}
+
+#date_picker {
+	float: none;
+	/* position: inherit; */
+	text-align: center;
+}
+
+#info_p {
+	text-align: center;
+}

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+		<title>Patients</title>
+		<meta name="author" content="Codrops" />
+		<!-- <link rel="shortcut icon" href="../favicon.ico"> -->
+		<link rel="stylesheet" type="text/css" href="css/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="css/demo.css" />
+		<link rel="stylesheet" type="text/css" href="css/component.css" />
+		<!--[if IE]>
+  		<script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
+		<link href="css/elements.css" rel="stylesheet">
+		<script src="js/my_js.js"></script>
+		<script src="js/database.js" type="text/javascript"></script>
+	</head>
+	<body onload="onLoad()">
+
+		<div class="container">
+			<!-- Top Navigation -->
+			<div class="codrops-top clearfix">
+				<a class="codrops-icon codrops-icon-prev" onClick="logout()" ><span id="logOut" >LogOut</span></a>
+				<span class="right"><a class="codrops-icon codrops-icon-drop"><span id="top_nav_username" ></span></a></span>
+			</div>
+			<header>
+				<h1 id="pharmacy_name"> </h1>
+				<h1><span id="pharmacy_address"></span></h1>	
+				<nav class="codrops-demos">
+					<a class="current-demo" href="userPortal.html" title="Basic Usage">Patients</a>
+					<a href="pendingDeliveries.html" title="Biaxial Headers">Deliveries</a>
+				</nav>
+			</header>
+			<div class="component">
+				
+				<p>This is your list of patients that we have delivered prescriptions to. Please click on the patient to change their address or telephone number.</p>
+					<div id="abc" >
+					<!-- Popup Div Starts Here -->
+					<div id="popupContact">
+					<!-- Contact Us Form -->
+					
+					<form action="#" id="form" method="post" name="form">
+					<img id="close" src="images/Remove_button_24.png" onclick ="div_hide()">
+					<h2> Enter Patient Info</h2>
+					<hr>
+					<input id="new_patient_name" name="name" placeholder="Full Name" type="text">
+					
+					<input id="new_patient_telephone" name="phone" placeholder="Telephone" type="text">
+
+					<input id="new_patient_unit" name="aptNum" placeholder="Apartment/Unit #" type="text">
+					<input id="new_patient_building" name="buildingNum" placeholder="Building/House #" type="text">
+					<input id="new_patient_street" name="streetName" placeholder="Street Name" type="text">
+					<input id="new_patient_city" name="city" placeholder="city" type="text">
+					<input id="new_patient_postal" name="postalCode" placeholder="Postal Code" type="text">
+					
+					<select id="new_patient_state" style="width: 100%; margin-top: 2%;">
+						<option selected="selected" value="ON">ON</option>
+						<option value="QC">QC</option>
+					</select>
+
+					<a href="javascript:%20check_empty()" id="submit">Submit</a>
+					</form>
+					</div>
+					<!-- Popup Div Ends Here -->
+					</div>
+				<!-- Display Popup Button -->
+				<!-- <button id="popup" onclick="div_show()">Popup</button> -->
+				<nav class="codrops-demos">
+					<a class="current-demo" onClick="div_show()" title="Basic Usage">ADD + </a>
+				</nav>
+
+				<div id="table_div">
+					<table id="patient_info_table">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>address</th>
+								<th>telephone</th>
+								<th>distance</th>
+							</tr>
+						</thead>
+						<tbody id="patient_info_table_body" >
+						</tbody>
+					</table>
+					<p id="no_ddeliveries_message" class="related">You have not added any patients, pleae click on the ADD button to add patients to your database</p>
+				</div>
+				<div id="edit_patient_info_div" style="display:none;">
+					<!-- edit_orders_div Popup Div Starts Here -->
+					<div id="popupContact">
+					<!-- Contact Us Form -->
+						<form action="#" id="edit_delete_form" method="post" name="form">
+							<img id="close" src="images/Remove_button_24.png" onclick ="edit_patient_info_div_hide()">
+							<h2> Edit Patient Info</h2>
+							<hr>
+							<div id="editInfoDiv">
+								<h2>Address</h2>
+								<label>Apt# : </label>
+								<input id="patient_aptNum">
+								<br><br>
+								<label>Building Number : </label>
+								<input id="patient_buildingNum">
+								<br><br>
+								<label>Street Name : </label>
+								<input id="patient_streetName">
+								<br><br>
+								<label>City : </label>
+								<input id="patient_city">
+								<br><br>
+								<label>Postal Code : </label>
+								<input id="patient_postalCode">
+								<br><br>
+								<label>State : </label>
+								<input id="patient_state">
+								<br><br>
+								<h2>Telephone</h2>
+								<label>Telephone : </label>
+								<input id="patient_telephone">
+							</div>
+							<div id="save_button_div">
+								
+							</div>
+						</form>
+					</div>
+					<!-- edit_orders_div Popup Div Ends Here -->
+				</div>
+			</div>
+		</div><!-- /container -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+
+		<!-- Parse Information -->
+    <script type="text/javascript" src="https://www.parsecdn.com/js/parse-1.6.14.min.js"></script>
+    <script type="text/javascript"></script>
+
+    <script type="text/javascript">
+        Parse.initialize("aeabfaa3a49e340251e16e04b573f9dd0ae6a07b", "acb0ac1ee21e335a9c273e1498af5375a73377f4");
+        Parse.serverURL = 'https://portal.bilgramigroup.com/parse';
+    </script>
+
+	</body>
+</html>

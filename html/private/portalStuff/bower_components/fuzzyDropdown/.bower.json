@@ -1,0 +1,41 @@
+{
+  "name": "fuzzyDropdown",
+  "main": "fuzzyDropdown.js",
+  "version": "0.0.11",
+  "homepage": "https://github.com/zeusdeux/fuzzyDropdown",
+  "authors": [
+    "Mudit Ameta <zeusdeux@gmail.com>"
+  ],
+  "description": "Converts a select box into a fuzzy searchable dropdown.",
+  "keywords": [
+    "fuzzy",
+    "dropdown",
+    "select",
+    "approximate",
+    "string",
+    "search",
+    "match"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "fuse": "~1.1.5"
+  },
+  "_release": "0.0.11",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.0.11",
+    "commit": "18046ba00a6b5afb56e036f8f99e05454825eb85"
+  },
+  "_source": "git://github.com/zeusdeux/fuzzyDropdown.git",
+  "_target": "~0.0.11",
+  "_originalSource": "fuzzyDropdown",
+  "_direct": true
+}

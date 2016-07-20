@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+    <!-- <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" /> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- parse imports -->
+    <script type="text/javascript" src="https://www.parsecdn.com/js/parse-1.6.14.min.js"></script>
+    <script type="text/javascript"></script>
+    <script type="text/javascript">
+        Parse.initialize("aeabfaa3a49e340251e16e04b573f9dd0ae6a07b", "acb0ac1ee21e335a9c273e1498af5375a73377f4");
+        Parse.serverURL = 'https://portal.bilgramigroup.com/parse';
+    </script>
+
+    <!-- jquery mobile css imports -->
+    <link rel="stylesheet" type="text/css" href="lib/jquery.mobile-1.4.5/jquery.mobile.icons-1.4.5.min.css">
+    <link rel="stylesheet" type="text/css" href="lib/jquery.mobile-1.4.5/jquery.mobile.structure-1.4.5.min.css">
+    <link rel="stylesheet" type="text/css" href="css/themes/conf-room1.min.css">
+    <link rel="stylesheet" type="text/css" href="css/app.css">
+
+    <!-- jquery mobile script imports -->
+    <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="lib/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+    <script type="text/javascript">
+        function codeAddress() {
+
+            $('div.ui-loader').show();
+            var orderId = localStorage.getItem("noShowOrderId");
+            var pharmacyInfoId = localStorage.getItem("noShowPharmacyInfoId");
+            
+            var orderObjectFromlocalDB = localStorage.getItem(orderId);
+            var pharmacyUserObject = localStorage.getItem(JSON.parse(orderObjectFromlocalDB).pharmacyID.objectId);
+            var pharmacyInfo = localStorage.getItem(JSON.parse(pharmacyUserObject).pharmacyInfo.objectId);
+            var patientInfo = localStorage.getItem(JSON.parse(orderObjectFromlocalDB).patientId.objectId);
+            //alert("view pickups function called with orderId : " + orderId);
+            localStorage.setItem("ordersToConfirmDelivery", JSON.stringify(orderId));
+            localStorage.setItem("ordersToConfirmDeliveryPharmacyInfoId", JSON.stringify(pharmacyInfoId));
+            //update the delivery page here now with the order information
+            $("#noShowDelivery_detailsPgae_bussinessName").empty();
+            $("#noShowDelivery_detailsPgae_patientName").empty();
+            $("#delivery_detailsPgae_patientAddress").empty();
+            $("#noShowDelivery_detailsPgae_distance").empty();
+            $("#noShowDelivery_detailsPgae_order_collectables").empty();
+            $("#noShowDelivery_detailsPgae_order_comments").empty();
+
+            $("#noShowDelivery_detailsPgae_bussinessName").append("<label>Pharmacy : </label>" + JSON.parse(pharmacyInfo).businessName + "");
+            $("#noShowDelivery_detailsPgae_patientName").append("<label>Patient Name : </label>" + JSON.parse(patientInfo).name + "");
+            $("#delivery_detailsPgae_patientAddress").append(JSON.parse(patientInfo).address + "");
+            $("#noShowDelivery_detailsPgae_distance").append("<label>Distance : </label>" + JSON.parse(patientInfo).distanceFromPharmacy.toFixed(2) +" KM");
+            $("#noShowDelivery_detailsPgae_order_collectables").append("<label>Order Collectables : </label>" + JSON.parse(orderObjectFromlocalDB).Collectables + "" );
+            $("#noShowDelivery_detailsPgae_order_comments").append("<label>Order Comments : </label>" + JSON.parse(orderObjectFromlocalDB).comments + "" );
+
+            $('div.ui-loader').hide();
+        }
+        window.onload = codeAddress;
+    </script>
+
+    <title></title>
+</head>
+
+<body>
+    <div data-role="page">
+        <div data-role="panel" id="mypanel">
+            <div>
+                <h1 id="current_username"></h1>
+                <ul data-role="listview" class="ui-listview">
+                    <li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-iconpos="right" data-theme="c" class="ui-btn-up-cui-li" onClick="panelButtonClick()" >
+                        <div class="ui-btn-inner ui-li" >
+                            <a href="homePage.html" data-ajax="false" style="text-decoration: none">
+                                <div class="ui-btn-text">
+                                    <label>
+                                        Home
+                                    </label>
+                                </div>
+                            </a>
+                            <!-- <span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span> -->
+                        </div>
+                    </li>
+
+                    <li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-iconpos="right" data-theme="c" class="ui-btn-up-cui-li" onClick="panelButtonClick()" >
+                        <div class="ui-btn-inner ui-li" >
+                            <a href="pickupPage.html" data-ajax="false" style="text-decoration: none">
+                                <div class="ui-btn-text">
+                                    <label>
+                                        Pickups<span name="total_pickups" class="ui-li-count ui-btn-up-c ui-btn-corner-all"></span>
+                                    </label>
+                                </div>
+                            </a>
+                            <!-- <span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span> -->
+                        </div>
+                    </li>
+
+                    <li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-iconpos="right" data-theme="c" class="ui-btn-up-cui-li" onClick="panelButtonClick()" >
+                        <div class="ui-btn-inner ui-li" >
+                            <a href="deliveriesPage.html" data-ajax="false" style="text-decoration: none">
+                                <div class="ui-btn-text">
+                                    <label>
+                                        Deliveries<span name="total_my_deliveries" class="ui-li-count ui-btn-up-c ui-btn-corner-all"></span>
+                                    </label>
+                                </div>
+                            </a>
+                            <!-- <span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span> -->
+                        </div>
+                    </li>
+
+                    <li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-iconpos="right" data-theme="c" class="ui-btn-up-cui-li" onClick="panelButtonClick()" >
+                        <div class="ui-btn-inner ui-li" >
+                            <a data-ajax="false" style="text-decoration: none">
+                                <div class="ui-btn-text">
+                                    <label>
+                                        Drop offs<span name="total_drop_offs" class="ui-li-count ui-btn-up-c ui-btn-corner-all"></span>
+                                    </label>
+                                </div>
+                            </a>
+                            <!-- <span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span> -->
+                        </div>
+                    </li>
+
+                    <li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-iconpos="right" data-theme="c" class="ui-btn-up-cui-li" style="background-color: #F3CACA;" onClick="panelButtonClick()" >
+                        <div class="ui-btn-inner ui-li" >
+                            <a href="noShowPage.html" data-ajax="false" style="text-decoration: none">
+                                <div class="ui-btn-text">
+                                    <label>
+                                        No Show<span name="total_no_shows" class="ui-li-count ui-btn-up-c ui-btn-corner-all"></span>
+                                    </label>
+                                </div>
+                            </a>
+                            <!-- <span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span> -->
+                        </div>
+                    </li>
+                </ul>
+                <button onClick="logout()">Logout</button>
+            </div>
+        </div><!-- /panel -->
+        
+        <div data-role="header" data-theme="c">
+            <a href="#mypanel" class="ui-btn-left ui-btn  ui-btn-icon-notext ui-corner-all ui-icon-bars">Back</a>
+            <h1>Delivery Detail</h1>
+        </div><!-- /header -->
+        <div role="main" class="ui-content">            
+            <div class="ui-panel-content-wrap ui-body-c ui-panel-animate ui-panel-content-wrap-closed">
+                <div data-role="content">
+                    <div data-role="content">                        
+                        <h3 id="noShowDelivery_detailsPgae_bussinessName">Pharmacy Name</h3>
+                        <label id="noShowDelivery_detailsPgae_patientName">Patient Name </label>
+                        <br>
+                        <label>Patient Address :</label> <label id="delivery_detailsPgae_patientAddress"></label>
+                        <br>
+                        <label id="noShowDelivery_detailsPgae_distance">Distance from pharmacy in KM</label>
+                        <br>
+                        <label id="noShowDelivery_detailsPgae_order_collectables">Collectables</label>
+                        <br>
+                        <label id="noShowDelivery_detailsPgae_order_comments">Pharmacy Comments</label>
+                        <br>
+                        <div id="copy_navigate_button_div">
+                            <button onClick="copyToClipBoard()">Copy Address</button>
+                        </div>
+                        <div>
+                            <button onClick="confirmNoShowPopup()">Confirm No Show</button>
+                        </div>
+                        <div id="confirm_delivery_button_div">
+                             <button onclick="location.href='noconflict.html'" >Confirm Delivery</button>
+                        </div>
+                        <div data-role="popup" id="confirm_no_show_popup" data-dismissible="false" style="max-width:400px;">
+                            <div role="main" class="ui-content">
+                                <h3 class="mc-text-danger">Confirm No Show?</h3>
+                                <p>Are you Sure you want to submit this delivery as no show?</p>
+                                <div onClick="confirmNoShow()" class="mc-text-center"><a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-b mc-top-margin-1-5">Yes</a></div>
+                                <div class="mc-text-center"><a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-b mc-top-margin-1-5">No</a></div>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+                <!-- <div data-theme="a" data-role="footer" data-position="fixed"> -->
+            </div>
+        </div><!-- /content -->
+    </div><!-- /page -->
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    
+</body>
+</html>

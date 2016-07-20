@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+    <!-- <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" /> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- parse imports -->
+    <script type="text/javascript" src="https://www.parsecdn.com/js/parse-1.6.14.min.js"></script>
+    <script type="text/javascript"></script>
+    <script type="text/javascript">
+        Parse.initialize("aeabfaa3a49e340251e16e04b573f9dd0ae6a07b", "acb0ac1ee21e335a9c273e1498af5375a73377f4");
+        Parse.serverURL = 'https://portal.bilgramigroup.com/parse';
+    </script>
+
+    <!-- jquery mobile css imports -->
+    <link rel="stylesheet" type="text/css" href="lib/jquery.mobile-1.4.5/jquery.mobile.icons-1.4.5.min.css">
+    <link rel="stylesheet" type="text/css" href="lib/jquery.mobile-1.4.5/jquery.mobile.structure-1.4.5.min.css">
+    <link rel="stylesheet" type="text/css" href="css/themes/conf-room1.min.css">
+    <link rel="stylesheet" type="text/css" href="css/app.css">
+
+    <!-- jquery mobile script imports -->
+    <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="lib/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+    <script type="text/javascript">
+        function codeAddress() {
+            $('div.ui-loader').show();
+            var delay=1000; //1 seconds
+            setTimeout(function(){
+                //your code to be executed after 1 seconds
+                //send notification emails here 
+                console.log("myDeliveries array size: "+JSON.parse(localStorage.getItem("myDeliveries")).length);
+                $("#pharmacies_list_myDeliveries").empty();
+
+                for (var j=0; j<JSON.parse(localStorage.getItem("myDeliveries")).length; j++) {
+
+                var orderId = JSON.parse(localStorage.getItem("myDeliveries"))[j];
+                //console.log(">>>>>>>> Printing information for the following orderId : " + orderId);
+                var orderObjectFromlocalDB = localStorage.getItem(orderId);
+
+                //console.log("orderObjectFromlocalDB : " + JSON.stringify(orderObjectFromlocalDB) );
+
+                var pharmacyUserObject = localStorage.getItem(JSON.parse(orderObjectFromlocalDB).pharmacyID.objectId);
+                //console.log("pharmacy user object from local DB : " +pharmacyUserObject);
+
+                var pharmacyInfo = localStorage.getItem(JSON.parse(pharmacyUserObject).pharmacyInfo.objectId);
+                //console.log("pharmacyInfo from local DB : " +pharmacyInfo);
+
+                var patientInfo = localStorage.getItem(JSON.parse(orderObjectFromlocalDB).patientId.objectId);
+                //console.log("patient information from local DB : " + patientInfo);
+                //for every pickup make the listitem and append the pickups_list in HTML page
+                var pickupEntry = '<li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r" data-iconpos="right" data-theme="c" class="ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-corner-top ui-btn-up-c" onClick="viewDelivery(\''+orderId+'\',\''+pharmacyInfo.id+'\')">'+
+                    '<div class="ui-btn-inner ui-li ui-corner-top">'+
+                        '<div class="ui-btn-text">'+
+                           '<a class="ui-link-inherit">'+
+                                '<p id="" class="ui-li-aside ui-li-desc"><strong>'+ JSON.parse(patientInfo).distanceFromPharmacy.toFixed(2)+'</strong>KM</p>'+
+                                '<p id="patient_name" class="ui-li-desc"><strong>'+JSON.parse(patientInfo).name+'</strong></p>'+
+                                '<p id="patient_address" class="ui-li-desc">'+JSON.parse(patientInfo).address+'</p>'+
+                    
+                            '</a>'+
+                        '</div>'+
+                        '<span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span>'+
+                    '</div>'+
+                '</li>';
+                $("#pharmacies_list_myDeliveries").append(pickupEntry);
+                }
+                $('div.ui-loader').hide();
+            }, delay);
+        }
+        window.onload = codeAddress;
+    </script>
+
+    <title></title>
+</head>
+
+<body>
+    <div data-role="page">
+        <div data-role="panel" id="mypanel">
+            <div>
+                <h1 id="current_username"></h1>
+                <ul data-role="listview" class="ui-listview">
+                    <li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-iconpos="right" data-theme="c" class="ui-btn-up-cui-li" onClick="panelButtonClick()" >
+                        <div class="ui-btn-inner ui-li" >
+                            <a href="homePage.html" data-ajax="false" style="text-decoration: none">
+                                <div class="ui-btn-text">
+                                    <label>
+                                        Home
+                                    </label>
+                                </div>
+                            </a>
+                            <!-- <span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span> -->
+                        </div>
+                    </li>
+
+                    <li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-iconpos="right" data-theme="c" class="ui-btn-up-cui-li" onClick="panelButtonClick()" >
+                        <div class="ui-btn-inner ui-li" >
+                            <a href="pickupPage.html" data-ajax="false" style="text-decoration: none">
+                                <div class="ui-btn-text">
+                                    <label>
+                                        Pickups<span name="total_pickups" class="ui-li-count ui-btn-up-c ui-btn-corner-all"></span>
+                                    </label>
+                                </div>
+                            </a>
+                            <!-- <span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span> -->
+                        </div>
+                    </li>
+
+                    <li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-iconpos="right" data-theme="c" class="ui-btn-up-cui-li" style="background-color: #F3CACA;" onClick="panelButtonClick()" >
+                        <div class="ui-btn-inner ui-li" >
+                            <a href="deliveriesPage.html" data-ajax="false" style="text-decoration: none">
+                                <div class="ui-btn-text">
+                                    <label>
+                                        Deliveries<span name="total_my_deliveries" class="ui-li-count ui-btn-up-c ui-btn-corner-all"></span>
+                                    </label>
+                                </div>
+                            </a>
+                            <!-- <span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span> -->
+                        </div>
+                    </li>
+
+                    <li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-iconpos="right" data-theme="c" class="ui-btn-up-cui-li" onClick="panelButtonClick()" >
+                        <div class="ui-btn-inner ui-li" >
+                            <a data-ajax="false" style="text-decoration: none">
+                                <div class="ui-btn-text">
+                                    <label>
+                                        Drop offs<span name="total_drop_offs" class="ui-li-count ui-btn-up-c ui-btn-corner-all"></span>
+                                    </label>
+                                </div>
+                            </a>
+                            <!-- <span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span> -->
+                        </div>
+                    </li>
+
+                    <li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-iconpos="right" data-theme="c" class="ui-btn-up-cui-li" onClick="panelButtonClick()" >
+                        <div class="ui-btn-inner ui-li" >
+                            <a href="noShowPage.html" data-ajax="false" style="text-decoration: none">
+                                <div class="ui-btn-text">
+                                    <label>
+                                        No Show<span name="total_no_shows" class="ui-li-count ui-btn-up-c ui-btn-corner-all"></span>
+                                    </label>
+                                </div>
+                            </a>
+                            <!-- <span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span> -->
+                        </div>
+                    </li>
+                </ul>
+                <button onClick="logout()">Logout</button>
+            </div>
+        </div><!-- /panel -->
+        
+        <div data-role="header" data-theme="c">
+            <a href="#mypanel" class="ui-btn-left ui-btn  ui-btn-icon-notext ui-corner-all ui-icon-bars">Back</a>
+            <h1>Deliveries</h1>
+        </div><!-- /header -->
+        <div role="main" class="ui-content">            
+            <ul style=" height: 35em; line-height: 2em; border: 1px solid #ccc; padding: 0; margin: 0; overflow: scroll; overflow-x: hidden;" id="pharmacies_list_myDeliveries" data-role="listview" data-inset="true" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
+                
+            </ul>
+            
+        </div><!-- /content -->
+    </div><!-- /page -->
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    
+</body>
+</html>

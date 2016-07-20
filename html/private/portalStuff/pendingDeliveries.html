@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+		<title>Pending Deliveries</title>
+		<meta name="description" content="Sticky Table Headers Revisited: Creating functional and flexible sticky table headers" />
+		<meta name="keywords" content="Sticky Table Headers Revisited" />
+		<meta name="author" content="Codrops" />
+		<!-- <link rel="shortcut icon" href="../favicon.ico"> -->
+		<link rel="stylesheet" type="text/css" href="css/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="css/demo.css" />
+		<link rel="stylesheet" type="text/css" href="css/component.css" />
+
+		<!-- Parse Information -->
+	    <script type="text/javascript" src="https://www.parsecdn.com/js/parse-1.6.14.min.js"></script>
+	    <script type="text/javascript"></script>
+
+	    <script type="text/javascript">
+	        Parse.initialize("aeabfaa3a49e340251e16e04b573f9dd0ae6a07b", "acb0ac1ee21e335a9c273e1498af5375a73377f4");
+	        Parse.serverURL = 'https://portal.bilgramigroup.com/parse';
+	    </script>
+
+		<!--[if IE]>
+  		<script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+ 		 
+		<link href="css/elements.css" rel="stylesheet">
+		<link href="css/datepicker.css" rel="stylesheet">
+		<link href="css/fuzzyDropdown.css" rel="stylesheet">
+		<link href="css/zerogrid.css" rel="stylesheet">
+		
+		<script src="js/my_js_pending_deliveries.js"></script>
+		<script src="js/database_pending_deliveries.js" type="text/javascript"></script>
+
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> 
+		<script type="text/javascript" src="js/jquery.searchabledropdown-1.0.8.min.js"></script>
+
+	</head>
+	<body onload="onLoad()">
+
+		<div class="container">
+			<!-- Top Navigation -->
+			<div class="codrops-top clearfix">
+				<a class="codrops-icon codrops-icon-prev" onClick="logout()" ><span id="logOut" >LogOut</span></a>
+				<span class="right"><a class="codrops-icon codrops-icon-drop"><span id="top_nav_username" ></span></a></span>
+			</div>
+			<header>
+				<h1 id="pharmacy_name"> </h1>
+				<h1><span id="pharmacy_address"></span></h1>
+				<nav class="codrops-demos">
+					<a href="userPortal.html" title="Basic Usage">Patients</a>
+					<a class="current-demo" href="pendingDeliveries.html" title="Biaxial Headers">Deliveries</a>
+				</nav>
+			</header>
+			<div class="component">
+				
+				<p id="info_p">This is your list of pending deliveries. To view more information about a delivey pleae click on it.</p>
+				<p id="date_picker">Please Sselect Date for which you want to view deliveries:<br /> 
+					<br>    
+			 	</p>
+				 <nav class="codrops-demos">
+					<select id="daydropdown">
+						<option>1</option>       
+					    <option>2</option>       
+					    <option>3</option>       
+					    <option>4</option>       
+					    <option>5</option>       
+					    <option>6</option>       
+					    <option>7</option>       
+					    <option>8</option>       
+					    <option>9</option>       
+					    <option>10</option>       
+					    <option>11</option>       
+					    <option>12</option>       
+					    <option>13</option>       
+					    <option>14</option>       
+					    <option>15</option>       
+					    <option>16</option>       
+					    <option>17</option>       
+					    <option>18</option>       
+					    <option>19</option>       
+					    <option>20</option>       
+					    <option>21</option>       
+					    <option>22</option>       
+					    <option>23</option>       
+					    <option>24</option>       
+					    <option>25</option>       
+					    <option>26</option>       
+					    <option>27</option>       
+					    <option>28</option>       
+					    <option>29</option>       
+					    <option>30</option>       
+					    <option>31</option> 
+					</select> 
+					<select id="monthdropdown">
+						<option>Jan</option>       
+					    <option>Feb</option>       
+					    <option>Mar</option>       
+					    <option>Apr</option>       
+					    <option>May</option>       
+					    <option>Jun</option>       
+					    <option>Jul</option>       
+					    <option>Aug</option>       
+					    <option>Sep</option>       
+					    <option>Oct</option>       
+					    <option>Nov</option>       
+					    <option>Dec</option>
+					</select> 
+					<select id="yeardropdown">
+						    <option>2015</option>       
+						    <option>2016</option>       
+						    <option>2017</option>       
+						    <option>2018</option>
+					</select> 
+					<a class="current-demo" onClick="get_deliveries()" title="Basic Usage">Go</a>
+				</nav>
+				 <nav class="codrops-demos">
+				 	<!-- <input id="start_dt" class='datepicker' size='11' title='D-MMM-YYYY' />  -->
+					
+					<a class="current-demo" onClick="div_show()" title="Basic Usage">Add Delivery</a>
+					<a class="current-demo" onClick="printData()" title="Basic Usage">Print</a>
+					<!-- <a class="current-demo" onClick="verifyOrders()" title="Basic Usage">Confirm Delivery</a> -->
+				</nav> 
+					
+				<div id="edit_orders_div" style="display:none;">
+					<!-- edit_orders_div Popup Div Starts Here -->
+					<div id="popupContact">
+					<!-- Contact Us Form -->
+					<form action="#" id="edit_delete_form" method="post" name="form">
+					<img id="close" src="images/Remove_button_24.png" onclick ="edit_orders_div_hide()">
+					<h2> Edit or Delete Entry</h2>
+					<hr>
+					<div id="patient_id_edit"></div>
+					<div id="patient_name_edit"></div>
+					<div id="patient_address_edit"></div>
+					<div id="patient_status_edit"></div>
+					<div id="patient_driver_edit"></div>
+					<div id="patient_createdAt_edit"></div>
+					<div id="patient_updatedAt_edit"></div>
+
+					<nav class="codrops-demos">
+						<label>Pickup Time</label>
+						<select name="time" id="editpickupTime">
+						</select>
+					</nav>
+					<nav class="codrops-demos">
+						<label>Order Date</label>
+						<select id="selectdaydropdown3">
+							<option>1</option>       
+						    <option>2</option>       
+						    <option>3</option>       
+						    <option>4</option>       
+						    <option>5</option>       
+						    <option>6</option>       
+						    <option>7</option>       
+						    <option>8</option>       
+						    <option>9</option>       
+						    <option>10</option>       
+						    <option>11</option>       
+						    <option>12</option>       
+						    <option>13</option>       
+						    <option>14</option>       
+						    <option>15</option>       
+						    <option>16</option>       
+						    <option>17</option>       
+						    <option>18</option>       
+						    <option>19</option>       
+						    <option>20</option>       
+						    <option>21</option>       
+						    <option>22</option>       
+						    <option>23</option>       
+						    <option>24</option>       
+						    <option>25</option>       
+						    <option>26</option>       
+						    <option>27</option>       
+						    <option>28</option>       
+						    <option>29</option>       
+						    <option>30</option>       
+						    <option>31</option> 
+						</select> 
+						<select id="selectmonthdropdown3">
+							<option>Jan</option>       
+						    <option>Feb</option>       
+						    <option>Mar</option>       
+						    <option>Apr</option>       
+						    <option>May</option>       
+						    <option>Jun</option>       
+						    <option>Jul</option>       
+						    <option>Aug</option>       
+						    <option>Sep</option>       
+						    <option>Oct</option>       
+						    <option>Nov</option>       
+						    <option>Dec</option>
+						</select> 
+						<select id="selectyeardropdown3">
+							    <option>2015</option>       
+							    <option>2016</option>       
+							    <option>2017</option>       
+							    <option>2018</option>
+						</select> 
+					</nav>
+					<div id="edit_delete_button_div"></div>
+					</form>
+					</div>
+					<!-- edit_orders_div Popup Div Ends Here -->
+				</div>
+					
+					<div id="abc">
+					<!-- Popup Div Starts Here -->
+					<div id="popupContact">
+					<!-- Contact Us Form -->
+					<form action="#" id="form" method="post" name="form">
+					<img id="close" src="images/Remove_button_24.png" onclick ="div_hide()">
+					<h2> Enter Delivery Info</h2>
+					<hr>
+					<nav class="codrops-demos">
+						<label>Pickup Time</label>
+							<select name="time" id="pickupTime">
+							</select>
+					</nav>
+					<nav class="codrops-demos">
+							<select id="daydropdown2">
+								<option>1</option>       
+							    <option>2</option>       
+							    <option>3</option>       
+							    <option>4</option>       
+							    <option>5</option>       
+							    <option>6</option>       
+							    <option>7</option>       
+							    <option>8</option>       
+							    <option>9</option>       
+							    <option>10</option>       
+							    <option>11</option>       
+							    <option>12</option>       
+							    <option>13</option>       
+							    <option>14</option>       
+							    <option>15</option>       
+							    <option>16</option>       
+							    <option>17</option>       
+							    <option>18</option>       
+							    <option>19</option>       
+							    <option>20</option>       
+							    <option>21</option>       
+							    <option>22</option>       
+							    <option>23</option>       
+							    <option>24</option>       
+							    <option>25</option>       
+							    <option>26</option>       
+							    <option>27</option>       
+							    <option>28</option>       
+							    <option>29</option>       
+							    <option>30</option>       
+							    <option>31</option> 
+							</select> 
+							<select id="monthdropdown2">
+								<option>Jan</option>       
+							    <option>Feb</option>       
+							    <option>Mar</option>       
+							    <option>Apr</option>       
+							    <option>May</option>       
+							    <option>Jun</option>       
+							    <option>Jul</option>       
+							    <option>Aug</option>       
+							    <option>Sep</option>       
+							    <option>Oct</option>       
+							    <option>Nov</option>       
+							    <option>Dec</option> 
+							</select> 
+							<select id="yeardropdown2">
+								    <option>2015</option>       
+								    <option>2016</option>       
+								    <option>2017</option>       
+								    <option>2018</option>
+							</select> 
+						
+					</nav>
+					<div>
+						<label>RX : </label>
+						<input id="RX" type="text">
+						<label>Collectables :</label>
+						<input id="Collectables" type="text">
+						<label>Comments :</label>
+						<input id="Comments" type="text">
+					</div>
+					<div id="page-wrapper">
+					  <label for="default">Select Patient</label>
+					  <input type="text" id="default" list="languages" placeholder="Type patient name">
+					  <datalist id="languages">
+					  </datalist>
+					</div>
+					  
+					 <!-- <a onClick="new_patient_info_div_show()" id="add_new_patient_button">+ New Patient</a> -->
+					<div id="new_patient_info" style="display:none;">
+					<input id="new_patient_name" name="name" placeholder="Full Name" type="text">
+					<input id="new_patient_address" name="email" placeholder="Full Address" type="text">
+					<input id="new_patient_telephone" name="message" placeholder="Telepphone" type="text"></input>
+					</div>
+					<a href="javascript:%20saveNewPatientAndSubmitNewOrder()" id="submit_with_new_patient" style="display:none;">Add Patient to database & Submit Delivery Order</a>
+					<a href="javascript:%20submitNewOrderExistingPatient()" id="submit">Submit Delivery Order</a>
+					</form>
+					</div>
+					<!-- Popup Div Ends Here -->
+					</div>
+				<!-- Display Popup Button -->
+				<!-- <button id="popup" onclick="div_show()">Popup</button> -->
+
+				<div id="table_div">
+					<div class="sticky-wrap">
+				<table id="patient_info_table">
+					<thead>
+						<tr>
+							<th>Order date</th>
+							<th>Patient name</th>
+							<th>Delivery Status </th>
+							<th>Pickup Time</th>
+							<th>Patient Signature</th>
+							<th>Driver Comment</th>
+							<th>RX</th>
+							<th>Collectables</th>
+							<th>Comments</th>
+							<th>Cost</th>
+						</tr>
+					</thead>
+					<tbody id="pending_delivery_table_body" >
+					</tbody>
+				</table>
+				</div>
+				<p id="no_ddeliveries_message" class="related">No delivers in database for the date you have selected</p>
+				</div>
+			</div>
+
+		</div><!-- /container -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+		<script type="text/javascript">
+			//populatedropdown(id_of_day_select, id_of_month_select, id_of_year_select)
+			// window.onload=function(){
+			// 	populatedropdown("daydropdown", "monthdropdown", "yeardropdown");
+			// 	populatedropdown("daydropdown2", "monthdropdown2", "yeardropdown2");
+			// }
+		</script>
+	</body>
+</html>
