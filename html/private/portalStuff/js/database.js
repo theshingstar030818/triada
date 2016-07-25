@@ -113,6 +113,7 @@ function editPatient(patientID){
       document.getElementById('patient_aptNum').value = aptNum;
       document.getElementById('patient_buildingNum').value = buildingNum;
       document.getElementById('patient_streetName').value = streetName;
+      console.log("patient_city = " + document.getElementById('patient_city').value);
       document.getElementById('patient_city').value = city;
       document.getElementById('patient_postalCode').value = postalCode;
       document.getElementById('patient_state').value = state;
@@ -200,7 +201,6 @@ function updatePatientInfo(patientID){
 								travelMode: google.maps.TravelMode.DRIVING
 							}, 
 							function callback(response, status) {
-								console.log("response : " + response);
 								var originList = response.originAddresses;
 								var total_distance = 0;	
 								for (var i = 0; i < originList.length; i++) {

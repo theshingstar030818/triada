@@ -92,7 +92,6 @@
 					      		if(pharmacyObject.length > 0){
 					      			var pharmacyPricing = JSON.parse(pharmacyObject[0].get("pricing"));
 					      			pharmacyPricing.cities.forEach(function(entry) {
-									    console.log(entry);
 									    var option = document.createElement("option");
 										option.text = entry.name;
 										option.value = entry.name;
@@ -164,7 +163,48 @@
 								<input id="patient_streetName">
 								<br><br>
 								<label>City : </label>
-								<input id="patient_city">
+								
+								<select id="patient_city" name="city" placeholder="city" type="text" style="width: 100%; margin-top: 2%;">
+								</select>
+
+								<script>
+
+									var edit_select = document.getElementById("patient_city");
+									
+									var currentUser = Parse.User.current();
+									var userString = JSON.stringify(currentUser);
+									var jsonUserData = JSON.parse(userString);
+
+									//get the pharmacy object for  the user
+									var Pharmacy = Parse.Object.extend("Pharmacies");
+
+									var pharmacyQuery = new Parse.Query(Pharmacy);
+									pharmacyQuery.include("pharmacyUser");
+									pharmacyQuery.equalTo("pharmacyUser", currentUser);
+									pharmacyQuery.limit(1000);
+
+									pharmacyQuery.find({
+			    						success: function(pharmacyObject){
+								      		if(pharmacyObject.length > 0){
+								      			var pharmacyPricing = JSON.parse(pharmacyObject[0].get("pricing"));
+								      			pharmacyPricing.cities.forEach(function(entry) {
+												    var option = document.createElement("option");
+													option.text = entry.name;
+													option.value = entry.name;
+													edit_select.add(option);
+												});
+								      		}
+								      	},
+									    error: function(error){
+									      alert("Error: " + error.code + " " + error.message);
+									    }
+									});
+
+									
+									
+
+								</script>
+								
 								<br><br>
 								<label>Postal Code : </label>
 								<input id="patient_postalCode">
