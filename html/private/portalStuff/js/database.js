@@ -212,6 +212,21 @@ function updatePatientInfo(patientID){
 								
 								var distanceFromPharmacy = total_distance/1000;
 								patient.set("distanceFromPharmacy",distanceFromPharmacy);
+
+								var pharmacyPricingJSON = JSON.parse(pharmacyInfo.get("pricing"));
+
+								for (var i = 0; i < pharmacyPricingJSON.cities.length; i++){
+								  
+								  if (pharmacyPricingJSON.cities[i].name == city){
+								  	if(distanceFromPharmacy < 10){
+										patient.set("cost",pharmacyPricingJSON.cities[i].rates[0]);
+								  	}else{
+								  		patient.set("cost",pharmacyPricingJSON.cities[i].rates[1]);
+								  	}
+								  }
+								}
+
+
 		                        patient.save(null, {
 		                          success: function(patientObjectReturn) {
 		                            // Execute any logic that should take place after the object is saved.

@@ -88,6 +88,7 @@ function logout(){
 
 function printData()
 {
+  console.log("...");
   $('td:nth-child(10)').hide();
   var divToPrint=document.getElementById("patient_info_table");
   newWin= window.open("");

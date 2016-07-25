@@ -117,6 +117,22 @@ function postPatient(){
                             
                             var distanceFromPharmacy = total_distance/1000;
                             patientObject.set("distanceFromPharmacy",distanceFromPharmacy);
+                            
+                            //set cost for the patient here and also change the ipdatePatient function
+                            var pharmacyPricingJSON = JSON.parse(pharmacyObject[0].get("pricing"));
+
+                            for (var i = 0; i < pharmacyPricingJSON.cities.length; i++){
+                              
+                              if (pharmacyPricingJSON.cities[i].name == city){
+                                if(distanceFromPharmacy < 10){
+                                  patientObject.set("cost",pharmacyPricingJSON.cities[i].rates[0]);
+                                }else{
+                                  patientObject.set("cost",pharmacyPricingJSON.cities[i].rates[1]);
+                                }
+                              }
+                            }
+
+
                             //set ACL on the object 
                             //all drivers can access the patient info 
                             //the pharmacy itself can access the object

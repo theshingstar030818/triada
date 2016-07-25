@@ -184,6 +184,9 @@ function postOrder(dateOfOrder,patientId){
         // now save that into the patientId pointer feild for the order 
         
         ordersObject.set("patientId", patient);
+
+        //set order cost here 
+        ordersObject.set("cost",patient.get("cost"));
         
         //set ACL on the object 
         //all drivers can access the patient info and also edit them
@@ -253,7 +256,7 @@ function getDeliveriesFromDatabaseForSpecificDate(date){
   var dayNames = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
   //OrdersQuery.equalTo("pharmacyId", Parse.User.current().id);
   //query conditions
-  OrdersQuery.equalTo("deliveryDate", date);
+  //OrdersQuery.equalTo("deliveryDate", date);
   OrdersQuery.include("pharmacyId");
   OrdersQuery.include("pharmacyID.pharmacyInfo");
   OrdersQuery.include("patientId");
@@ -288,25 +291,10 @@ function getDeliveriesFromDatabaseForSpecificDate(date){
             var signatureTimeStamp = results[i].get("patientSignatureTimeStamp");
             var driverComment = results[i].get("driverComment");
 
-            var cost = "";
+            var cost = results[i].get("cost");
 
             if(driverComment === undefined){
               driverComment = "";
-            }
-
-            if(patient.get("distanceFromPharmacy") < 10){
-              cost = pharmacyInfo.get("priceRate");
-            }else if(patient.get("distanceFromPharmacy") >= 20){
-              cost = pharmacyInfo.get("priceRateOver20Km");
-              if(cost === undefined){
-                cost = pharmacyInfo.get("priceRateOver10Km");
-              }
-            }else{
-              cost = pharmacyInfo.get("priceRateOver10Km");
-            }
-
-            if(results[i].get("noShow") == true ){
-              cost = cost * ( results[i].get("numberOfNoShows") );
             }
 
             if(clientSignature === undefined){
