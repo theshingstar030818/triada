@@ -17,6 +17,20 @@
 		<link href="css/elements.css" rel="stylesheet">
 		<script src="js/my_js.js"></script>
 		<script src="js/database.js" type="text/javascript"></script>
+
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+
+		<!-- Parse Information -->
+	    <script type="text/javascript" src="https://www.parsecdn.com/js/parse-1.6.14.min.js"></script>
+	    <script type="text/javascript"></script>
+
+	    <script type="text/javascript">
+	        Parse.initialize("aeabfaa3a49e340251e16e04b573f9dd0ae6a07b", "acb0ac1ee21e335a9c273e1498af5375a73377f4");
+	        Parse.serverURL = 'https://portal.bilgramigroup.com/parse';
+	    </script>
+
 	</head>
 	<body onload="onLoad()">
 
@@ -53,7 +67,50 @@
 					<input id="new_patient_unit" name="aptNum" placeholder="Apartment/Unit #" type="text">
 					<input id="new_patient_building" name="buildingNum" placeholder="Building/House #" type="text">
 					<input id="new_patient_street" name="streetName" placeholder="Street Name" type="text">
-					<input id="new_patient_city" name="city" placeholder="city" type="text">
+					
+					<select id="new_patient_city" name="city" placeholder="city" type="text" style="width: 100%; margin-top: 2%;">
+					</select>
+
+					<script>
+
+						var select = document.getElementById("new_patient_city");
+						
+						var currentUser = Parse.User.current();
+						var userString = JSON.stringify(currentUser);
+						var jsonUserData = JSON.parse(userString);
+
+						//get the pharmacy object for  the user
+						var Pharmacy = Parse.Object.extend("Pharmacies");
+
+						var pharmacyQuery = new Parse.Query(Pharmacy);
+						pharmacyQuery.include("pharmacyUser");
+						pharmacyQuery.equalTo("pharmacyUser", currentUser);
+						pharmacyQuery.limit(1000);
+
+						pharmacyQuery.find({
+    						success: function(pharmacyObject){
+					      		if(pharmacyObject.length > 0){
+					      			var pharmacyPricing = JSON.parse(pharmacyObject[0].get("pricing"));
+					      			pharmacyPricing.cities.forEach(function(entry) {
+									    console.log(entry);
+									    var option = document.createElement("option");
+										option.text = entry.name;
+										option.value = entry.name;
+										select.add(option);
+									});
+
+					      		}
+					      	},
+						    error: function(error){
+						      alert("Error: " + error.code + " " + error.message);
+						    }
+						});
+
+						
+						
+
+					</script>
+
 					<input id="new_patient_postal" name="postalCode" placeholder="Postal Code" type="text">
 					
 					<select id="new_patient_state" style="width: 100%; margin-top: 2%;">
@@ -128,17 +185,7 @@
 				</div>
 			</div>
 		</div><!-- /container -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
-
-		<!-- Parse Information -->
-    <script type="text/javascript" src="https://www.parsecdn.com/js/parse-1.6.14.min.js"></script>
-    <script type="text/javascript"></script>
-
-    <script type="text/javascript">
-        Parse.initialize("aeabfaa3a49e340251e16e04b573f9dd0ae6a07b", "acb0ac1ee21e335a9c273e1498af5375a73377f4");
-        Parse.serverURL = 'https://portal.bilgramigroup.com/parse';
-    </script>
+		
 
 	</body>
 </html>
