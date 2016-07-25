@@ -339,15 +339,7 @@ function getDeliveriesFromDatabaseForSpecificDate(date){
             var clientSignature = results[i].get("patientSignature");
             var signatureTimeStamp = results[i].get("patientSignatureTimeStamp");
 
-            var cost = "";
-
-            if(patient.get("distanceFromPharmacy") < 10){
-              cost = pharmacyInfo.get("priceRate");
-            }else if(patient.get("distanceFromPharmacy") >= 20){
-              cost = "20";
-            }else{
-              cost = pharmacyInfo.get("priceRateOver10Km");
-            }
+            var cost = results[i].get("cost");
 
             if(results[i].get("noShow") == true ){
               cost = cost * ( results[i].get("numberOfNoShows") );
