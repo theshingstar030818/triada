@@ -74,15 +74,7 @@
                 <br><br>
                 <label>Address of the Business : </label>
                 <input id="businessAddress">
-                <br><br>
-                <label>Zone : </label>
-                <select id="businessZone" multiple>
-                    <option>Ottawa East</option>
-                    <option>Ottawa West</option>
-                    <option>Ottawa South</option>
-                    <option>Ottawa Old South</option>
-                    <option>Ottawa Downtown</option>
-                </select>
+                
                 <br><br>
 
                 <label>Pickup Times : </label>
@@ -210,18 +202,28 @@
 
                 <h2>Price Rates</h2>
 
-                <label>Regular Delivery Rate : $ </label>
-                <input type="number" id="priceRate">
-                <br><br>
+                <div id="cities">
+                    
+                </div>
 
-                <label>Over 10 KM Delivery Rate : $ </label>
-                <input type="number" id="priceRateOver10Km">
-                <br><br>
-                <label>Over 20 KM Delivery Rate : $ </label>
-                <input type="number" id="priceRateOver20Km">
-                <br><br>
-                <label>Over 30 KM Delivery Rate : $ </label>
-                <input type="number" id="priceRateOver30Km">
+
+                <script type="text/javascript">
+                    function addCity(){
+                        var div = document.createElement('div');
+
+
+
+                        div.innerHTML = '<select><option value="" disabled selected > Select a City</option><option value="Ajax">Ajax</option><option value="Aurora" >Aurora</option><option value="Brampton" >Brampton</option><option value="Brock" >Brock</option><option value="Burlington" >Burlington</option><option value="Caledon" >Caledon</option><option value="Clarington" >Clarington</option><option value="East" >East Gwillimbury</option><option value="Etobicoke" >Etobicoke</option><option value="Georgina" >Georgina</option><option value="Georgetown" >Georgetown</option><option value="Halton" >Halton Hills</option><option value="King" >King</option><option value="Markham" >Markham</option><option value="Milton" >Milton</option><option value="Mississauga" >Mississauga</option><option value="Newmarket" >Newmarket</option><option value="Oakville" >Oakville</option><option value="Oshawa" >Oshawa</option><option value="Pickering" >Pickering</option><option value="Richmond" >Richmond Hill</option><option value="Scarborough" >Scarborough</option><option value="Scugog" >Scugog</option><option value="Toronto" >Toronto</option><option value="Uxbridge" >Uxbridge</option><option value="Vaughan" >Vaughan</option><option value="Whitby" >Whitby</option><option value="Whitchurch-Stouffville">Whitchurch-Stouffville</option><option value="Woodbridge">Woodbridge</option></select><label>Less than 10 Km : </label><input type="number"><label>Over 10 Km : </label><input type="number"> <br><br>';
+
+                        document.getElementById('cities').appendChild(div);
+                    }
+
+                    addCity();
+                </script>
+                <br>
+
+                <button onclick="addCity()" >Add City</button> 
+
                 <br><br>
                 
                 <h2>Online Portal Information</h2>

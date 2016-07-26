@@ -50,10 +50,23 @@ function createPharmacyAccount(){
     var password = document.getElementById("password").value;
     var re_type_password = document.getElementById("re_type_password").value;
 
-    var priceRate = document.getElementById("priceRate").value;
-    var priceRateOver10Km = document.getElementById("priceRateOver10Km").value;
-    var priceRateOver20Km = document.getElementById("priceRateOver20Km").value;
-    var priceRateOver30Km = document.getElementById("priceRateOver30Km").value;
+    console.log("get cities ...");
+    
+    var pricing = '{ "cities" : [ ';
+
+    $("#cities").children().each(function(i, elm) {
+        var city = $($(elm).find('select')[0]).val();
+        var under10 = $($(elm).find('input')[0]).val();
+        var over10 = $($(elm).find('input')[1]).val();
+
+        pricing += '{"name" : "'+city+'", "rates" : ['+under10+','+over10+']},';
+    });
+
+    pricing = pricing.substring(0, pricing.length-1);
+    pricing += ']}';
+
+
+    var priceRate = pricing;
 
 
     var pickupTimesArray = [];    
@@ -66,8 +79,7 @@ function createPharmacyAccount(){
         Parse.Cloud.run('createNewPharmacyAccount', { businessName: businessName, ownerName: ownerName,
          businessAddress: businessAddress, businessNumber: businessNumber, otherNumber: otherNumber, 
          fax: fax, email: email, contactMode: contactMode, employee1: employee1, employee2: employee2,
-         employee3: employee3, userName: userName, password: password, priceRate: priceRate, priceRateOver10Km: priceRateOver10Km,
-         priceRateOver20Km: priceRateOver20Km, priceRateOver30Km: priceRateOver30Km, pickupTimesArray: pickupTimesArray }, {
+         employee3: employee3, userName: userName, password: password, priceRate: pricing, pickupTimesArray: pickupTimesArray }, {
           success: function(result) {
             alert(result);
             resetForm();
