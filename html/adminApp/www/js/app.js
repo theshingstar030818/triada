@@ -93,17 +93,17 @@ angular.module('starter', ['ionic', 'starter.controllers'])
    updateCurrDate: function(currDate) {
      this.currDate = currDate;
    },
-  updateCurrentOrders:function(currentOrders) {
-    this.currentOrders = currentOrders;
-  },
-  updateCurrDriver: function(currDriver) {
-    this.currDriver = currDriver;
-  },
-  updateAlldriversArray: function(allDriversArray){
-    this.allDriversArray = allDriversArray;
-  },
-  updateAllDriversMap: function(allDriversMap){
-    this.allDriversMap = allDriversMap;
+   updateCurrentOrders:function(currentOrders) {
+     this.currentOrders = currentOrders;
+   },
+   updateCurrDriver: function(currDriver) {
+     this.currDriver = currDriver;
+   },
+   updateAlldriversArray: function(allDriversArray){
+     this.allDriversArray = allDriversArray;
+   },
+   updateAllDriversMap: function(allDriversMap){
+     this.allDriversMap = allDriversMap;
    },
    updateAllDeliveriesForTodayMap: function(allDeliveriesForTodayMap){
     this.allDeliveriesForTodayMap = allDeliveriesForTodayMap;

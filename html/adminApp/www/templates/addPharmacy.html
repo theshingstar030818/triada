@@ -1,5 +1,119 @@
 <ion-view view-title="Add Pharmacy">
    <ion-content>
-     <h1>Coming Soon :p</h1>
+     
+   		<ion-list>
+    		<div class="item item-divider" ng-click="flipShowClientInfo()">
+    			<i class="icon ion-ios-information-outline"></i>
+		    	Client Info
+			</div>
+		    <ion-item ng-show="showClientInfo">
+			  	<div class="list">
+				  <label class="item item-input">
+				    <input ng-model="submitData.bName" type="text" placeholder="Business Name">
+				    {{bName}}
+				  </label>
+				  <label class="item item-input">
+				    <input ng-model="submitData.oName" type="text" placeholder="Owner Name">
+				  </label>
+				  <label class="item item-input">
+				    <input ng-model="submitData.bAddress" type="text" placeholder="Business Address">
+				  </label>
+				</div>
+		    </ion-item>
+
+		    <div class="item item-divider" ng-click="flipShowPickupTimes()">
+    			<i class="icon ion-clock"></i>
+		    	Pickup Times
+			</div>
+			<label ng-show="showPickupTimes" class="item item-input item-select">
+				<div class="input-label">
+				  Pickup Times
+				</div>
+				<select multiple ng-model='submitData.selectedValues' ng-options="a for a in values" >
+				 
+				</select>
+			</label>
+
+		    
+
+		    <div class="item item-divider" ng-click="flipShowContactDetails()">
+    			<i class="icon ion-iphone"></i>
+		    	Contact Details
+			</div>
+		    <ion-item ng-show="showContactDetails">
+			  	<div class="list">
+				  <label class="item item-input">
+				    <input ng-model="submitData.bNumber" type="number" placeholder="Business Number">
+				  </label>
+				  <label class="item item-input">
+				    <input type="number" placeholder="Other Number">
+				  </label>
+				  <label class="item item-input">
+				    <input ng-model="submitData.fax" type="number" placeholder="Fax">
+				  </label>
+				  <label class="item item-input">
+				    <input ng-model="submitData.email" type="email" placeholder="Email">
+				  </label>
+				</div>
+		    </ion-item>
+
+		    <div class="item item-divider" ng-click="flipShowCities()">
+    			<i class="icon ion-social-bitcoin"></i>
+		    	Price Rates
+			</div>
+		    <ion-item ng-show="showCities">
+				<div class="list">
+				  <div class="item item-button-right" ng-repeat="item in priceRates">
+				    ${{item.under10Km}} - ${{item.over10Km}} - {{item.name}} 
+				    <button ng-click="removeItem($index)" class="button assertive">
+				      <i class="icon ion-minus-circled"></i>
+				    </button>
+				  </div>
+				</div>
+				<div id="AddItem">
+					<div class="list">
+					  <label class="item item-input">
+					   <input id="amoutInput" type="number" placeholder="$$$ under 10 Km" ng-model="itemAmount.under10Km">
+					  </label>
+					  <label class="item item-input">
+					   <input id="amoutOver10KmInput" type="number" placeholder="$$$ over 10 Km" ng-model="itemAmount.over10Km">
+					  </label>
+					  <label class="item item-input item-select">
+					    <div class="input-label">
+					      City
+					    </div>
+					    <select id="cityInput" ng-model='itemName' ng-options="city for city in cities" >
+					    </select>
+					  </label>
+					</div>
+					<br/><br/>
+					<button ng-click="addItem(itemAmount,itemName)" class="button button-block balanced">
+					  Add City <i class="icon ion-plus-circled balanced"></i>
+					</button>
+				</div>
+		    </ion-item>
+		    
+		    <div class="item item-divider" ng-click="flipShowLoginInfo()">
+    			<i class="icon ion-log-in"></i>
+		    	Login Info
+			</div>
+		    <ion-item ng-show="showLoginInfo">
+			  	<div class="list">
+				  <label class="item item-input">
+				    <input ng-model="submitData.username" type="text" placeholder="Username">
+				  </label>
+				  <label class="item item-input">
+				    <input ng-model="submitData.password" type="password" placeholder="Password">
+				  </label>
+				  <label class="item item-input">
+				    <input ng-model="submitData.rePassword" type="password" placeholder="Re-Enter Password">
+				  </label>
+				</div>
+		    </ion-item>
+		</ion-list>
+
+		<button ng-click="signUpPharmacy()" class="button button-full button-assertive">
+		  	Sign Up Pharmacy !
+		</button>
    </ion-content>
  </ion-view>

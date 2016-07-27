@@ -49,8 +49,6 @@ function createPharmacyAccount(){
     var userName = document.getElementById("userName").value;
     var password = document.getElementById("password").value;
     var re_type_password = document.getElementById("re_type_password").value;
-
-    console.log("get cities ...");
     
     var pricing = '{ "cities" : [ ';
 

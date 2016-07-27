@@ -285,8 +285,116 @@ angular.module('starter.controllers', [])
   }
 })
   
-.controller('pharmacyCtrl', function($scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup) {
+.controller('pharmacyCtrl', function($scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup, $ionicLoading) {
   $scope.title = "Add pharmacy";
+
+  //set UI ng-show flags
+  $scope.showClientInfo = true;
+  $scope.showPickupTimes = false;
+  $scope.showContactDetails = false;
+  $scope.showCities = false;
+  $scope.showLoginInfo = false;
+
+  $scope.values=  ["0500","0515","0530","0545","0600","0615","0630","0645","0700","0715","0730","0745","0800","0815","0830","0845","0900","0915","0930","0945","1000","1015","1030","1045","1100","1115","1130","1145","1200","1215","1230","1245","1300","1315","1330","1345","1400","1415","1430","1445","1500","1515","1530","1545","1600","1615","1630","1645","1700","1715","1730","1745","1800","1815","1830","1845","1900","1915","1930","1945","2000","2015","2030","2045","2100","2115","2130","2145","2200","2215","2230","2245"];
+  $scope.cities = ["Ajax","Aurora","Brampton","Brock","Burlington","Caledon","Clarington","East Gwillimbury","Etobicoke","Georgina","Georgetown","Halton Hills","King","Markham","Milton","Mississauga","Newmarket","Oakville","Oshawa","Pickering","Richmond","Richmond Hill","Scarborough","Scugog","Toronto","Uxbridge","Vaughan","Whitby","Whitchurch-Stouffville","Woodbridge"];
+
+  $scope.itemName = "";
+  $scope.itemAmount = {};
+  $scope.name="";
+  $scope.priceRates = [];
+  
+  $scope.submitData = {};
+
+  $scope.flipShowClientInfo = function(){
+    $scope.showClientInfo = !$scope.showClientInfo;
+  }
+
+  $scope.flipShowPickupTimes = function(){
+    $scope.showPickupTimes = !$scope.showPickupTimes;
+  }
+
+  $scope.flipShowContactDetails = function(){
+    $scope.showContactDetails = !$scope.showContactDetails;
+  }
+
+  $scope.flipShowCities = function(){
+    $scope.showCities = !$scope.showCities;
+  }
+
+  $scope.flipShowLoginInfo = function(){
+    $scope.showLoginInfo = !$scope.showLoginInfo;
+  }
+
+  $scope.removeItem = function (index) {
+    $scope.priceRates.splice(index, 1);
+  };
+
+  $scope.addItem = function (itemAmount, itemName) {
+    
+    if(itemAmount == "" || itemName == ""){
+      alert("Please enter the amount/city and then press add.");
+    }else{
+     $scope.priceRates.push({
+        under10Km: itemAmount.under10Km,
+        over10Km: itemAmount.over10Km,
+        name: itemName
+      });
+      $scope.itemAmount = '';
+      itemAmount = '';
+    }
+  };
+
+  $scope.signUpPharmacy =function (){
+    console.log($scope.submitData.selectedValues);
+    console.log($scope.priceRates);
+    var pricing = '{ "cities" : [ ';
+    
+    for(var i=0; i < $scope.priceRates.length; i++){
+      var city = $scope.priceRates[i].name;
+      var under10 = $scope.priceRates[i].under10Km;
+      var over10 = $scope.priceRates[i].over10Km;
+      pricing += '{"name" : "'+city+'", "rates" : ['+under10+','+over10+']},';
+    }
+    
+    pricing = pricing.substring(0, pricing.length-1);
+    pricing += ']}';
+
+    var pickupTimesArray = $scope.submitData.selectedValues;      
+    $ionicLoading.show({
+      template: 'Loading...'
+    });
+    Parse.Cloud.run('createNewPharmacyAccount', { businessName: $scope.submitData.bName, ownerName: $scope.submitData.oName, businessAddress: $scope.submitData.bAddress, businessNumber: String($scope.submitData.bNumber), otherNumber: "", fax: String($scope.submitData.fax), email: $scope.submitData.email, contactMode: "phone", employee1: "employee1", employee2: "employee2", employee3: "employee3", userName: $scope.submitData.username, password: $scope.submitData.password, priceRate: pricing, pickupTimesArray: pickupTimesArray }, {
+      success: function(result) {
+        $scope.submitData = {};
+        $scope.showSuccessAlert();
+        $ionicLoading.hide();
+      },
+      error: function(error) {
+        $scope.showFailAlert(error);
+        $ionicLoading.hide();
+      }
+    });
+   
+  }
+
+  $scope.showSuccessAlert = function() {
+    var alertPopup = $ionicPopup.alert({
+        title: "Success!",
+        template: "Pharmacy SignUp Successful",
+        okText: "Ok",
+        okType: "button-assertive"
+    });  
+  };
+
+  $scope.showFailAlert = function(error) {
+    var alertPopup = $ionicPopup.alert({
+        title: "Fail!",
+        template: error.message.message,
+        okText: "Ok",
+        okType: "button-assertive"
+    });  
+  };
+
 })
 
 .controller('driverCtrl', function($scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup) {
@@ -314,7 +422,7 @@ function loadMaps($scope){
   for (var i = 0; i < deliveries.length; i++) {
 
       //required for backwards integration
-      checkCost(deliveries[i]);
+      //checkCost(deliveries[i]);
 
       pharmacyInfoMap.set(deliveries[i].get("pharmacyID").id, deliveries[i].get("pharmacyID").get("pharmacyInfo"));
       pharmacyUserMap.set(deliveries[i].get("pharmacyID").id, deliveries[i].get("pharmacyID"));

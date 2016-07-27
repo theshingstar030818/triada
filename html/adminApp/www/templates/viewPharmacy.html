@@ -1,5 +1,5 @@
 
-<ion-view>
+<ion-view view-title="">
    <ion-content class="has-footer">
     	<!-- {{pharmacyInfoArray[0].object.get("businessName")}} -->
     	<div class="list card">
@@ -18,20 +18,20 @@
 		    		<font>Total Earnings : ${{pharmacyOrdersArray[0].totalCost}} <br></font> 
 		    	</b>
 		      	
-		    	<hr ng-show="details">
+		    	<!-- <hr ng-show="details">
 		      	<font ng-show="details">Under 10 Km : {{pharmacyOrdersArray[0].under10Km[0]}} x ${{pharmacyOrdersArray[0].object[0].get("pharmacyID").get("pharmacyInfo").get("priceRate")}} = $ {{pharmacyOrdersArray[0].under10Km[1]}}<br></font> 
 			    
 			    <font ng-show="details">Under 20 Km : {{pharmacyOrdersArray[0].under20Km[0]}} x ${{pharmacyOrdersArray[0].object[0].get("pharmacyID").get("pharmacyInfo").get("priceRateOver10Km")}} = $ {{pharmacyOrdersArray[0].under20Km[1]}}<br></font> 
 			    
 			    <font ng-show="details">Under 30 Km : {{pharmacyOrdersArray[0].under30Km[0]}} x ${{pharmacyOrdersArray[0].object[0].get("pharmacyID").get("pharmacyInfo").get("priceRateOver20Km")}} = ${{pharmacyOrdersArray[0].under30Km[1]}}<br></font> 
 			    
-			    <font ng-show="details">Over 30 Km : {{pharmacyOrdersArray[0].over30Km[0]}} x ${{pharmacyOrdersArray[0].object[0].get("pharmacyID").get("pharmacyInfo").get("priceRateOver30Km")}} = ${{pharmacyOrdersArray[0].over30Km[1]}}<br></font> 
+			    <font ng-show="details">Over 30 Km : {{pharmacyOrdersArray[0].over30Km[0]}} x ${{pharmacyOrdersArray[0].object[0].get("pharmacyID").get("pharmacyInfo").get("priceRateOver30Km")}} = ${{pharmacyOrdersArray[0].over30Km[1]}}<br></font>  -->
 		     
 		      	
 		    </p>
 		    <p>
 		      <a ng-click="flipDetails()" class="subdued">Detail <i class="icon ion-pie-graph"></i> </a>
-		      <a href="#" class="subdued">Email <i class="icon ion-ios-email"></i> </a>
+		      <a href="" class="subdued">Email <i class="icon ion-ios-email"></i> </a>
 		    </p>
 		  </div>
 
