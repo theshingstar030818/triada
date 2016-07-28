@@ -53,6 +53,7 @@ angular.module('starter.controllers', [])
     scopeService.updateCurrPharmacyOrdersDetailArray(currPharmacyOrdersDetailArray);
     $state.go("app.viewPharmacy");
   };
+
 })
 
 .controller('statsCtrl', function($scope, $state, $ionicActionSheet, $ionicLoading, ParseService, scopeService, $ionicPopup) {
@@ -66,8 +67,8 @@ angular.module('starter.controllers', [])
     var allDeliveriesForTodayMap = new Map();
     for (var i = 0; i < response.length; i++) { 
       allDeliveriesForTodayMap.set(response[i].id,response[i]);
-     }
-     scopeService.updateAllDeliveriesForTodayMap(allDeliveriesForTodayMap);
+    }
+    scopeService.updateAllDeliveriesForTodayMap(allDeliveriesForTodayMap);
     $scope = loadMaps($scope);
     $ionicLoading.hide();
   });
@@ -75,7 +76,6 @@ angular.module('starter.controllers', [])
 
 .controller('viewPharmacyCtrl', function($scope, $state, $ionicActionSheet, $ionicLoading, ParseService, scopeService, $ionicPopup) {
   $scope.currentPharmacy = scopeService.getCurrentPharmacy();
-  
   $scope.currPharmacyOrdersDetailArray = scopeService.getCurrPharmacyOrdersDetailArray();
   $scope.currDate = scopeService.getCurrDate();
   
@@ -96,7 +96,7 @@ angular.module('starter.controllers', [])
     .then(function(response) {
       $scope.deliveries = response;
       $scope = loadMaps($scope);
-      $scope.drivers = scopeService.getAllDriversArray;
+      $scope.drivers = scopeService.getAllDriversArray();
       $ionicLoading.hide();
       $scope.title = $scope.pharmacyInfoArray[0].object.get("businessName");
       if($scope.currPharmacyOrdersDetailArray.pending.length == 0){
@@ -231,6 +231,7 @@ angular.module('starter.controllers', [])
         $scope.currentOrders[0].set("patientSignatureTimeStamp",timeStamp);
         $scope.currentOrders[0].set("driverComment", $scope.submitData.comment);
         $scope.currentOrders[0].save();
+        window.location.replace("home.html");
       }
   }
 
@@ -358,9 +359,9 @@ angular.module('starter.controllers', [])
     sendNotification(notification);
     window.location.replace("home.html");
   }
-  $scope.loadMap = function() {
-    loadMap();
-  }
+  // $scope.loadMap = function() {
+  //   loadMap();
+  // }
 })
   
 .controller('pharmacyCtrl', function($scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup, $ionicLoading) {
@@ -675,26 +676,26 @@ function loadMaps($scope){
   return $scope;
 }
 
-function loadMap (){
-  var myLatlng = new google.maps.LatLng(37.3000, -120.4833);
+// function loadMap (){
+//   var myLatlng = new google.maps.LatLng(37.3000, -120.4833);
 
-  var mapOptions = {
-      center: myLatlng,
-      zoom: 16,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-  };
+//   var mapOptions = {
+//       center: myLatlng,
+//       zoom: 16,
+//       mapTypeId: google.maps.MapTypeId.ROADMAP
+//   };
 
-  var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+//   var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
-  navigator.geolocation.getCurrentPosition(function(pos) {
-      map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
-      var myLocation = new google.maps.Marker({
-          position: new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
-          map: map,
-          title: "My Location"
-      });
-  });
-}
+//   navigator.geolocation.getCurrentPosition(function(pos) {
+//       map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+//       var myLocation = new google.maps.Marker({
+//           position: new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
+//           map: map,
+//           title: "My Location"
+//       });
+//   });
+// }
 
 function checkCost(order){
   if(order.get("cost") == undefined){
@@ -749,3 +750,7 @@ function notifyDriver(params){
 }
 
 function someOtherFunction(params){}
+
+function updateLocal (){
+
+}
