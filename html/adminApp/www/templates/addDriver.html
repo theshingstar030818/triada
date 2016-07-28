@@ -1,5 +1,93 @@
 <ion-view view-title="{{title}}">
    <ion-content>
-     <h1>Coming Soon :p</h1>
-   </ion-content>
+   		<ion-list>
+    		<div class="item item-divider" ng-click="flipShowPersonalInfo()">
+    			<i class="icon ion-ios-information-outline"></i>
+		    	Personal Info
+			</div>
+		    <ion-item ng-show="showPersonalInfo">
+			  	<div class="list">
+				  <label class="item item-input">
+				    <input ng-model="submitData.fName" type="text" placeholder="First Name">
+				  </label>
+				  <label class="item item-input">
+				    <input ng-model="submitData.lName" type="text" placeholder="Last Name">
+				  </label>
+				  <label class="item item-input">
+				  	<input ng-model="submitData.dob" placeholder="Date of Birth" class="textbox-n" type="text" onfocus=" (this.type='date')"  > 
+				  </label>
+				  <label class="item item-input">
+				    <input ng-model="submitData.sin" type="number" placeholder="S.I.N">
+				  </label>
+				  <label class="item item-input">
+				    <input ng-model="submitData.license" type="text" placeholder="Driver's License#">
+				  </label>
+				</div>
+		    </ion-item>
+
+		    <div class="item item-divider" ng-click="flipShowContactInfo()">
+    			<i class="icon ion-ios-information-outline"></i>
+		    	Contact Info
+			</div>
+		    <ion-item ng-show="showContactInfo">
+			  	<div class="list">
+				  <label class="item item-input">
+				    <input ng-model="submitData.email" type="email" placeholder="Email">
+				  </label>
+				  <label class="item item-input">
+				    <input ng-model="submitData.phone" type="number" placeholder="Phone#">
+				  </label>
+				  
+				</div>
+		    </ion-item>
+
+		    
+		    <div class="item item-divider" ng-click="flipShowAddressInfo()">
+    			<i class="icon ion-ios-information-outline"></i>
+		    	Address Info
+			</div>
+		    <ion-item ng-show="showAddressInfo">
+			  	<div class="list">
+				  <label class="item item-input">
+				    <input ng-model="submitData.unit" type="text" placeholder="Unit/Apartment #">
+				  </label>
+				  <label class="item item-input">
+				    <input ng-model="submitData.streetAddress" type="text" placeholder="Street Address">
+				  </label>
+				  <label class="item item-input">
+				    <input ng-model="submitData.city" type="text" placeholder="City">
+				  </label>
+				  <label class="item item-input">
+				    <input ng-model="submitData.state" type="text" placeholder="State">
+				  </label>
+				  <label class="item item-input">
+				    <input ng-model="submitData.postalCode" type="text" placeholder="Postal Code">
+				  </label>
+				</div>
+		    </ion-item>
+		    
+		    <div class="item item-divider" ng-click="flipShowLoginInfo()">
+    			<i class="icon ion-log-in"></i>
+		    	Login Info
+			</div>
+		    <ion-item ng-show="showLoginInfo">
+			  	<div class="list">
+				  <label class="item item-input">
+				    <input ng-model="submitData.username" type="text" placeholder="Username">
+				  </label>
+				  <label class="item item-input">
+				    <input ng-model="submitData.password" type="password" placeholder="Password">
+				  </label>
+				  <label class="item item-input">
+				    <input ng-model="submitData.rePassword" type="password" placeholder="Re-Enter Password">
+				  </label>
+				</div>
+		    </ion-item>
+
+		</ion-list>
+
+		<button ng-click="signUpDriver()" class="button button-full button-assertive">
+		  	Sign Up Driver
+		</button>
+	</ion-content>
  </ion-view>

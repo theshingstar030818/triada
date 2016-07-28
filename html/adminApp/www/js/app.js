@@ -48,6 +48,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
          return response;
       });
     }
+
  };
 })
 
@@ -184,6 +185,15 @@ angular.module('starter', ['ionic', 'starter.controllers'])
      'menuContent': {
        templateUrl: "templates/viewSingleDelivery.html",
        controller: 'viewSingleDeliveryCtrl'
+     }
+   }
+ })
+ .state('app.submitDelivery', {
+   url: "/submitDelivery",
+   views: {
+     'menuContent': {
+       templateUrl: "templates/submitDelivery.html",
+       controller: 'submitDeliveryCtrl'
      }
    }
  })

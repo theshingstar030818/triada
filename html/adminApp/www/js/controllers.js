@@ -87,6 +87,7 @@ angular.module('starter.controllers', [])
   $scope.noInProgressOrdersCard = false;
   $scope.noCompletedOrdersCard = false;
   $scope.details = false;
+  $scope.assigneAllButton = true;
 
   if($scope.currentPharmacy != null){
     $scope.title = $scope.currentPharmacy.get("pharmacyInfo").get("businessName");
@@ -98,6 +99,10 @@ angular.module('starter.controllers', [])
       $scope.drivers = scopeService.getAllDriversArray;
       $ionicLoading.hide();
       $scope.title = $scope.pharmacyInfoArray[0].object.get("businessName");
+      if($scope.currPharmacyOrdersDetailArray.pending.length == 0){
+        $scope.assigneAllButton = false;
+      }
+           
     });
   }else{
     window.location.replace("home.html");
@@ -193,7 +198,56 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('viewSingleDeliveryCtrl', function($scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup, $ionicLoading) { 
+.controller('submitDeliveryCtrl', function($window, $scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup, $ionicLoading) { 
+  $scope.title = "Submit Order";
+  $scope.currentOrders = scopeService.getCurrentOrders();
+  $scope.currentPharmacy = scopeService.getCurrentPharmacy();
+
+  $scope.submitData = {};
+
+  $scope.window = {};
+  $scope.window.height = $window.innerHeight*(0.7);
+  $scope.window.width = $window.innerWidth;
+  
+  $scope.showComments = false;
+
+  //signature pad stuff
+  var canvas = document.getElementById('signatureCanvas');
+  var signaturePad = new SignaturePad(canvas);
+
+  $scope.clearCanvas = function() {
+      signaturePad.clear();
+  }
+
+  $scope.saveCanvas = function() {
+      var sigImg = signaturePad.toDataURL();
+      $scope.signature = sigImg;
+      if(signaturePad.isEmpty()){
+        alert("please collect signature before submission");
+      }else{
+        var timeStamp = new Date();
+        $scope.currentOrders[0].set("deliveryStatus", "Completed");
+        $scope.currentOrders[0].set("patientSignature", $scope.signature);
+        $scope.currentOrders[0].set("patientSignatureTimeStamp",timeStamp);
+        $scope.currentOrders[0].set("driverComment", $scope.submitData.comment);
+        $scope.currentOrders[0].save();
+      }
+  }
+
+  $scope.flipShowComments = function(){
+    $scope.showComments = !$scope.showComments;
+  }
+
+  if($scope.currentOrders != null){
+  
+  }else{
+     window.location.replace("home.html");
+  }
+
+})
+
+
+.controller('viewSingleDeliveryCtrl', function($window, $scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup, $ionicLoading) { 
   $scope.title = "Order Details";
   $scope.currentAvatar = "img/blackwidow.jpg";
   $scope.currentOrders = scopeService.getCurrentOrders();
@@ -203,6 +257,7 @@ angular.module('starter.controllers', [])
     driverSelected: ''
   }
   $scope.showDriverCardDiv = false;
+  $scope.showPharmacyInfo = false;
 
   $scope.showDriver = false;
   $scope.showSignature = false;
@@ -211,12 +266,34 @@ angular.module('starter.controllers', [])
   $scope.isPending = false;
   $scope.showDriverSelector = false;
   $scope.deliveryStatusColor = "assertive"
+  $scope.completeDeliveryButton = false;
+  $scope.showPatientInfo = false;
 
+  $scope.submitDelivery = function(){
+    $state.go("app.submitDelivery");
+  }
 
+  $scope.flipShowPatientInfo = function(){
+    $scope.showPatientInfo = !$scope.showPatientInfo;
+  }
+
+  $scope.flipShowPharmacyInfo = function(){
+    $scope.showPharmacyInfo = !$scope.showPharmacyInfo;
+  }
+
+  $scope.flipShowDriverInfo = function(){
+    $scope.showDriverInfo = !$scope.showDriverInfo;
+  }
 
   if($scope.currentOrders != null){ 
     $scope.cost = $scope.currentOrders[0].get("cost");
-    $scope.deliveryDate = $scope.currentOrders[0].get("deliveryDate");
+
+    var deliveryDate = new Date($scope.currentOrders[0].get("deliveryDate"));
+    var deliveryDateYear = deliveryDate.getYear()+1900;
+
+    $scope.deliveryDate = deliveryDate.getDate() + " " + months[deliveryDate.getMonth()] + " " + deliveryDateYear;
+
+    $scope.noShow = $scope.currentOrders[0].get("noShow");
     $scope.patient = $scope.currentOrders[0].get("patientId");
     $scope.distanceFromPharmacy = $scope.patient.get("distanceFromPharmacy");
     $scope.pharmacyInfo = $scope.currentOrders[0].get("pharmacyID").get("pharmacyInfo");
@@ -241,6 +318,7 @@ angular.module('starter.controllers', [])
       $scope.isInProgress = true;
       $scope.showSignature = false;
       $scope.showDriverSelector = false;
+      $scope.completeDeliveryButton = true;
     }
 
     if($scope.currentOrders[0].get("deliveryStatus") == "Completed"){
@@ -289,7 +367,7 @@ angular.module('starter.controllers', [])
   $scope.title = "Add pharmacy";
 
   //set UI ng-show flags
-  $scope.showClientInfo = true;
+  $scope.showClientInfo = false;
   $scope.showPickupTimes = false;
   $scope.showContactDetails = false;
   $scope.showCities = false;
@@ -330,8 +408,8 @@ angular.module('starter.controllers', [])
   };
 
   $scope.addItem = function (itemAmount, itemName) {
-    
-    if(itemAmount == "" || itemName == ""){
+    console.log("...");
+    if(itemAmount.under10Km == undefined || itemAmount.over10Km == undefined || itemName == ""){
       alert("Please enter the amount/city and then press add.");
     }else{
      $scope.priceRates.push({
@@ -345,8 +423,6 @@ angular.module('starter.controllers', [])
   };
 
   $scope.signUpPharmacy =function (){
-    console.log($scope.submitData.selectedValues);
-    console.log($scope.priceRates);
     var pricing = '{ "cities" : [ ';
     
     for(var i=0; i < $scope.priceRates.length; i++){
@@ -363,9 +439,10 @@ angular.module('starter.controllers', [])
     $ionicLoading.show({
       template: 'Loading...'
     });
-    Parse.Cloud.run('createNewPharmacyAccount', { businessName: $scope.submitData.bName, ownerName: $scope.submitData.oName, businessAddress: $scope.submitData.bAddress, businessNumber: String($scope.submitData.bNumber), otherNumber: "", fax: String($scope.submitData.fax), email: $scope.submitData.email, contactMode: "phone", employee1: "employee1", employee2: "employee2", employee3: "employee3", userName: $scope.submitData.username, password: $scope.submitData.password, priceRate: pricing, pickupTimesArray: pickupTimesArray }, {
+    Parse.Cloud.run('createNewPharmacyAccount', { businessName: $scope.submitData.bName, ownerName: $scope.submitData.oName, businessAddress: $scope.submitData.bAddress, businessNumber: String($scope.submitData.bNumber), otherNumber: String($scope.submitData.oNumber), fax: String($scope.submitData.fax), email: $scope.submitData.email, contactMode: "phone", employee1: "employee1", employee2: "employee2", employee3: "employee3", userName: $scope.submitData.username, password: $scope.submitData.password, priceRate: pricing, pickupTimesArray: pickupTimesArray }, {
       success: function(result) {
         $scope.submitData = {};
+        $scope.priceRates = [];
         $scope.showSuccessAlert();
         $ionicLoading.hide();
       },
@@ -397,8 +474,75 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('driverCtrl', function($scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup) {
+.controller('driverCtrl', function($scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup, $ionicLoading) {
   $scope.title = "Add Driver";
+
+  //set UI ng-show flags
+  $scope.showPersonalInfo = false;
+  $scope.showContactInfo = false;
+  $scope.showAddressInfo = false;
+  $scope.showLoginInfo = false;
+
+  $scope.submitData = {};
+
+  $scope.flipShowPersonalInfo = function(){
+    $scope.showPersonalInfo = !$scope.showPersonalInfo;
+  }
+
+  $scope.flipShowContactInfo = function(){
+    $scope.showContactInfo = !$scope.showContactInfo;
+  }
+
+  $scope.flipShowAddressInfo = function(){
+    $scope.showAddressInfo = !$scope.showAddressInfo;
+  }
+
+  $scope.flipShowLoginInfo = function(){
+    $scope.showLoginInfo = !$scope.showLoginInfo;
+  }
+
+  $scope.signUpDriver = function(){
+    console.log($scope.submitData);
+    $ionicLoading.show({
+      template: 'Loading...'
+    });
+    //cloud code call
+    Parse.Cloud.run('createNewDriverAccount', { driverFirstName: $scope.submitData.fName, driverLastName: $scope.submitData.lName, driverDOB: $scope.submitData.dob, 
+            driverSIN: String($scope.submitData.sin), driverLicense: $scope.submitData.license, driverEmail: $scope.submitData.email, driverMobile: String($scope.submitData.phone), driverAddressUnit: $scope.submitData.unit, 
+                driverStreetAddress: $scope.submitData.streetAddress, driverAddressCity: $scope.submitData.city, driverAddressState: $scope.submitData.state, 
+                driverAddressPostalCode: $scope.submitData.postalCode, driverUserName: $scope.submitData.username, driverPassword: $scope.submitData.password }, {
+      success: function(result) {
+        $scope.submitData = {};
+        $scope.showSuccessAlert();
+        $ionicLoading.hide();
+      },
+      error: function(error) {
+        $scope.showFailAlert(error);
+        $ionicLoading.hide();
+      }
+    });
+
+    $ionicLoading.hide();
+  }
+
+  $scope.showSuccessAlert = function() {
+    var alertPopup = $ionicPopup.alert({
+        title: "Success!",
+        template: "Driver SignUp Successful",
+        okText: "Ok",
+        okType: "button-assertive"
+    });  
+  };
+
+  $scope.showFailAlert = function(error) {
+    var alertPopup = $ionicPopup.alert({
+        title: "Fail!",
+        template: error.message.message,
+        okText: "Ok",
+        okType: "button-assertive"
+    });  
+  };
+
 })
 
 function loadMaps($scope){

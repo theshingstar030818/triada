@@ -49,6 +49,7 @@
 			    No pending orders <i class="icon ion-happy-outline"></i>
 			  </div>
 			</div>
+
 		    <ion-item ng-show="showPending" ng-repeat="pharmacy in pharmacyOrdersArray[0].pending">
 				  <a class="item item-avatar" ng-click="assignDriverSingleDelivery({{pharmacy}})">
 				    <img src="img/logo.svg">
@@ -108,8 +109,8 @@
 	  	<div class="buttons">
 		</div>
 		<h1 class="title"></h1>
-		<div class="buttons">
-			<button class="button" ng-click="assignDriver(pharmacyOrdersArray[0].pending)">
+		<div ng-show="assigneAllButton" class="buttons">
+			<button  class="button" ng-click="assignDriver(pharmacyOrdersArray[0].pending)">
 				Assign All Pending
 				<i class="icon ion-model-s"></i>
 			</button>

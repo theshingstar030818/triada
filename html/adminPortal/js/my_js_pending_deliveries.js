@@ -345,11 +345,9 @@ function getDeliveriesFromDatabaseForSpecificDate(date){
               cost = cost * ( results[i].get("numberOfNoShows") );
             }
 
-            if(clientSignature === undefined){
+            
               clientSignature = "";
-            }else{
-              clientSignature =  signatureTimeStamp + "" + clientSignature.substring(14);
-            }
+            
 
 
             //console.log(JSON.stringify(patient));

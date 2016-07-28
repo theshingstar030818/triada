@@ -300,7 +300,7 @@ function getDeliveriesFromDatabaseForSpecificDate(date){
             if(clientSignature === undefined){
               clientSignature = "";
             }else{
-              clientSignature =  signatureTimeStamp + "" + clientSignature.substring(14);
+              clientSignature =  signatureTimeStamp + '<img height="25%" width="50%" src="'+clientSignature+'" /> ';
             }
             
             var RX = results[i].get("RX");

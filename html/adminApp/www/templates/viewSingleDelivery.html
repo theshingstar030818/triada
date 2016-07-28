@@ -2,79 +2,166 @@
    <ion-content class="has-footer">
    		
    		<!-- <div id="map" data-tap-disabled="true"></div> -->
+   		<ion-list>
+   			
 
-   		<div class="list card">
+    		<div class="item item-divider" ng-click="flipShowPatientInfo()">
+    			<i class="icon ion-android-person"></i>
+		    	Patient Info
+			</div>
+		    <ion-item ng-show="showPatientInfo">
 
-		  <div class="item item-avatar item-button-right">
-		    <img src="{{currentAvatar}}">
-		    <h2>{{currentOrders[0].get("patientId").get("name")}} </h2>
-		    <p>{{currentOrders[0].get("patientId").get("address")}}</p>
-		    <button class="button button-assertive">
-		      <i class="icon ion-map"></i>
-		    </button>		  
-		  </div>
+		    	<div class="list card">
 
-		  <div class="item item-body">
-		    <p>
-		    	<b>
-		    		<font>Pharmacy : </font><font class="">{{currentPharmacy.get("pharmacyInfo").get("businessName")}} </font><br>
-		    		<font>Date : {{deliveryDate}}</font><br>
-		    		<font class="{{deliveryStatusColor}}">Status : {{currentOrders[0].get("deliveryStatus")}}</font><br>
-		    		<font ng-show="showDriver">Driver : {{currentOrders[0].get("driverId").get("firstName")}} {{currentOrders[0].get("driverId").get("lastName")}}<br></font>
-		    		<!-- patient signature -->
+				  <div class="item item-avatar">
+				    <img src="{{currentAvatar}}">
+				    <h2><b>{{currentOrders[0].get("patientId").get("name")}}</b></h2>
+				    <p><b>Telephone: </b> {{currentOrders[0].get("patientId").get("telephone")}}</p>
+				  </div>
+
+				  <div class="item item-body">
+				    <p>
+				      <b>Address: </b> {{currentOrders[0].get("patientId").get("address")}}
+				    </p>
+				    
+				    <p>
+				      <a href='tel:{{currentOrders[0].get("patientId").get("telephone")}}' class="subdued">Call <i class="icon ion-ios-telephone"></i></a>
+				      <a href='http://maps.google.com/?q={{currentOrders[0].get("patientId").get("address")}}' class="subdued">Navigate <i class="icon ion-ios-navigate"></i></a>
+				    </p>
+				  </div>
+
+				</div>
+			  	
+		    </ion-item>
+
+		    <div class="item item-divider" ng-click="flipShowPharmacyInfo()">
+    			<i class="icon ion-ios-pulse-strong"></i>
+		    	Pharmacy Info
+			</div>
+		    <ion-item ng-show="showPharmacyInfo">
+
+		    	<div class="list card">
+
+				  <div class="item item-avatar">
+				    <img src="{{currentAvatar}}">
+				    <h2><b>{{currentPharmacy.get("pharmacyInfo").get("businessName")}}</b></h2>
+				    <p><b>Telephone: </b> {{currentPharmacy.get("pharmacyInfo").get("businessNumber")}}</p>
+				  </div>
+
+				  <div class="item item-body">
+				    <p>
+				      <b>Address: </b> {{currentPharmacy.get("pharmacyInfo").get("businessAddress")}}
+				    </p>
+				    <p>
+				      
+				    </p>
+				    <p>
+				      <a href='tel:{{currentPharmacy.get("pharmacyInfo").get("businessNumber")}}' class="subdued">Call <i class="icon ion-ios-telephone"></i></a>
+				      <a href='http://maps.google.com/?q={{currentPharmacy.get("pharmacyInfo").get("businessAddress")}}' class="subdued">Navigate <i class="icon ion-ios-navigate"></i></a>
+				    </p>
+				  </div>
+
+				</div>
+			  	
+		    </ion-item>
+
+		    <div class="item item-divider" ng-click="flipShowDriverInfo()">
+    			<i class="icon ion-model-s"></i>
+		    	Driver Info
+			</div>
+		    <ion-item ng-show="showDriverInfo">
+		    	
+			    <div ng-hide="showDriverSelector" class="list card">
+			    	
+			    	<div class="item item-avatar">
+					    <img src="img/ironman.jpg">
+					    
+					    <h2>
+					    	<b>{{currentOrders[0].get("driverId").get("firstName")}} {{currentOrders[0].get("driverId").get("lastName")}}</b>
+					    </h2>
+					    
+					    <p>
+					    	<b>Telephone: </b> {{currentOrders[0].get("driverId").get("driverMobile")}} 
+					    </p>
+					</div>
+
+					<div class="item item-body">
+					    <p>
+					      <b>Address: </b> {{currentOrders[0].get("driverId").get("driverStreetAddress")}}
+					    </p>
+					    
+					    <p>
+					      <a href='tel:{{currentOrders[0].get("driverId").get("driverMobile")}}' class="subdued">Call <i class="icon ion-ios-telephone"></i></a>
+					      <a href='http://maps.google.com/?q={{currentOrders[0].get("driverId").get("driverStreetAddress")}}' class="subdued">Navigate <i class="icon ion-ios-navigate"></i></a>
+					    </p>
+					  </div>
+
+			    </div>
+		    	
+			    <div ng-show="showDriverSelector">
+		   			<label class="item item-input item-select">
+					    <div class="input-label">
+					        Select Driver
+					    </div>
+					    <select ng-model="filterDriverCondition.driverSelected" ng-change="driverSelected()" >
+						    <option ng-repeat="driver in drivers" 
+						    		ng-selected=""
+						            value="{{driver}}">
+						      		{{driver.get("firstName")}},{{driver.get("lastName")}}
+						    </option>
+						</select>
+					</label>
+					<br>
+		   		</div>
+
+		   		<div ng-show="showDriverCardDiv" class="list card">
+
+				  <div class="item item-avatar">
+				    <img src="img/ironman.jpg">
+				    <h2><b>{{currentDriverSelected.firstName}} {{currentDriverSelected.lastName}}</b></h2>
+				    <p><b>Telephone: </b> {{currentDriverSelected.driverMobile}}</p>
+				  </div>
+
+				  <div class="item item-body">
+				    <p>
+				      <b>Address: </b> {{currentPharmacy.get("pharmacyInfo").get("businessAddress")}}
+				    </p>
+				    
+				    <p>
+				      <a href="tel:{{currentDriverSelected.driverMobile}}" class="subdued">Call <i class="icon ion-ios-telephone"></i></a>
+				      <a ng-click="assigneDriverFinalize()" class="subdued assertive ">Assign Delivery <i class="icon ion-ios-email"></i></a>
+				    </p>
+				  </div>
+
+				</div>
+		    </ion-item>	
+
+		    <div class="card">
+			  <div class="item item-divider">
+			    <b>Status:</b><font class="{{deliveryStatusColor}}"> {{currentOrders[0].get("deliveryStatus")}}</font>
+			  </div>
+			  <div class="item item-text-wrap">
+			    <b>RX#: </b>{{currentOrders[0].get("RX")}}<br>
+			    <b>Collectables: </b>{{currentOrders[0].get("Collectables")}}<br>
+			    <b>Comments: </b>{{currentOrders[0].get("comments")}}<br>
+			    <b>Cost: </b>${{currentOrders[0].get("cost")}}<br>
+			  	<font ng-show="noShow"><b>No Shows: </b>{{currentOrders[0].get("numberOfNoShows")}}<br></font>
+			  	<p>
+				    <!-- patient signature -->
 		    		<div ng-show="showSignature">
 		    			<img  class="full-image" src="data:{{signatureImage}}"><br>
 		    			<font>Time Stamp : {{signatureTimeStamp}}</font> <br>
 		    		</div>
-		    		
-
-
-				</b> 
-		    </p>
-		    
-		    <div ng-show="showDriverSelector">
-	   			<label class="item item-input item-select">
-				    <div class="input-label">
-				        Select Driver
-				    </div>
-				    <select ng-model="filterDriverCondition.driverSelected" ng-change="driverSelected()" >
-					    <option ng-repeat="driver in drivers" 
-					    		ng-selected=""
-					            value="{{driver}}">
-					      		{{driver.get("firstName")}},{{driver.get("lastName")}}
-					    </option>
-					</select>
-				</label>
-				<br>
-	   		</div>
-	   		<div ng-show="showDriverCardDiv" class="list card">
-			  <div class="item item-avatar item-button-right">
-			    <img src="img/ironman.jpg">
-			    <h2>{{currentDriverSelected.firstName}} {{currentDriverSelected.lastName}}</h2>
-			    <p>{{currentDriverSelected.driverMobile}}</p>
-			    <button class="button button-assertive">
-			      <i class="icon ion-ios-telephone"></i>
-			    </button>		  
-			  </div>
-			  <div class="item item-body">
-			    <p>
-			    	<b>
-						<font class="assertive">{{currentOrders.length}} </font> 
-						<font>deliveries by </font>
-						<font class="assertive">{{currentPharmacy.get("pharmacyInfo").get("businessName")}} </font>
-						<font>selected for </font>
-						<font class="assertive">{{currentDriverSelected.firstName}}</font>
-					</b> 
 			    </p>
-			    <button class="button button-full button-assertive" ng-click="assigneDriverFinalize()">
-				  	Assign to {{currentDriverSelected.firstName}} 
-					<i class="icon ion-model-s"></i>
-				</button>
+			  </div>
+			  <div class="item item-divider">
+			    <b>Delivery Date:</b> {{deliveryDate}}<br>
+			    <b>Pickup Time: </b>{{currentOrders[0].get("pickupTime")}}
 			  </div>
 			</div>
-		    
-		  </div>
-		</div>
+		</ion-list>
+
+   		
 
    </ion-content>
 
@@ -82,8 +169,11 @@
 	  	<div class="buttons">
 		</div>
 		<h1 class="title"></h1>
-		<div class="buttons">
-			
+		<div ng-show="completeDeliveryButton" class="buttons">
+			<button class="button" ng-click="submitDelivery()">
+				Complete Delivery
+				<i class="icon ion-android-done-all"></i>
+			</button>
 		</div>
 	</ion-footer-bar>
 
