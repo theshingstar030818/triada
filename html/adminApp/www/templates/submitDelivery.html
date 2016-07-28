@@ -1,0 +1,34 @@
+<ion-view view-title="{{title}}">
+   <ion-content>
+   	
+   	<ion-list>
+   		<div class="item item-divider" ng-click="flipShowComments()">
+			<i class="icon ion-document-text"></i>
+	    	Additional Comments
+		</div>
+	    <ion-item ng-show="showComments">
+    		<label class="item item-input">				
+				<textarea ng-model="submitData.comment" type="text" placeholder="Comments"></textarea>
+			</label>		  	
+	    </ion-item>
+   	</ion-list>
+   	
+   	<b>Signature</b> 
+
+   	<div>
+		<canvas id='signatureCanvas' width='{{window.width}}' height='{{window.height}}' style='border: 1px solid black;'></canvas>
+		
+		<br>
+		<!-- uncomment this to show the saved signature image -->
+		<!-- <img ng-src='{{signature}}'/> -->
+	</div>
+   </ion-content>
+
+   <ion-footer-bar align-title="left" class="bar-assertive">
+	  	<div class='button-bar'>
+		  <a class='button button-stable' ng-click='clearCanvas()'>Clear</a>
+		  <a class='button button-stable' ng-click='saveCanvas()'>Save</a>
+		</div>
+	</ion-footer-bar>
+
+</ion-view>
