@@ -345,8 +345,11 @@ function getDeliveriesFromDatabaseForSpecificDate(date){
               cost = cost * ( results[i].get("numberOfNoShows") );
             }
 
-            
+            if(clientSignature === undefined){
               clientSignature = "";
+            }else{
+              clientSignature =  signatureTimeStamp + '<img height="25%" width="50%" src="'+clientSignature+'" /> ';
+            }
             
 
 
