@@ -26,17 +26,21 @@
       </div>
 
       <ion-list>        
-        <ion-item menu-close class="item-icon-right" href="#/app/addPharmacy">
-          <i class="icon ion-ios-pulse-strong"></i> Add Pharmacy
+        <ion-item ng-show="showAddPharmacy" menu-close class="item-icon-right" href="#/app/clients">
+          <i class="icon ion-ios-pulse-strong"></i> Clients
         </ion-item>
         
-        <ion-item menu-close class="item-icon-right" href="#/app/addDriver" >
+        <ion-item ng-show="showAddDriver" menu-close class="item-icon-right" href="#/app/addDriver" >
           <i class="icon ion-model-s"></i> Add Driver 
         </ion-item>
         
         <ion-item menu-close class="item-icon-right" href="#/app/playlists">
           <i class="icon ion-stats-bars"></i> Daily Stats
         </ion-item>
+
+        <ion-item menu-close class="item-icon-right assertive" ng-click="logout()">
+          <i class="icon ion-log-out"></i>Logout
+        </ion-item> 
       
       </ion-list>
     </ion-content>

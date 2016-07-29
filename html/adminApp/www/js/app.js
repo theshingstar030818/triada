@@ -20,6 +20,12 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       var Orders = Parse.Object.extend("Orders");
       var OrdersQuery = new Parse.Query(Orders);
       OrdersQuery.equalTo("deliveryDate", queryDate);
+
+      if(!Parse.User.current().get("isAdmin") && Parse.User.current().get("driverInfo") != undefined){
+        //driver user
+        OrdersQuery.equalTo("driverId", Parse.User.current().get("driverInfo"));
+      }
+
       OrdersQuery.include("pharmacyID");
       OrdersQuery.include("patientId");
       OrdersQuery.include("pharmacyID.pharmacyInfo");
@@ -33,6 +39,12 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       var OrdersQuery = new Parse.Query(Orders);
       OrdersQuery.equalTo("deliveryDate", queryDate);
       OrdersQuery.equalTo("pharmacyID", pharmacyIDObject);
+
+      if(!Parse.User.current().get("isAdmin") && Parse.User.current().get("driverInfo") != undefined){
+        //driver user
+        OrdersQuery.equalTo("driverId", Parse.User.current().get("driverInfo"));
+      }
+
       OrdersQuery.include("pharmacyID");
       OrdersQuery.include("patientId");
       OrdersQuery.include("pharmacyID.pharmacyInfo");
@@ -47,7 +59,15 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       return DriversQuery.find().then(function (response) {
          return response;
       });
+    },
+    fetchClients: function(){
+      var Clients = Parse.Object.extend("Pharmacies");
+      var ClientsQuery = new Parse.Query(Clients);
+      return ClientsQuery.find().then(function (response) {
+         return response;
+      });
     }
+
 
  };
 })
@@ -60,9 +80,15 @@ angular.module('starter', ['ionic', 'starter.controllers'])
    currDriver: null,
    allDriversArray: null,
    allDriversMap: null,
+   allClientsArray: null,
+   allClientsMap: null,
    allDeliveriesForTodayMap: null,
    currPharmacyOrdersDetailArray: null,
+   clientToEdit: null,
 
+   getClientToEdit: function() {
+     return this.clientToEdit;
+   },
    getCurrentPharmacy: function() {
      return this.currentPharmacy;
    },
@@ -81,6 +107,12 @@ angular.module('starter', ['ionic', 'starter.controllers'])
    getAllDriversMap: function(){
     return this.allDriversMap;
    },
+   getAllClientsArray: function(){
+    return this.allClientsArray;
+   },
+   getAllClientsMap: function(){
+    return this.allClientsMap;
+   },
    getAllDeliveriesForTodayMap: function(){
     return this.allDeliveriesForTodayMap;
    },
@@ -88,6 +120,9 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     return this.currPharmacyOrdersDetailArray;
    },
 
+   updateClientToEdit: function(clientToEdit) {
+     this.clientToEdit = clientToEdit;
+   },
    updatecurrentPharmacy: function(currentPharmacy) {
      this.currentPharmacy = currentPharmacy;
    },
@@ -105,6 +140,12 @@ angular.module('starter', ['ionic', 'starter.controllers'])
    },
    updateAllDriversMap: function(allDriversMap){
      this.allDriversMap = allDriversMap;
+   },
+   updateAllClientsArray: function(allClientsArray){
+     this.allClientsArray = allClientsArray;
+   },
+   updateAllClientsMap: function(allClientsMap){
+     this.allClientsMap = allClientsMap;
    },
    updateAllDeliveriesForTodayMap: function(allDeliveriesForTodayMap){
     this.allDeliveriesForTodayMap = allDeliveriesForTodayMap;
@@ -152,12 +193,22 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     }
   })
 
-  .state('app.addPharmacy', {
-   url: "/addPharmacy",
+  .state('app.clients', {
+   url: "/clients",
+   views: {
+     'menuContent': {
+       templateUrl: "templates/clients.html",
+       controller: 'clientsCtrl'
+     }
+   }
+ })
+
+  .state('app.addEditPharmacy', {
+   url: "/addEditPharmacy",
    views: {
      'menuContent': {
        templateUrl: "templates/addPharmacy.html",
-       controller: 'pharmacyCtrl'
+       controller: 'addEditClientCtrl'
      }
    }
  })

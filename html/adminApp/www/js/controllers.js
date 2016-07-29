@@ -13,8 +13,11 @@ angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $state, $ionicActionSheet, ParseService, $ionicLoading, scopeService, $ionicPopup, $ionicModal, $timeout) {
 
+  if(Parse.User.current() == null){
+    window.location.replace("index.html");
+  }
   //current user
-  $scope.currentUser = JSON.parse(localStorage.getItem('currentPaceUser'));
+  $scope.currentUser = JSON.parse(localStorage.getItem('currentPaceUser'));;
 
   // Date stuff
 
@@ -30,6 +33,14 @@ angular.module('starter.controllers', [])
   $scope.currDate.date = date;
   $scope.currDate.month = month;
   $scope.day = day;
+
+  $scope.showAddPharmacy = false;
+  $scope.showAddDriver = false;
+  
+  if(Parse.User.current().get("isAdmin")){
+    $scope.showAddPharmacy = true;
+    $scope.showAddDriver = true;
+  }
   
   $ionicLoading.show({
     template: 'Loading...'
@@ -46,6 +57,21 @@ angular.module('starter.controllers', [])
      $ionicLoading.hide();
   });
 
+  $ionicLoading.show({
+    template: 'Loading...'
+  });
+  ParseService.fetchClients()
+  .then(function(response) {
+     $scope.clients = response;
+     scopeService.updateAllClientsArray(response);
+     var allClientsMap = new Map();
+     for (var i = 0; i < response.length; i++) { 
+      allClientsMap.set(response[i].id,response[i]);
+     }
+     scopeService.updateAllClientsMap(allClientsMap);
+     $ionicLoading.hide();
+  });
+
   $scope.viewPharmacy = function(pharmacy, currPharmacyOrdersDetailArray) {
     $scope.currentPharmacy = pharmacy;
     $scope.currPharmacyOrdersDetailArray = currPharmacyOrdersDetailArray;
@@ -54,9 +80,21 @@ angular.module('starter.controllers', [])
     $state.go("app.viewPharmacy");
   };
 
+  $scope.logout = function (){
+    Parse.User.logOut().then(() => {
+      $scope.currentUser = Parse.User.current();
+      window.location.replace("index.html");
+    });
+  }
+
 })
 
 .controller('statsCtrl', function($scope, $state, $ionicActionSheet, $ionicLoading, ParseService, scopeService, $ionicPopup) {
+  
+  if(Parse.User.current() == null){
+    window.location.replace("index.html");
+  }
+
   $scope.title = "Daily Stats";
   $ionicLoading.show({
     template: 'Loading...'
@@ -73,6 +111,51 @@ angular.module('starter.controllers', [])
     $ionicLoading.hide();
   });
 })
+
+.controller('clientsCtrl', function($scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup, $ionicLoading) {
+  
+  if(Parse.User.current() == null){
+    window.location.replace("index.html");
+  }
+
+  scopeService.updateClientToEdit(null);
+
+  $scope.allClientsArray = scopeService.getAllClientsArray();
+  $scope.allClientsMap = scopeService.getAllClientsMap();
+
+  if($scope.allClientsArray == null || $scope.allClientsMap == null){
+    $ionicLoading.show({
+      template: 'Loading...'
+    });
+    ParseService.fetchClients()
+    .then(function(response) {
+       $scope.clients = response;
+       scopeService.updateAllClientsArray(response);
+       $scope.allClientsArray = response;
+       var allClientsMap = new Map();
+       for (var i = 0; i < response.length; i++) { 
+        allClientsMap.set(response[i].id,response[i]);
+       }
+       scopeService.updateAllClientsMap(allClientsMap);
+       $scope.allClientsMap = allClientsMap;
+       $ionicLoading.hide();
+    });
+  }
+
+  $scope.title = "Clients";
+
+  $scope.addPharmacy = function(){
+    scopeService.updateClientToEdit(null);
+    $state.go("app.addEditPharmacy");
+  }
+
+  $scope.editPharmacy = function(pharmacyToEdit){
+    scopeService.updateClientToEdit(pharmacyToEdit);
+    $state.go("app.addEditPharmacy");
+  }
+
+})
+
 
 .controller('viewPharmacyCtrl', function($scope, $state, $ionicActionSheet, $ionicLoading, ParseService, scopeService, $ionicPopup) {
   $scope.currentPharmacy = scopeService.getCurrentPharmacy();
@@ -153,6 +236,10 @@ angular.module('starter.controllers', [])
 
 .controller('assignDriverCtrl', function($scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup, $ionicLoading) {  
 
+  if(Parse.User.current() == null){
+    window.location.replace("index.html");
+  }
+
   $scope.title = "Assign Driver";
   $scope.currentOrders = scopeService.getCurrentOrders();
   $scope.currentPharmacy = scopeService.getCurrentPharmacy();
@@ -199,6 +286,11 @@ angular.module('starter.controllers', [])
 })
 
 .controller('submitDeliveryCtrl', function($window, $scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup, $ionicLoading) { 
+  
+  if(Parse.User.current() == null){
+    window.location.replace("index.html");
+  }
+
   $scope.title = "Submit Order";
   $scope.currentOrders = scopeService.getCurrentOrders();
   $scope.currentPharmacy = scopeService.getCurrentPharmacy();
@@ -239,9 +331,7 @@ angular.module('starter.controllers', [])
     $scope.showComments = !$scope.showComments;
   }
 
-  if($scope.currentOrders != null){
-  
-  }else{
+  if($scope.currentOrders == null){
      window.location.replace("home.html");
   }
 
@@ -249,6 +339,11 @@ angular.module('starter.controllers', [])
 
 
 .controller('viewSingleDeliveryCtrl', function($window, $scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup, $ionicLoading) { 
+  
+  if(Parse.User.current() == null){
+    window.location.replace("index.html");
+  }
+
   $scope.title = "Order Details";
   $scope.currentAvatar = "img/blackwidow.jpg";
   $scope.currentOrders = scopeService.getCurrentOrders();
@@ -359,13 +454,72 @@ angular.module('starter.controllers', [])
     sendNotification(notification);
     window.location.replace("home.html");
   }
-  // $scope.loadMap = function() {
-  //   loadMap();
-  // }
+
+  $scope.editPatient = function(){
+    $scope.currentOrders[0].get("patientId");
+    $scope.data = {};
+    $scope.data.phone =  $scope.currentOrders[0].get("patientId").get("telephone");
+    $scope.data.address =  $scope.currentOrders[0].get("patientId").get("address");
+    $scope.data.cost =  $scope.currentOrders[0].get("patientId").get("cost");
+    $scope.data.distance =  $scope.currentOrders[0].get("patientId").get("distanceFromPharmacy");
+
+    var customPopup = $ionicPopup.show({
+      
+      title: 'Edit Patient Information',
+      //template: '<input type="password" ng-model="data.wifi">',
+      templateUrl: 'templates/editPatientPopup.html',
+      subTitle: 'Please tap save when done',
+      scope: $scope,
+      
+      buttons: [
+        { text: 'Cancel',
+          type: 'button-assertive'},
+        { text: 'Save', 
+          type: 'button-balanced',
+          onTap: function(e) {
+            if (!$scope.data.phone || !$scope.data.address || !$scope.data.cost || !$scope.data.distance) {
+              // Don't allow the user to close unless they enter all fields.
+              e.preventDefault();
+            } else {
+              $scope.currentOrders[0].get("patientId").set("telephone",$scope.data.phone);
+              $scope.currentOrders[0].get("patientId").set("address",$scope.data.address);
+              $scope.currentOrders[0].get("patientId").set("cost",$scope.data.cost);
+              $scope.currentOrders[0].get("patientId").set("distanceFromPharmacy",$scope.data.distance);
+              $scope.currentOrders[0].get("patientId").save();
+              //also update the cost of this order accordingly
+              $scope.currentOrders[0].set("cost",$scope.data.cost);
+              $scope.currentOrders[0].save();
+              return true;
+            }
+          }
+        },
+      ]
+      
+    });
+      
+      customPopup.then(function(res) {
+        //console.log('Tapped!', res);
+      });
+  }
+
 })
   
-.controller('pharmacyCtrl', function($scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup, $ionicLoading) {
+.controller('addEditClientCtrl', function($scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup, $ionicLoading) {
+  
+  if(Parse.User.current() == null){
+    window.location.replace("index.html");
+  }
   $scope.title = "Add pharmacy";
+  $scope.editMode = false;
+
+  if(scopeService.getClientToEdit() != null){
+    $scope.title = "Edit ";
+    $scope.editMode = true;
+    var clientId = scopeService.getClientToEdit().objectId;
+    scopeService.updateClientToEdit( scopeService.getAllClientsMap().get(clientId));
+    $scope.clientToEdit = scopeService.getAllClientsMap().get(clientId);
+  }
+  
 
   //set UI ng-show flags
   $scope.showClientInfo = false;
@@ -375,7 +529,7 @@ angular.module('starter.controllers', [])
   $scope.showLoginInfo = false;
 
   $scope.values=  ["0500","0515","0530","0545","0600","0615","0630","0645","0700","0715","0730","0745","0800","0815","0830","0845","0900","0915","0930","0945","1000","1015","1030","1045","1100","1115","1130","1145","1200","1215","1230","1245","1300","1315","1330","1345","1400","1415","1430","1445","1500","1515","1530","1545","1600","1615","1630","1645","1700","1715","1730","1745","1800","1815","1830","1845","1900","1915","1930","1945","2000","2015","2030","2045","2100","2115","2130","2145","2200","2215","2230","2245"];
-  $scope.cities = ["Ajax","Aurora","Brampton","Brock","Burlington","Caledon","Clarington","East Gwillimbury","Etobicoke","Georgina","Georgetown","Halton Hills","King","Markham","Milton","Mississauga","Newmarket","Oakville","Oshawa","Pickering","Richmond","Richmond Hill","Scarborough","Scugog","Toronto","Uxbridge","Vaughan","Whitby","Whitchurch-Stouffville","Woodbridge"];
+  $scope.cities = ["Ajax","Aurora","Brampton","Brock","Burlington","Caledon","Clarington","East Gwillimbury","Etobicoke","Georgina","Georgetown","Halton Hills","King","Markham","Milton","Mississauga","Newmarket", "North York", "Oakville","Oshawa","Pickering","Richmond","Richmond Hill","Scarborough","Scugog","Toronto","Uxbridge","Vaughan","Whitby","Whitchurch-Stouffville","Woodbridge"];
 
   $scope.itemName = "";
   $scope.itemAmount = {};
@@ -383,6 +537,93 @@ angular.module('starter.controllers', [])
   $scope.priceRates = [];
   
   $scope.submitData = {};
+
+  if($scope.editMode){
+    if(!($scope.clientToEdit.get("businessName") == undefined || $scope.clientToEdit.get("businessName") == "undefined")){
+      $scope.submitData.bName = $scope.clientToEdit.get("businessName");
+    }
+    
+    if(!($scope.clientToEdit.get("ownerName") == undefined || $scope.clientToEdit.get("ownerName") == "undefined")){
+      $scope.submitData.oName = $scope.clientToEdit.get("ownerName");
+    }
+    
+    if(!($scope.clientToEdit.get("businessAddress") == undefined || $scope.clientToEdit.get("businessAddress") == "undefined")){
+      $scope.submitData.bAddress = $scope.clientToEdit.get("businessAddress");
+    }
+    
+    if(!($scope.clientToEdit.get("businessNumber") == undefined || $scope.clientToEdit.get("businessNumber") == "undefined")){
+      $scope.submitData.bNumber = Number($scope.clientToEdit.get("businessNumber"));
+    }
+
+    if(!($scope.clientToEdit.get("otherNumber") == undefined || $scope.clientToEdit.get("otherNumber") == "undefined")){
+      $scope.submitData.oNumber = Number($scope.clientToEdit.get("otherNumber"));
+    }
+
+    if(!($scope.clientToEdit.get("fax") == undefined || $scope.clientToEdit.get("fax") == "undefined")){
+      $scope.submitData.fax = Number($scope.clientToEdit.get("fax"));
+    }
+
+    if(!($scope.clientToEdit.get("email") == undefined || $scope.clientToEdit.get("email") == "undefined")){
+      $scope.submitData.email = $scope.clientToEdit.get("email");
+    }
+
+    if(!($scope.clientToEdit.get("userName") == undefined || $scope.clientToEdit.get("userName") == "undefined")){
+      $scope.submitData.username = $scope.clientToEdit.get("userName");
+    }
+
+    if(!($scope.clientToEdit.get("password") == undefined || $scope.clientToEdit.get("password") == "undefined")){
+      $scope.submitData.password = $scope.clientToEdit.get("password");
+      $scope.submitData.rePassword = $scope.clientToEdit.get("password");
+    }
+
+    if(!($scope.clientToEdit.get("pickupTimes") == undefined || $scope.clientToEdit.get("pickupTimes") == "undefined")){
+      $scope.submitData.selectedValues = $scope.clientToEdit.get("pickupTimes");
+    }
+
+    if(!($scope.clientToEdit.get("pricing") == undefined || $scope.clientToEdit.get("pricing") == "undefined")){
+      for(var i=0; i< JSON.parse($scope.clientToEdit.get("pricing")).cities.length; i++){
+        JSON.parse($scope.clientToEdit.get("pricing")).cities[i];
+        $scope.priceRates.push({
+          under10Km: JSON.parse($scope.clientToEdit.get("pricing")).cities[i].rates[0],
+          over10Km: JSON.parse($scope.clientToEdit.get("pricing")).cities[i].rates[1],
+          over20Km: JSON.parse($scope.clientToEdit.get("pricing")).cities[i].rates[2],
+          name: JSON.parse($scope.clientToEdit.get("pricing")).cities[i].name
+        });
+      }
+      
+    }
+    
+  }
+
+  $scope.savePharmacy = function(){
+    $scope.clientToEdit.set("businessName",$scope.submitData.bName);
+    $scope.clientToEdit.set("ownerName",$scope.submitData.oName);
+    $scope.clientToEdit.set("businessAddress",$scope.submitData.bAddress);
+    $scope.clientToEdit.set("businessNumber",String($scope.submitData.bNumber));
+    $scope.clientToEdit.set("otherNumber",String($scope.submitData.oNumber));
+    $scope.clientToEdit.set("fax",String($scope.submitData.fax));
+    $scope.clientToEdit.set("email",$scope.submitData.email);;
+    $scope.clientToEdit.set("userName",$scope.submitData.username);
+    $scope.clientToEdit.set("password",$scope.submitData.password);
+    $scope.clientToEdit.set("pickupTimes",$scope.submitData.selectedValues);
+    
+    var pricing = '{ "cities" : [ ';
+    
+    for(var i=0; i < $scope.priceRates.length; i++){
+      var city = $scope.priceRates[i].name;
+      var under10 = $scope.priceRates[i].under10Km;
+      var over10 = $scope.priceRates[i].over10Km;
+      var over20 = $scope.priceRates[i].over20Km;
+      pricing += '{"name" : "'+city+'", "rates" : ['+under10+','+over10+','+over20+']},';
+    }
+    
+    pricing = pricing.substring(0, pricing.length-1);
+    pricing += ']}';
+
+    $scope.clientToEdit.set("pricing",pricing);
+    $scope.clientToEdit.save();
+    $state.go("app.clients");
+  }
 
   $scope.flipShowClientInfo = function(){
     $scope.showClientInfo = !$scope.showClientInfo;
@@ -409,13 +650,13 @@ angular.module('starter.controllers', [])
   };
 
   $scope.addItem = function (itemAmount, itemName) {
-    console.log("...");
-    if(itemAmount.under10Km == undefined || itemAmount.over10Km == undefined || itemName == ""){
+    if(itemAmount.under10Km == undefined || itemAmount.over10Km == undefined || itemAmount.over20Km == undefined || itemName == ""){
       alert("Please enter the amount/city and then press add.");
     }else{
      $scope.priceRates.push({
         under10Km: itemAmount.under10Km,
         over10Km: itemAmount.over10Km,
+        over20Km: itemAmount.over20Km,
         name: itemName
       });
       $scope.itemAmount = '';
@@ -430,7 +671,7 @@ angular.module('starter.controllers', [])
       var city = $scope.priceRates[i].name;
       var under10 = $scope.priceRates[i].under10Km;
       var over10 = $scope.priceRates[i].over10Km;
-      pricing += '{"name" : "'+city+'", "rates" : ['+under10+','+over10+']},';
+      pricing += '{"name" : "'+city+'", "rates" : ['+under10+','+over10+','+over20+']},';
     }
     
     pricing = pricing.substring(0, pricing.length-1);
@@ -446,6 +687,7 @@ angular.module('starter.controllers', [])
         $scope.priceRates = [];
         $scope.showSuccessAlert();
         $ionicLoading.hide();
+        window.location.replace("home.html");
       },
       error: function(error) {
         $scope.showFailAlert(error);
@@ -476,6 +718,11 @@ angular.module('starter.controllers', [])
 })
 
 .controller('driverCtrl', function($scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup, $ionicLoading) {
+  
+  if(Parse.User.current() == null){
+    window.location.replace("index.html");
+  }
+
   $scope.title = "Add Driver";
 
   //set UI ng-show flags
@@ -516,6 +763,7 @@ angular.module('starter.controllers', [])
         $scope.submitData = {};
         $scope.showSuccessAlert();
         $ionicLoading.hide();
+        window.location.replace("home.html");
       },
       error: function(error) {
         $scope.showFailAlert(error);

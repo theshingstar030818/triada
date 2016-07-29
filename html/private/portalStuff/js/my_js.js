@@ -126,8 +126,10 @@ function postPatient(){
                               if (pharmacyPricingJSON.cities[i].name == city){
                                 if(distanceFromPharmacy < 10){
                                   patientObject.set("cost",pharmacyPricingJSON.cities[i].rates[0]);
-                                }else{
+                                }else if(distanceFromPharmacy > 10 && distanceFromPharmacy < 20){
                                   patientObject.set("cost",pharmacyPricingJSON.cities[i].rates[1]);
+                                }else{
+                                  patientObject.set("cost",pharmacyPricingJSON.cities[i].rates[2]);
                                 }
                               }
                             }

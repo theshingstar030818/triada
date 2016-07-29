@@ -86,7 +86,7 @@ function login(){
 
   Parse.User.logIn(username, password , {
     success: function(user) {
-      if(user.get("isAdmin") != true){
+      if(user.get("pharmacyInfo") != undefined){
         Parse.User.logOut();
         alert("Please login with admin credentials");
       }else{
@@ -94,12 +94,16 @@ function login(){
         JSON_user = JSON.parse(JSON_user);
         if(JSON_user.isAdmin == true){
           var objectString = JSON.stringify(user);
-          console.log("login successful"); 
-          // set user in scope so it can be accessed by other controllers here
+          localStorage.setItem('currentPaceUser', JSON.stringify(user));
+          window.location.href = "home.html";
+        }else if(user.get("driverInfo") != undefined){
+          //driver user
+          var objectString = JSON.stringify(user);
           localStorage.setItem('currentPaceUser', JSON.stringify(user));
           window.location.href = "home.html";
         }else{
           alert("Invalid Credentials");
+          //pharmacy users can not log in to this app
         }
       }
     },

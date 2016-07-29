@@ -1,4 +1,4 @@
-<ion-view view-title="Add Pharmacy">
+<ion-view view-title="{{title}}">
    <ion-content>
      
    		<ion-list>
@@ -63,7 +63,7 @@
 		    <ion-item ng-show="showCities">
 				<div class="list">
 				  <div class="item item-button-right" ng-repeat="item in priceRates">
-				    ${{item.under10Km}} - ${{item.over10Km}} - {{item.name}} 
+				    ${{item.under10Km}} - ${{item.over10Km}} - ${{item.over20Km}} - {{item.name}} 
 				    <button ng-click="removeItem($index)" class="button assertive">
 				      <i class="icon ion-minus-circled"></i>
 				    </button>
@@ -76,6 +76,9 @@
 					  </label>
 					  <label class="item item-input">
 					   <input id="amoutOver10KmInput" type="number" placeholder="$$$ over 10 Km" ng-model="itemAmount.over10Km">
+					  </label>
+					  <label class="item item-input">
+					   <input id="amoutOver20KmInput" type="number" placeholder="$$$ over 20 Km" ng-model="itemAmount.over20Km">
 					  </label>
 					  <label class="item item-input item-select">
 					    <div class="input-label">
@@ -111,8 +114,13 @@
 		    </ion-item>
 		</ion-list>
 
-		<button ng-click="signUpPharmacy()" class="button button-full button-assertive">
+		<button ng-hide="editMode" ng-click="signUpPharmacy()" class="button button-full button-assertive">
 		  	Sign Up Pharmacy !
 		</button>
+
+		<button ng-show="editMode" ng-click="savePharmacy()" class="button button-full button-balanced">
+		  	Save !
+		</button>
+
    </ion-content>
  </ion-view>

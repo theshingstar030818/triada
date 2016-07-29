@@ -21,12 +21,14 @@
 
 				  <div class="item item-body">
 				    <p>
-				      <b>Address: </b> {{currentOrders[0].get("patientId").get("address")}}
+				    	<b>Address: </b> {{currentOrders[0].get("patientId").get("address")}}<br>
+				    	<b>Distance: </b> {{currentOrders[0].get("patientId").get("distanceFromPharmacy")}} Km <br>
 				    </p>
 				    
 				    <p>
 				      <a href='tel:{{currentOrders[0].get("patientId").get("telephone")}}' class="subdued">Call <i class="icon ion-ios-telephone"></i></a>
 				      <a href='http://maps.google.com/?q={{currentOrders[0].get("patientId").get("address")}}' class="subdued">Navigate <i class="icon ion-ios-navigate"></i></a>
+				      <a ng-click="editPatient()" class="subdued">Edit <i class="icon ion-edit"></i></a>
 				    </p>
 				  </div>
 
@@ -141,16 +143,18 @@
 			    <b>Status:</b><font class="{{deliveryStatusColor}}"> {{currentOrders[0].get("deliveryStatus")}}</font>
 			  </div>
 			  <div class="item item-text-wrap">
+			  	<b>Distance: </b> {{currentOrders[0].get("patientId").get("distanceFromPharmacy")}} Km <br>
 			    <b>RX#: </b>{{currentOrders[0].get("RX")}}<br>
 			    <b>Collectables: </b>{{currentOrders[0].get("Collectables")}}<br>
-			    <b>Comments: </b>{{currentOrders[0].get("comments")}}<br>
+			    <b>Pharmacy Comments: </b>{{currentOrders[0].get("comments")}}<br>
 			    <b>Cost: </b>${{currentOrders[0].get("cost")}}<br>
 			  	<font ng-show="noShow"><b>No Shows: </b>{{currentOrders[0].get("numberOfNoShows")}}<br></font>
+			  	<b>Driver Comments: </b> {{currentOrders[0].get("driverComment")}}<br>
 			  	<p>
 				    <!-- patient signature -->
 		    		<div ng-show="showSignature">
 		    			<img  class="full-image" src="data:{{signatureImage}}"><br>
-		    			<font>Time Stamp : {{signatureTimeStamp}}</font> <br>
+		    			<font><b>Time Stamp:</b> {{signatureTimeStamp}}</font> <br>
 		    		</div>
 			    </p>
 			  </div>

@@ -220,8 +220,10 @@ function updatePatientInfo(patientID){
 								  if (pharmacyPricingJSON.cities[i].name == city){
 								  	if(distanceFromPharmacy < 10){
 										patient.set("cost",pharmacyPricingJSON.cities[i].rates[0]);
-								  	}else{
+								  	}else if(distanceFromPharmacy > 10 && distanceFromPharmacy < 20){
 								  		patient.set("cost",pharmacyPricingJSON.cities[i].rates[1]);
+								  	}else{
+								  		patient.set("cost",pharmacyPricingJSON.cities[i].rates[2]);
 								  	}
 								  }
 								}

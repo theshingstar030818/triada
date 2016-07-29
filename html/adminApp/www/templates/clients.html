@@ -1,0 +1,23 @@
+<ion-view view-title="{{title}}">
+   <ion-content>
+
+   	<div class="" ng-repeat="client in allClientsArray">
+	    <a class="item item-avatar" ng-click="editPharmacy({{client}})">
+	      <img src="img/ironman.jpg">
+	      <h2>{{client.get("businessName")}}</h2>
+	      <p>{{client.get("businessAddress")}}</p>
+	    </a>
+	</div>
+
+   </ion-content>
+
+   <ion-footer-bar class="bar-assertive">
+		<div class="buttons">
+			<button  class="button" ng-click="addPharmacy()">
+				Add New Client
+				<i class="icon ion-ios-plus-empty"></i>
+			</button>
+		</div>
+	</ion-footer-bar>
+
+</ion-view>
