@@ -96,6 +96,7 @@ angular.module('starter.controllers', [])
   }
 
   $scope.title = "Daily Stats";
+
   $ionicLoading.show({
     template: 'Loading...'
   });
@@ -110,6 +111,12 @@ angular.module('starter.controllers', [])
     $scope = loadMaps($scope);
     $ionicLoading.hide();
   });
+
+  $scope.isAdmin = Parse.User.current().get("isAdmin");
+  if(!$scope.isAdmin){
+    //driver user logged in
+  }
+
 })
 
 .controller('clientsCtrl', function($scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup, $ionicLoading) {
@@ -159,37 +166,46 @@ angular.module('starter.controllers', [])
 
 .controller('viewPharmacyCtrl', function($scope, $state, $ionicActionSheet, $ionicLoading, ParseService, scopeService, $ionicPopup) {
   $scope.currentPharmacy = scopeService.getCurrentPharmacy();
-  $scope.currPharmacyOrdersDetailArray = scopeService.getCurrPharmacyOrdersDetailArray();
-  $scope.currDate = scopeService.getCurrDate();
   
+  $scope.isAdmin = Parse.User.current().get("isAdmin");
+  if(!$scope.isAdmin){
+    //driver user logged in
+  }
+
   //set UI ng-show flags
   $scope.showPending = false;
   $scope.showInProgress = false;
+  $scope.showPickupInProgress = false;
   $scope.showCompleted = false;
   $scope.noPendingOrdersCard = false;
   $scope.noInProgressOrdersCard = false;
+  $scope.noPickupInProgressOrdersCard = false;
   $scope.noCompletedOrdersCard = false;
   $scope.details = false;
-  $scope.assigneAllButton = true;
+  $scope.showAssignAllButton = false;
 
-  if($scope.currentPharmacy != null){
-    $scope.title = $scope.currentPharmacy.get("pharmacyInfo").get("businessName");
-    $ionicLoading.show({template: 'Loading...'});
-    ParseService.fetchDataForSpecificDatePharmacy($scope.currDate, $scope.currentPharmacy)
-    .then(function(response) {
-      $scope.deliveries = response;
-      $scope = loadMaps($scope);
-      $scope.drivers = scopeService.getAllDriversArray();
-      $ionicLoading.hide();
-      $scope.title = $scope.pharmacyInfoArray[0].object.get("businessName");
-      if($scope.currPharmacyOrdersDetailArray.pending.length == 0){
-        $scope.assigneAllButton = false;
-      }
-           
-    });
-  }else{
-    window.location.replace("home.html");
+  $scope.loadData = function(){
+    $scope.currPharmacyOrdersDetailArray = scopeService.getCurrPharmacyOrdersDetailArray();
+    $scope.currDate = scopeService.getCurrDate();
+    if($scope.currentPharmacy != null){
+      $scope.title = $scope.currentPharmacy.get("pharmacyInfo").get("businessName");
+      $ionicLoading.show({template: 'Loading...'});
+      ParseService.fetchDataForSpecificDatePharmacy($scope.currDate, $scope.currentPharmacy)
+      .then(function(response) {
+        $scope.deliveries = response;
+        $scope = loadMaps($scope);
+        $scope.drivers = scopeService.getAllDriversArray();
+        $ionicLoading.hide();
+        $scope.title = $scope.pharmacyInfoArray[0].object.get("businessName");
+        if($scope.currPharmacyOrdersDetailArray.pending.length > 0){
+          $scope.showAssignAllButton = true;
+        }             
+      });
+    }else{
+      window.location.replace("home.html");
+    }
   }
+  $scope.loadData();
 
   $scope.assignDriver = function(ordersArray){
     scopeService.updateCurrentOrders(ordersArray);
@@ -220,6 +236,14 @@ angular.module('starter.controllers', [])
     }
   }
 
+  $scope.flipShowPickupInProgress = function(){
+    if($scope.currPharmacyOrdersDetailArray.pickupInProgress.length == 0){
+      $scope.noPickupInProgressOrdersCard = !$scope.noPickupInProgressOrdersCard;
+    }else{
+      $scope.showPickupInProgress = !$scope.showPickupInProgress;
+    }
+  }
+
   $scope.flipShowCompleted = function(){
     
     if($scope.currPharmacyOrdersDetailArray.completed.length == 0){
@@ -230,6 +254,32 @@ angular.module('starter.controllers', [])
   }
   $scope.flipDetails = function(){
     $scope.details = !$scope.details;
+  }
+
+  $scope.markAllPicked = function(){
+    var customPopup = $ionicPopup.show({
+      
+      title: 'Confirm Pickup',
+      //template: '<input type="password" ng-model="data.wifi">',
+      templateUrl: '',
+      subTitle: $scope.pharmacyOrdersArray[0].inProgress.length + ' Order(s) picked?',
+      scope: $scope,
+      
+      buttons: [
+        { text: 'Cancel',
+          type: 'button-assertive'},
+        { text: 'Yes', 
+          type: 'button-balanced',
+          onTap: function(e) {
+            for(var i=0; i<$scope.pharmacyOrdersArray[0].inProgress.length; i++){
+              $scope.pharmacyOrdersArray[0].inProgress[i].set("pickup",true);
+              $scope.pharmacyOrdersArray[0].inProgress[i].save();
+            }
+            window.location.replace("home.html");
+          }
+        },
+      ]
+    });
   }
 
 })
@@ -343,6 +393,8 @@ angular.module('starter.controllers', [])
   if(Parse.User.current() == null){
     window.location.replace("index.html");
   }
+  
+  $scope.isAdmin = Parse.User.current().get("isAdmin");
 
   $scope.title = "Order Details";
   $scope.currentAvatar = "img/blackwidow.jpg";
@@ -806,6 +858,7 @@ function loadMaps($scope){
   var pharmacyOrdersArray = [], pharmacyInfoItem;
 
   var totalPending = [0,0];
+  var totalPickupInProgress = [0,0];
   var totalInProgress = [0,0];
   var totalCompleted = [0,0];
   
@@ -841,8 +894,13 @@ function loadMaps($scope){
         totalPending[1] += deliveries[i].get("cost");
       }
       if(deliveries[i].get("deliveryStatus") == "In progress"){
-        totalInProgress[0]++;
-        totalInProgress[1] += deliveries[i].get("cost");
+        if(deliveries[i].get("pickup")){
+          totalPickupInProgress[0]++;
+          totalPickupInProgress[1] += deliveries[i].get("cost");
+        }else{
+          totalInProgress[0]++;
+          totalInProgress[1] += deliveries[i].get("cost");
+        }
       }
       if(deliveries[i].get("deliveryStatus") == "Completed"){
         totalCompleted[0]++;
@@ -862,6 +920,7 @@ function loadMaps($scope){
       pharmacyInfoItem.object = item;
 
       pharmacyInfoItem.pending = [];
+      pharmacyInfoItem.pickupInProgress = [];
       pharmacyInfoItem.inProgress = [];
       pharmacyInfoItem.completed = [];
       
@@ -898,7 +957,11 @@ function loadMaps($scope){
           pharmacyInfoItem.pending.push(item[x]);
         }
         if(item[x].get("deliveryStatus") == "In progress"){
-          pharmacyInfoItem.inProgress.push(item[x]);
+          if(item[x].get("pickup")){
+            pharmacyInfoItem.pickupInProgress.push(item[x]);
+          }else{
+            pharmacyInfoItem.inProgress.push(item[x]);
+          }
         }
         if(item[x].get("deliveryStatus") == "Completed"){
           pharmacyInfoItem.completed.push(item[x]);
@@ -919,7 +982,7 @@ function loadMaps($scope){
   $scope.totalPending = totalPending;
   $scope.totalInProgress = totalInProgress;
   $scope.totalCompleted = totalCompleted;
-  
+  $scope.totalPickupInProgress = totalPickupInProgress;
 
   return $scope;
 }

@@ -13,9 +13,9 @@
 		  <div class="item item-body">
 		    <!-- <img class="full-image" src=""> -->
 		    <p>
-		    	<b>
+		    	<b >
 		    		<font>Total Deliveries : {{deliveries.length}}<br></font> 
-		    		<font>Total Earnings : ${{pharmacyOrdersArray[0].totalCost}} <br></font> 
+		    		<font ng-show="isAdmin">Total Earnings : ${{pharmacyOrdersArray[0].totalCost}} <br></font> 
 		    	</b>
 		      	
 		    	<!-- <hr ng-show="details">
@@ -30,8 +30,10 @@
 		      	
 		    </p>
 		    <p>
-		      <a ng-click="flipDetails()" class="subdued">Detail <i class="icon ion-pie-graph"></i> </a>
-		      <a href="" class="subdued">Email <i class="icon ion-ios-email"></i> </a>
+		      <a href='http://maps.google.com/?q={{currentPharmacy.get("pharmacyInfo").get("businessAddress")}}' class="subdued">Navigate <i class="icon ion-ios-navigate"></i></a>
+		      <a href='tel:{{currentPharmacy.get("pharmacyInfo").get("businessNumber")}}' class="subdued">Call <i class="icon ion-ios-telephone"></i></a>
+		      <a ng-show="isAdmin" ng-click="flipDetails()" class="subdued">Detail <i class="icon ion-pie-graph"></i> </a>
+		      <a ng-show="isAdmin" class="subdued">Email <i class="icon ion-ios-email"></i> </a>
 		    </p>
 		  </div>
 
@@ -39,37 +41,55 @@
 
 
     	<ion-list>
-    		<div class="item assertive item-divider" ng-click="flipShowPending()">
-    			<i class="icon ion-more"></i>
-		    	Pending
-		    	<span class="badge badge-assertive">{{currPharmacyOrdersDetailArray.pending.length}}</span>
-			</div>
-			<div class="card" ng-show="noPendingOrdersCard">
-			  <div class="item item-text-wrap">
-			    No pending orders <i class="icon ion-happy-outline"></i>
-			  </div>
-			</div>
+    		<div ng-show="isAdmin">
+	    		<div class="item assertive item-divider" ng-click="flipShowPending()">
+	    			<i class="icon ion-email-unread"></i>
+			    	Undecided
+			    	<span class="badge badge-assertive">{{currPharmacyOrdersDetailArray.pending.length}}</span>
+				</div>
+				<div class="card" ng-show="noPendingOrdersCard">
+				  <div class="item item-text-wrap">
+				    No pending orders <i class="icon ion-happy-outline"></i>
+				  </div>
+				</div>
+				<ion-item ng-show="showPending">
+					<div ng-show="showAssignAllButton" class="">
+						<button class="button button-full assertive" ng-click="assignDriver(pharmacyOrdersArray[0].pending)">
+							Assign All
+							<i class="icon ion-model-s"></i>
+						</button>
+					</div>
+				</ion-item>
+			    <ion-item ng-show="showPending" ng-repeat="pharmacy in pharmacyOrdersArray[0].pending">
+					  <a class="item item-avatar" ng-click="assignDriverSingleDelivery({{pharmacy}})">
+					    <img src="img/logo.svg">
+					    <h2>{{patientsMap.get(pharmacy.get("patientId").id).get("name").toUpperCase()}}</h2>
+					    <h4>{{patientsMap.get(pharmacy.get("patientId").id).get("address")}}</h4>
+					    <h4 class="subdued">Distance : {{patientsMap.get(pharmacy.get("patientId").id).get("distanceFromPharmacy").toFixed(2)}} KM</h4>
+					    <h4 class="subdued ">Status : {{pharmacy.get("deliveryStatus")}}</h4>
+					  </a>
+			    </ion-item>
+    			
+    		</div>    		
 
-		    <ion-item ng-show="showPending" ng-repeat="pharmacy in pharmacyOrdersArray[0].pending">
-				  <a class="item item-avatar" ng-click="assignDriverSingleDelivery({{pharmacy}})">
-				    <img src="img/logo.svg">
-				    <h2>{{patientsMap.get(pharmacy.get("patientId").id).get("name").toUpperCase()}}</h2>
-				    <h4>{{patientsMap.get(pharmacy.get("patientId").id).get("address")}}</h4>
-				    <h4 class="subdued">Distance : {{patientsMap.get(pharmacy.get("patientId").id).get("distanceFromPharmacy").toFixed(2)}} KM</h4>
-				    <h4 class="subdued ">Status : {{pharmacy.get("deliveryStatus")}}</h4>
-				  </a>
-		    </ion-item>
-
-		    <div class="item energized item-divider" ng-click="flipShowInProgress()">
-    			<i class="icon ion-load-a"></i>
-		    	In Progress
-		    	<span class="badge badge-energized">{{currPharmacyOrdersDetailArray.inProgress.length}}</span>
+			<div class="item assertive item-divider" ng-click="flipShowInProgress()">
+    			<i class="icon ion-ios-cart"></i>
+		    	Pending Pickups
+		    	<span class="badge badge-assertive">{{currPharmacyOrdersDetailArray.inProgress.length}}</span>
 			</div>
 			<div class="card" ng-show="noInProgressOrdersCard">
 			  <div class="item item-text-wrap">
-			    No orders in progress
+			    No orders in for pickup
 			  </div>
 			</div>
+			<ion-item ng-show="showInProgress">
+				<div class="">
+					<button class="button button-full dark" ng-click="markAllPicked()">
+						Pickup All
+						<i class="icon ion-android-done"></i>
+					</button>
+				</div>
+			</ion-item>
 		    <ion-item ng-show="showInProgress" ng-repeat="pharmacy in pharmacyOrdersArray[0].inProgress">
 				  <a class="item item-avatar" ng-click="assignDriverSingleDelivery({{pharmacy}})">
 				    <img src="img/logo.svg">
@@ -80,8 +100,33 @@
 				  </a>
 		    </ion-item>
 
+
+		    
+
+
+		    <div class="item dark item-divider" ng-click="flipShowPickupInProgress()">
+    			<i class="icon ion-android-done"></i>
+		    	In Progress
+		    	<span class="badge badge-dark">{{currPharmacyOrdersDetailArray.pickupInProgress.length}}</span>
+			</div>
+			<div class="card" ng-show="noPickupInProgressOrdersCard">
+			  <div class="item item-text-wrap">
+			    No orders in progress
+			  </div>
+			</div>
+		    <ion-item ng-show="showPickupInProgress" ng-repeat="pharmacy in pharmacyOrdersArray[0].pickupInProgress">
+				  <a class="item item-avatar" ng-click="assignDriverSingleDelivery({{pharmacy}})">
+				    <img src="img/logo.svg">
+				    <h2>{{patientsMap.get(pharmacy.get("patientId").id).get("name").toUpperCase()}}</h2>
+				    <h4>{{patientsMap.get(pharmacy.get("patientId").id).get("address")}}</h4>
+				    <h4 class="subdued">Distance : {{patientsMap.get(pharmacy.get("patientId").id).get("distanceFromPharmacy").toFixed(2)}} KM</h4>
+				    <h4 class="subdued ">Status : {{pharmacy.get("deliveryStatus")}}</h4>
+				  </a>
+		    </ion-item>
+
+
 		    <div class="item balanced item-divider" ng-click="flipShowCompleted()">
-    			<i class="icon ion-checkmark"></i>
+    			<i class="icon ion-android-done-all"></i>
 		    	Completed
 		    	<span class="badge badge-balanced">{{currPharmacyOrdersDetailArray.completed.length}}</span>
 			</div>
@@ -105,15 +150,13 @@
 
    </ion-content>
 
-   	<ion-footer-bar align-title="left" class="bar-assertive">
+	<ion-footer-bar align-title="left" class="bar-assertive">
 	  	<div class="buttons">
 		</div>
 		<h1 class="title"></h1>
-		<div ng-show="assigneAllButton" class="buttons">
-			<button  class="button" ng-click="assignDriver(pharmacyOrdersArray[0].pending)">
-				Assign All Pending
-				<i class="icon ion-model-s"></i>
-			</button>
+		
+		<div class="buttons">
+			
 		</div>
 	</ion-footer-bar>
 

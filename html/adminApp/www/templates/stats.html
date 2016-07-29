@@ -14,13 +14,19 @@
 		      <b>
 			      {{deliveries.length}} Deliveries Today<br>
 			      {{pharmacyInfoMap.size}} Pharmacies Active Today<br>
-			      {{activeDriversMap.size}} Drivers Online Today<br>
-			      {{totalPending[0]}} pending orders <font class="assertive">(${{totalPending[1]}})<br></font>
-			      {{totalInProgress[0]}} In progress orders <font class="energized">(${{totalInProgress[1]}})<br></font>
-			      {{totalCompleted[0]}} Completed orders <font class="balanced">(${{totalCompleted[1]}})<br></font> 
+			      <font ng-show="isAdmin">{{activeDriversMap.size}} Drivers Online Today<br></font>
+			      <font ng-show="isAdmin" class="assertive">{{totalPending[0]}} Pending orders <font ng-show="isAdmin" >(${{totalPending[1]}})</font><br></font>
+			      
+			      <font ng-show="isAdmin" class="energized">{{totalInProgress[0]}} Pending pickups <font ng-show="isAdmin" >(${{totalInProgress[1]}})</font><br></font>
+			      
+			      <font ng-hide="isAdmin" class="assertive">{{totalInProgress[0]}} Pending pickups <font ng-show="isAdmin" >(${{totalInProgress[1]}})</font><br></font>
+
+			      <font class="energized">{{totalPickupInProgress[0]}} In progress orders <font ng-show="isAdmin" >(${{totalPickupInProgress[1]}})</font><br></font> 
+
+			      <font class="balanced"> {{totalCompleted[0]}} Completed orders <font ng-show="isAdmin" (${{totalCompleted[1]}})</font><br> </font> 
 		      </b>
 		    </p>
-		    <p>
+		    <p ng-show="isAdmin">
 		      <a href="#" class="subdued">Transcript <i class="icon ion-pie-graph"></i> </a>
 		      <a href="#" class="subdued">Email <i class="icon ion-ios-email"></i> </a>
 		    </p>
@@ -33,7 +39,8 @@
 		        <a class="item item-icon-left" ng-click="viewPharmacy(pharmacyUserMap.get(pharmacy.id),pharmacy)">
 				    <i class="icon ion-ios-pulse-strong"></i>
 				    	<b><p>{{pharmacyInfoMap.get(pharmacy.id).get("businessName")}}</p></b>
-					<span class="badge badge-assertive">{{pharmacy.pending.length}}</span>
+					<span ng-show="isAdmin" class="badge badge-assertive">{{pharmacy.pending.length}}</span>
+					<span ng-hide="isAdmin" class="badge badge-assertive">{{pharmacy.inProgress.length}}</span>
 				 </a>
 		    </ion-item>
 		</ion-list>

@@ -173,8 +173,7 @@ function postOrder(dateOfOrder,patientId){
   ordersObject.set("RX", RX);
   ordersObject.set("Collectables", Collectables);
   ordersObject.set("comments", Comments);
-
-
+  ordersObject.set("pickup", false);
 
   var Patients = Parse.Object.extend("Patients");
   var PatientsQuery = new Parse.Query(Patients);

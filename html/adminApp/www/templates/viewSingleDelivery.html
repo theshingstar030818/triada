@@ -28,7 +28,7 @@
 				    <p>
 				      <a href='tel:{{currentOrders[0].get("patientId").get("telephone")}}' class="subdued">Call <i class="icon ion-ios-telephone"></i></a>
 				      <a href='http://maps.google.com/?q={{currentOrders[0].get("patientId").get("address")}}' class="subdued">Navigate <i class="icon ion-ios-navigate"></i></a>
-				      <a ng-click="editPatient()" class="subdued">Edit <i class="icon ion-edit"></i></a>
+				      <a ng-show="isAdmin" ng-click="editPatient()" class="subdued">Edit <i class="icon ion-edit"></i></a>
 				    </p>
 				  </div>
 
@@ -67,76 +67,79 @@
 			  	
 		    </ion-item>
 
-		    <div class="item item-divider" ng-click="flipShowDriverInfo()">
-    			<i class="icon ion-model-s"></i>
-		    	Driver Info
-			</div>
-		    <ion-item ng-show="showDriverInfo">
-		    	
-			    <div ng-hide="showDriverSelector" class="list card">
+		    <div ng-show="isAdmin">
+			    <div class="item item-divider" ng-click="flipShowDriverInfo()">
+	    			<i class="icon ion-model-s"></i>
+			    	Driver Info
+				</div>
+			    <ion-item ng-show="showDriverInfo">
 			    	
-			    	<div class="item item-avatar">
-					    <img src="img/ironman.jpg">
-					    
-					    <h2>
-					    	<b>{{currentOrders[0].get("driverId").get("firstName")}} {{currentOrders[0].get("driverId").get("lastName")}}</b>
-					    </h2>
-					    
-					    <p>
-					    	<b>Telephone: </b> {{currentOrders[0].get("driverId").get("driverMobile")}} 
-					    </p>
-					</div>
+				    <div ng-hide="showDriverSelector" class="list card">
+				    	
+				    	<div class="item item-avatar">
+						    <img src="img/ironman.jpg">
+						    
+						    <h2>
+						    	<b>{{currentOrders[0].get("driverId").get("firstName")}} {{currentOrders[0].get("driverId").get("lastName")}}</b>
+						    </h2>
+						    
+						    <p>
+						    	<b>Telephone: </b> {{currentOrders[0].get("driverId").get("driverMobile")}} 
+						    </p>
+						</div>
 
-					<div class="item item-body">
+						<div class="item item-body">
+						    <p>
+						      <b>Address: </b> {{currentOrders[0].get("driverId").get("driverStreetAddress")}}
+						    </p>
+						    
+						    <p>
+						      <a href='tel:{{currentOrders[0].get("driverId").get("driverMobile")}}' class="subdued">Call <i class="icon ion-ios-telephone"></i></a>
+						      <a href='http://maps.google.com/?q={{currentOrders[0].get("driverId").get("driverStreetAddress")}}' class="subdued">Navigate <i class="icon ion-ios-navigate"></i></a>
+						    </p>
+						  </div>
+
+				    </div>
+			    	
+				    <div ng-show="showDriverSelector">
+			   			<label class="item item-input item-select">
+						    <div class="input-label">
+						        Select Driver
+						    </div>
+						    <select ng-model="filterDriverCondition.driverSelected" ng-change="driverSelected()" >
+							    <option ng-repeat="driver in drivers" 
+							    		ng-selected=""
+							            value="{{driver}}">
+							      		{{driver.get("firstName")}},{{driver.get("lastName")}}
+							    </option>
+							</select>
+						</label>
+						<br>
+			   		</div>
+
+			   		<div ng-show="showDriverCardDiv" class="list card">
+
+					  <div class="item item-avatar">
+					    <img src="img/ironman.jpg">
+					    <h2><b>{{currentDriverSelected.firstName}} {{currentDriverSelected.lastName}}</b></h2>
+					    <p><b>Telephone: </b> {{currentDriverSelected.driverMobile}}</p>
+					  </div>
+
+					  <div class="item item-body">
 					    <p>
-					      <b>Address: </b> {{currentOrders[0].get("driverId").get("driverStreetAddress")}}
+					      <b>Address: </b> {{currentPharmacy.get("pharmacyInfo").get("businessAddress")}}
 					    </p>
 					    
 					    <p>
-					      <a href='tel:{{currentOrders[0].get("driverId").get("driverMobile")}}' class="subdued">Call <i class="icon ion-ios-telephone"></i></a>
-					      <a href='http://maps.google.com/?q={{currentOrders[0].get("driverId").get("driverStreetAddress")}}' class="subdued">Navigate <i class="icon ion-ios-navigate"></i></a>
+					      <a href="tel:{{currentDriverSelected.driverMobile}}" class="subdued">Call <i class="icon ion-ios-telephone"></i></a>
+					      <a ng-click="assigneDriverFinalize()" class="subdued assertive ">Assign Delivery <i class="icon ion-ios-email"></i></a>
 					    </p>
 					  </div>
 
-			    </div>
-		    	
-			    <div ng-show="showDriverSelector">
-		   			<label class="item item-input item-select">
-					    <div class="input-label">
-					        Select Driver
-					    </div>
-					    <select ng-model="filterDriverCondition.driverSelected" ng-change="driverSelected()" >
-						    <option ng-repeat="driver in drivers" 
-						    		ng-selected=""
-						            value="{{driver}}">
-						      		{{driver.get("firstName")}},{{driver.get("lastName")}}
-						    </option>
-						</select>
-					</label>
-					<br>
-		   		</div>
-
-		   		<div ng-show="showDriverCardDiv" class="list card">
-
-				  <div class="item item-avatar">
-				    <img src="img/ironman.jpg">
-				    <h2><b>{{currentDriverSelected.firstName}} {{currentDriverSelected.lastName}}</b></h2>
-				    <p><b>Telephone: </b> {{currentDriverSelected.driverMobile}}</p>
-				  </div>
-
-				  <div class="item item-body">
-				    <p>
-				      <b>Address: </b> {{currentPharmacy.get("pharmacyInfo").get("businessAddress")}}
-				    </p>
-				    
-				    <p>
-				      <a href="tel:{{currentDriverSelected.driverMobile}}" class="subdued">Call <i class="icon ion-ios-telephone"></i></a>
-				      <a ng-click="assigneDriverFinalize()" class="subdued assertive ">Assign Delivery <i class="icon ion-ios-email"></i></a>
-				    </p>
-				  </div>
-
-				</div>
-		    </ion-item>	
+					</div>
+			    </ion-item>	
+		    </div>
+		    
 
 		    <div class="card">
 			  <div class="item item-divider">
@@ -147,7 +150,8 @@
 			    <b>RX#: </b>{{currentOrders[0].get("RX")}}<br>
 			    <b>Collectables: </b>{{currentOrders[0].get("Collectables")}}<br>
 			    <b>Pharmacy Comments: </b>{{currentOrders[0].get("comments")}}<br>
-			    <b>Cost: </b>${{currentOrders[0].get("cost")}}<br>
+			    <font ng-show="isAdmin"><b>Cost: </b>${{currentOrders[0].get("cost")}}<br></font>
+			    
 			  	<font ng-show="noShow"><b>No Shows: </b>{{currentOrders[0].get("numberOfNoShows")}}<br></font>
 			  	<b>Driver Comments: </b> {{currentOrders[0].get("driverComment")}}<br>
 			  	<p>
