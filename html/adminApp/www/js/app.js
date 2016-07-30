@@ -85,10 +85,15 @@ angular.module('starter', ['ionic', 'starter.controllers'])
    allDeliveriesForTodayMap: null,
    currPharmacyOrdersDetailArray: null,
    clientToEdit: null,
+   employeeToEdit: null,
 
    getClientToEdit: function() {
      return this.clientToEdit;
    },
+   getEmployeeToEdit: function() {
+     return this.employeeToEdit;
+   },
+
    getCurrentPharmacy: function() {
      return this.currentPharmacy;
    },
@@ -123,6 +128,10 @@ angular.module('starter', ['ionic', 'starter.controllers'])
    updateClientToEdit: function(clientToEdit) {
      this.clientToEdit = clientToEdit;
    },
+   updateEmployeeToEdit: function(employeeToEdit) {
+     this.employeeToEdit = employeeToEdit;
+   },
+   
    updatecurrentPharmacy: function(currentPharmacy) {
      this.currentPharmacy = currentPharmacy;
    },
@@ -203,6 +212,16 @@ angular.module('starter', ['ionic', 'starter.controllers'])
    }
  })
 
+  .state('app.employees', {
+   url: "/employees",
+   views: {
+     'menuContent': {
+       templateUrl: "templates/employees.html",
+       controller: 'employeesCtrl'
+     }
+   }
+ })
+
   .state('app.addEditPharmacy', {
    url: "/addEditPharmacy",
    views: {
@@ -248,12 +267,12 @@ angular.module('starter', ['ionic', 'starter.controllers'])
      }
    }
  })
- .state('app.addDriver', {
-     url: "/addDriver",
+ .state('app.addEditEmployee', {
+     url: "/addEditEmployee",
      views: {
        'menuContent': {
          templateUrl: "templates/addDriver.html",
-         controller: 'driverCtrl'
+         controller: 'addEditEmployeeCtrl'
        }
      }
   });

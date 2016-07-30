@@ -9,13 +9,16 @@
 		    <ion-item ng-show="showClientInfo">
 			  	<div class="list">
 				  <label class="item item-input">
-				    <input ng-model="submitData.bName" type="text" placeholder="Business Name">
+				  	<span class="input-label">Business Name</span>
+				    <input ng-model="submitData.bName" type="text" placeholder="">
 				  </label>
 				  <label class="item item-input">
-				    <input ng-model="submitData.oName" type="text" placeholder="Owner Name">
+				  	<span class="input-label">Owner Name</span>
+				    <input ng-model="submitData.oName" type="text" placeholder="">
 				  </label>
 				  <label class="item item-input">
-				    <input ng-model="submitData.bAddress" type="text" placeholder="Business Address">
+				  	<span class="input-label"><i class="icon ion-map"> Address</i></span>
+				    <input ng-model="submitData.bAddress" type="text" placeholder="">
 				  </label>
 				</div>
 		    </ion-item>
@@ -42,16 +45,21 @@
 		    <ion-item ng-show="showContactDetails">
 			  	<div class="list">
 				  <label class="item item-input">
-				    <input ng-model="submitData.bNumber" type="number" placeholder="Business Number">
+				  	<span class="input-label"><i class="icon ion-ios-telephone"> Phone</i></span>
+
+				    <input ng-model="submitData.bNumber" type="number" placeholder="">
 				  </label>
 				  <label class="item item-input">
-				    <input ng-model="submitData.oNumber" type="number" placeholder="Other Number">
+				  	<span class="input-label"><i class="icon ion-ios-telephone-outline"> Phone</i></span>
+				    <input ng-model="submitData.oNumber" type="number" placeholder="">
 				  </label>
 				  <label class="item item-input">
-				    <input ng-model="submitData.fax" type="number" placeholder="Fax">
+				  	<span class="input-label"><i class="icon ion-clipboard"> Fax</i></span>
+				    <input ng-model="submitData.fax" type="number" placeholder="">
 				  </label>
 				  <label class="item item-input">
-				    <input ng-model="submitData.email" type="email" placeholder="Email">
+				  	<span class="input-label"><i class="icon ion-at"> Email</i></span>
+				    <input ng-model="submitData.email" type="email" placeholder="">
 				  </label>
 				</div>
 		    </ion-item>
@@ -72,13 +80,16 @@
 				<div id="AddItem">
 					<div class="list">
 					  <label class="item item-input">
-					   <input id="amoutInput" type="number" placeholder="$$$ under 10 Km" ng-model="itemAmount.under10Km">
+					  	<span class="input-label">Under 10 Km</span>
+					   <input id="amoutInput" type="number" placeholder="" ng-model="itemAmount.under10Km">
 					  </label>
 					  <label class="item item-input">
-					   <input id="amoutOver10KmInput" type="number" placeholder="$$$ over 10 Km" ng-model="itemAmount.over10Km">
+					  	<span class="input-label">Over 10 Km</span>
+					   <input id="amoutOver10KmInput" type="number" placeholder="" ng-model="itemAmount.over10Km">
 					  </label>
 					  <label class="item item-input">
-					   <input id="amoutOver20KmInput" type="number" placeholder="$$$ over 20 Km" ng-model="itemAmount.over20Km">
+					  	<span class="input-label">Over 20 Km</span>
+					   <input id="amoutOver20KmInput" type="number" placeholder="" ng-model="itemAmount.over20Km">
 					  </label>
 					  <label class="item item-input item-select">
 					    <div class="input-label">
@@ -102,13 +113,16 @@
 		    <ion-item ng-show="showLoginInfo">
 			  	<div class="list">
 				  <label class="item item-input">
-				    <input ng-model="submitData.username" type="text" placeholder="Username">
+				  	<span class="input-label">Username</span>
+				    <input ng-model="submitData.username" type="text" placeholder="">
 				  </label>
 				  <label class="item item-input">
-				    <input ng-model="submitData.password" type="password" placeholder="Password">
+				  	<span class="input-label">Password</span>
+				    <input ng-model="submitData.password" type="password" placeholder="">
 				  </label>
 				  <label class="item item-input">
-				    <input ng-model="submitData.rePassword" type="password" placeholder="Re-Enter Password">
+				  	<span class="input-label">Re-Password</span>
+				    <input ng-model="submitData.rePassword" type="password" placeholder="">
 				  </label>
 				</div>
 		    </ion-item>

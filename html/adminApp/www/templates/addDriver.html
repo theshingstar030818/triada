@@ -8,18 +8,23 @@
 		    <ion-item ng-show="showPersonalInfo">
 			  	<div class="list">
 				  <label class="item item-input">
-				    <input ng-model="submitData.fName" type="text" placeholder="First Name">
+				  	<span class="input-label">First Name</span>
+				    <input ng-model="submitData.fName" type="text" placeholder="">
 				  </label>
 				  <label class="item item-input">
-				    <input ng-model="submitData.lName" type="text" placeholder="Last Name">
+				  	<span class="input-label">Last Name</span>
+				    <input ng-model="submitData.lName" type="text" placeholder="">
 				  </label>
 				  <label class="item item-input">
-				  	<input ng-model="submitData.dob" placeholder="Date of Birth" class="textbox-n" type="text" onfocus=" (this.type='date')"  > 
+				  	<span class="input-label">D.O.B</span>
+				  	<input ng-model="submitData.dob" placeholder="" class="textbox-n" type="text" onfocus=" (this.type='date')"  > 
 				  </label>
 				  <label class="item item-input">
+				  	<span class="input-label">S.I.N</span>
 				    <input ng-model="submitData.sin" type="number" placeholder="S.I.N">
 				  </label>
 				  <label class="item item-input">
+				  	<span class="input-label">Driver's License#</span>
 				    <input ng-model="submitData.license" type="text" placeholder="Driver's License#">
 				  </label>
 				</div>
@@ -32,9 +37,11 @@
 		    <ion-item ng-show="showContactInfo">
 			  	<div class="list">
 				  <label class="item item-input">
+				  	<span class="input-label">Email</span>
 				    <input ng-model="submitData.email" type="email" placeholder="Email">
 				  </label>
 				  <label class="item item-input">
+				  	<span class="input-label">Phone#</span>
 				    <input ng-model="submitData.phone" type="number" placeholder="Phone#">
 				  </label>
 				  
@@ -49,19 +56,24 @@
 		    <ion-item ng-show="showAddressInfo">
 			  	<div class="list">
 				  <label class="item item-input">
-				    <input ng-model="submitData.unit" type="text" placeholder="Unit/Apartment #">
+				  	<span class="input-label">Unit #</span>
+				    <input ng-model="submitData.unit" type="text" placeholder="">
 				  </label>
 				  <label class="item item-input">
-				    <input ng-model="submitData.streetAddress" type="text" placeholder="Street Address">
+				  	<span class="input-label">Street</span>
+				    <input ng-model="submitData.streetAddress" type="text" placeholder="">
 				  </label>
 				  <label class="item item-input">
-				    <input ng-model="submitData.city" type="text" placeholder="City">
+				  	<span class="input-label">City</span>
+				    <input ng-model="submitData.city" type="text" placeholder="">
 				  </label>
 				  <label class="item item-input">
-				    <input ng-model="submitData.state" type="text" placeholder="State">
+				  	<span class="input-label">State</span>
+				    <input ng-model="submitData.state" type="text" placeholder="">
 				  </label>
 				  <label class="item item-input">
-				    <input ng-model="submitData.postalCode" type="text" placeholder="Postal Code">
+				  	<span class="input-label">Postal Code</span>
+				    <input ng-model="submitData.postalCode" type="text" placeholder="">
 				  </label>
 				</div>
 		    </ion-item>
@@ -73,21 +85,28 @@
 		    <ion-item ng-show="showLoginInfo">
 			  	<div class="list">
 				  <label class="item item-input">
-				    <input ng-model="submitData.username" type="text" placeholder="Username">
+				  	<span class="input-label">Username</span>
+				    <input ng-model="submitData.username" type="text" placeholder="">
 				  </label>
 				  <label class="item item-input">
-				    <input ng-model="submitData.password" type="password" placeholder="Password">
+				  	<span class="input-label">Password</span>
+				    <input ng-model="submitData.password" type="password" placeholder="">
 				  </label>
 				  <label class="item item-input">
-				    <input ng-model="submitData.rePassword" type="password" placeholder="Re-Enter Password">
+				  	<span class="input-label">Re-Password</span>
+				    <input ng-model="submitData.rePassword" type="password" placeholder="">
 				  </label>
 				</div>
 		    </ion-item>
 
 		</ion-list>
 
-		<button ng-click="signUpDriver()" class="button button-full button-assertive">
+		<button ng-hide="editMode" ng-click="signUpDriver()" class="button button-full button-assertive">
 		  	Sign Up Driver
+		</button>
+
+		<button ng-show="editMode" ng-click="saveEmployee()" class="button button-full button-balanced">
+		  	Save !
 		</button>
 	</ion-content>
  </ion-view>

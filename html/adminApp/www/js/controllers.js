@@ -119,6 +119,47 @@ angular.module('starter.controllers', [])
 
 })
 
+.controller('employeesCtrl', function($scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup, $ionicLoading) {
+  if(Parse.User.current() == null){
+    window.location.replace("index.html");
+  }
+
+  $scope.title = "Employees";
+  scopeService.updateEmployeeToEdit(null);
+  $scope.allDriversArray = scopeService.getAllDriversArray();
+  $scope.allDriversMap = scopeService.getAllDriversMap();
+
+  if($scope.allDriversArray == null || $scope.allDriversMap == null){
+    $ionicLoading.show({
+      template: 'Loading...'
+    });
+    ParseService.fetchDrivers()
+    .then(function(response) {
+       $scope.drivers = response;
+       scopeService.updateAlldriversArray(response);
+       $scope.allDriversArray = response;
+       var allDriversMap = new Map();
+       for (var i = 0; i < response.length; i++) { 
+        allDriversMap.set(response[i].id,response[i]);
+       }
+       scopeService.updateAllDriversMap(allDriversMap);
+       $scope.allDriversMap = allDriversMap;
+       $ionicLoading.hide();
+    });
+  }
+
+  $scope.addEmployee = function(){
+    scopeService.updateClientToEdit(null);
+    $state.go("app.addEditEmployee");
+  }
+
+  $scope.editEmployee = function(employeeToEdit){
+    scopeService.updateEmployeeToEdit(employeeToEdit);
+    $state.go("app.addEditEmployee");
+  }
+
+})
+
 .controller('clientsCtrl', function($scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup, $ionicLoading) {
   
   if(Parse.User.current() == null){
@@ -393,7 +434,7 @@ angular.module('starter.controllers', [])
   if(Parse.User.current() == null){
     window.location.replace("index.html");
   }
-  
+
   $scope.isAdmin = Parse.User.current().get("isAdmin");
 
   $scope.title = "Order Details";
@@ -769,13 +810,23 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('driverCtrl', function($scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup, $ionicLoading) {
+.controller('addEditEmployeeCtrl', function($scope, $state, $ionicActionSheet, ParseService, scopeService, $ionicPopup, $ionicLoading) {
   
   if(Parse.User.current() == null){
     window.location.replace("index.html");
   }
 
-  $scope.title = "Add Driver";
+  $scope.title = "Add Employee";
+
+  $scope.editMode = false;
+
+  if(scopeService.getEmployeeToEdit() != null){
+    $scope.title = "Edit ";
+    $scope.editMode = true;
+    var employeeId = scopeService.getEmployeeToEdit().objectId;
+    scopeService.updateEmployeeToEdit( scopeService.getAllDriversMap().get(employeeId));
+    $scope.employeeToEdit = scopeService.getAllDriversMap().get(employeeId);
+  }
 
   //set UI ng-show flags
   $scope.showPersonalInfo = false;
@@ -784,6 +835,72 @@ angular.module('starter.controllers', [])
   $scope.showLoginInfo = false;
 
   $scope.submitData = {};
+
+  if($scope.editMode){
+    if(!($scope.employeeToEdit.get("firstName") == undefined || $scope.employeeToEdit.get("firstName") == "undefined")){
+      $scope.submitData.fName = $scope.employeeToEdit.get("firstName");
+    }
+    if(!($scope.employeeToEdit.get("lastName") == undefined || $scope.employeeToEdit.get("lastName") == "undefined")){
+      $scope.submitData.lName = $scope.employeeToEdit.get("lastName");
+    }
+    if(!($scope.employeeToEdit.get("DOB") == undefined || $scope.employeeToEdit.get("DOB") == "undefined")){
+      $scope.submitData.dob = $scope.employeeToEdit.get("DOB");
+    }
+    if(!($scope.employeeToEdit.get("driverSIN") == undefined || $scope.employeeToEdit.get("driverSIN") == "undefined")){
+      $scope.submitData.sin = Number($scope.employeeToEdit.get("driverSIN"));
+    }
+    if(!($scope.employeeToEdit.get("driverLicense") == undefined || $scope.employeeToEdit.get("driverLicense") == "undefined")){
+      $scope.submitData.license = $scope.employeeToEdit.get("driverLicense");
+    }
+    if(!($scope.employeeToEdit.get("email") == undefined || $scope.employeeToEdit.get("email") == "undefined")){
+      $scope.submitData.email = $scope.employeeToEdit.get("email");
+    }
+    if(!($scope.employeeToEdit.get("driverMobile") == undefined || $scope.employeeToEdit.get("driverMobile") == "undefined")){
+      $scope.submitData.phone = Number($scope.employeeToEdit.get("driverMobile"));
+    }
+    if(!($scope.employeeToEdit.get("driverAddressUnit") == undefined || $scope.employeeToEdit.get("driverAddressUnit") == "undefined")){
+      $scope.submitData.unit = $scope.employeeToEdit.get("driverAddressUnit");
+    }
+    if(!($scope.employeeToEdit.get("driverStreetAddress") == undefined || $scope.employeeToEdit.get("driverStreetAddress") == "undefined")){
+      $scope.submitData.streetAddress = $scope.employeeToEdit.get("driverStreetAddress");
+    }
+    if(!($scope.employeeToEdit.get("driverAddressCity") == undefined || $scope.employeeToEdit.get("driverAddressCity") == "undefined")){
+      $scope.submitData.city = $scope.employeeToEdit.get("driverAddressCity");
+    }
+    if(!($scope.employeeToEdit.get("driverAddressState") == undefined || $scope.employeeToEdit.get("driverAddressState") == "undefined")){
+      $scope.submitData.state = $scope.employeeToEdit.get("driverAddressState");
+    }
+    if(!($scope.employeeToEdit.get("driverAddressPostalCode") == undefined || $scope.employeeToEdit.get("driverAddressPostalCode") == "undefined")){
+      $scope.submitData.postalCode = $scope.employeeToEdit.get("driverAddressPostalCode");
+    }
+
+    if(!($scope.employeeToEdit.get("username") == undefined || $scope.employeeToEdit.get("username") == "undefined")){
+      $scope.submitData.username = $scope.employeeToEdit.get("username");
+    }
+    if(!($scope.employeeToEdit.get("password") == undefined || $scope.employeeToEdit.get("password") == "undefined")){
+      $scope.submitData.password = $scope.employeeToEdit.get("password");
+      $scope.submitData.rePassword = $scope.employeeToEdit.get("password");
+    }
+  }
+
+  $scope.saveEmployee = function(){
+    $scope.employeeToEdit.set("firstName",$scope.submitData.fName);
+    $scope.employeeToEdit.set("lastName",$scope.submitData.lName);
+    $scope.employeeToEdit.set("DOB",$scope.submitData.dob);
+    $scope.employeeToEdit.set("driverSIN",$scope.submitData.sin);
+    $scope.employeeToEdit.set("driverLicense",$scope.submitData.license);
+    $scope.employeeToEdit.set("email",$scope.submitData.email);
+    $scope.employeeToEdit.set("driverMobile",$scope.submitData.phone);
+    $scope.employeeToEdit.set("driverAddressUnit",$scope.submitData.unit);
+    $scope.employeeToEdit.set("driverStreetAddress",$scope.submitData.streetAddress);
+    $scope.employeeToEdit.set("driverAddressCity",$scope.submitData.city);
+    $scope.employeeToEdit.set("driverAddressState",$scope.submitData.state);
+    $scope.employeeToEdit.set("driverAddressPostalCode",$scope.submitData.postalCode);
+    $scope.employeeToEdit.set("username",$scope.submitData.username);
+    $scope.employeeToEdit.set("password",$scope.submitData.password);
+    $scope.employeeToEdit.save();
+    $state.go("app.employees");
+  }
 
   $scope.flipShowPersonalInfo = function(){
     $scope.showPersonalInfo = !$scope.showPersonalInfo;
