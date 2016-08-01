@@ -887,10 +887,10 @@ angular.module('starter.controllers', [])
     $scope.employeeToEdit.set("firstName",$scope.submitData.fName);
     $scope.employeeToEdit.set("lastName",$scope.submitData.lName);
     $scope.employeeToEdit.set("DOB",$scope.submitData.dob);
-    $scope.employeeToEdit.set("driverSIN",$scope.submitData.sin);
+    $scope.employeeToEdit.set("driverSIN",String($scope.submitData.sin));
     $scope.employeeToEdit.set("driverLicense",$scope.submitData.license);
     $scope.employeeToEdit.set("email",$scope.submitData.email);
-    $scope.employeeToEdit.set("driverMobile",$scope.submitData.phone);
+    $scope.employeeToEdit.set("driverMobile",String($scope.submitData.phone));
     $scope.employeeToEdit.set("driverAddressUnit",$scope.submitData.unit);
     $scope.employeeToEdit.set("driverStreetAddress",$scope.submitData.streetAddress);
     $scope.employeeToEdit.set("driverAddressCity",$scope.submitData.city);
