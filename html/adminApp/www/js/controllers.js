@@ -81,10 +81,9 @@ angular.module('starter.controllers', [])
   };
 
   $scope.logout = function (){
-    Parse.User.logOut().then(() => {
-      $scope.currentUser = Parse.User.current();
-      window.location.replace("index.html");
-    });
+    Parse.User.logOut();
+    $scope.currentUser = Parse.User.current();
+    window.location.replace("index.html");
   }
 
 })
