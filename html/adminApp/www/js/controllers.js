@@ -985,7 +985,7 @@ function loadMaps($scope){
   for (var i = 0; i < deliveries.length; i++) {
 
       //required for backwards integration
-      //checkCost(deliveries[i]);
+      checkCost(deliveries[i]);
 
       pharmacyInfoMap.set(deliveries[i].get("pharmacyID").id, deliveries[i].get("pharmacyID").get("pharmacyInfo"));
       pharmacyUserMap.set(deliveries[i].get("pharmacyID").id, deliveries[i].get("pharmacyID"));
