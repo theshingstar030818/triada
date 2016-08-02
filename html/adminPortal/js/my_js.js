@@ -48,7 +48,14 @@ function postPatient(){
         var aptNum = document.getElementById("new_patient_unit").value;
         var buildingNum = document.getElementById("new_patient_building").value;
         var streetName = document.getElementById("new_patient_street").value;
-        var city = document.getElementById("new_patient_city").value;
+        
+
+        if(pharmacyObject[0].get("pricing") != undefined){
+          var city = document.getElementById("new_patient_city_select").value;
+        }else{
+          var city = document.getElementById("new_patient_city_input").value;
+        }
+
         var postalCode = document.getElementById("new_patient_postal").value;
         var state = document.getElementById("new_patient_state").value;
 

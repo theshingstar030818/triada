@@ -67,13 +67,22 @@
 					<input id="new_patient_unit" name="aptNum" placeholder="Apartment/Unit #" type="text">
 					<input id="new_patient_building" name="buildingNum" placeholder="Building/House #" type="text">
 					<input id="new_patient_street" name="streetName" placeholder="Street Name" type="text">
+					<div id="new_patient_city">
+						<select id="new_patient_city_select" name="city" placeholder="city" type="text" style="width: 100%; margin-top: 2%;"></select>
+						
+						<input id="new_patient_city_input" type="text" name="city" placeholder="city" type="text" style="width: 100%; margin-top: 2%;">
+					</div>
+
 					
-					<select id="new_patient_city" name="city" placeholder="city" type="text" style="width: 100%; margin-top: 2%;">
-					</select>
 
 					<script>
 
-						var select = document.getElementById("new_patient_city");
+						var select = document.getElementById("new_patient_city_select");
+						var input = document.getElementById("new_patient_city_input");
+
+						$("#new_patient_city_input").hide();
+						$("#new_patient_city_select").hide();
+
 						
 						var currentUser = Parse.User.current();
 						var userString = JSON.stringify(currentUser);
@@ -90,14 +99,18 @@
 						pharmacyQuery.find({
     						success: function(pharmacyObject){
 					      		if(pharmacyObject.length > 0){
-					      			var pharmacyPricing = JSON.parse(pharmacyObject[0].get("pricing"));
-					      			pharmacyPricing.cities.forEach(function(entry) {
-									    var option = document.createElement("option");
-										option.text = entry.name;
-										option.value = entry.name;
-										select.add(option);
-									});
-
+					      			if(pharmacyObject[0].get("pricing") != undefined){
+					      				$("#new_patient_city_select").show();
+					      				var pharmacyPricing = JSON.parse(pharmacyObject[0].get("pricing"));
+						      			pharmacyPricing.cities.forEach(function(entry) {
+										    var option = document.createElement("option");
+											option.text = entry.name;
+											option.value = entry.name;
+											select.add(option);
+										});
+					      			}
+					      		}else{
+					      			$("#new_patient_city_input").show();
 					      		}
 					      	},
 						    error: function(error){
@@ -163,13 +176,23 @@
 								<input id="patient_streetName">
 								<br><br>
 								<label>City : </label>
+
+								<div id="patient_city">
+									<select id="patient_city_select" name="city" placeholder="city" type="text" style="width: 100%; margin-top: 2%;"></select>
+
+									<input id="patient_city_input" name="city" placeholder="city" type="text" style="width: 100%; margin-top: 2%;">
+									
+								</div>
 								
-								<select id="patient_city" name="city" placeholder="city" type="text" style="width: 100%; margin-top: 2%;">
-								</select>
+								
 
 								<script>
 
-									var edit_select = document.getElementById("patient_city");
+									var edit_select = document.getElementById("patient_city_select");
+									var edit_input = document.getElementById("patient_city_input");
+
+									$("#patient_city_select").hide();
+									$("#patient_city_input").hide();
 									
 									var currentUser = Parse.User.current();
 									var userString = JSON.stringify(currentUser);
@@ -186,13 +209,20 @@
 									pharmacyQuery.find({
 			    						success: function(pharmacyObject){
 								      		if(pharmacyObject.length > 0){
-								      			var pharmacyPricing = JSON.parse(pharmacyObject[0].get("pricing"));
-								      			pharmacyPricing.cities.forEach(function(entry) {
-												    var option = document.createElement("option");
-													option.text = entry.name;
-													option.value = entry.name;
-													edit_select.add(option);
-												});
+
+								      			if(pharmacyObject[0].get("pricing") != undefined){
+								      				$("#patient_city_select").show();
+								      				var pharmacyPricing = JSON.parse(pharmacyObject[0].get("pricing"));
+									      			pharmacyPricing.cities.forEach(function(entry) {
+													    var option = document.createElement("option");
+														option.text = entry.name;
+														option.value = entry.name;
+														edit_select.add(option);
+													});
+								      			}else{
+								      				$("#patient_city_input").show();
+								      			}
+								      			
 								      		}
 								      	},
 									    error: function(error){

@@ -152,7 +152,16 @@ function updatePatientInfo(patientID){
 			var aptNum = document.getElementById('patient_aptNum').value;
 			var buildingNum = document.getElementById('patient_buildingNum').value;
 			var streetName = document.getElementById('patient_streetName').value;
-			var city = document.getElementById('patient_city').value;
+
+			if(patient.get("pharmacy").get("pharmacyInfo").get("pricing") != undefined){
+				var city = document.getElementById('patient_city_select').value;
+			}else{
+				var city = document.getElementById('patient_city_input').value;
+			}
+
+			
+			
+
 			var postalCode = document.getElementById('patient_postalCode').value;
 			var state = document.getElementById('patient_state').value;
 			var telephone = document.getElementById('patient_telephone').value;
