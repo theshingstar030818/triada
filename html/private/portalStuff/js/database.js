@@ -114,7 +114,13 @@ function editPatient(patientID){
       document.getElementById('patient_buildingNum').value = buildingNum;
       document.getElementById('patient_streetName').value = streetName;
       console.log("patient_city = " + document.getElementById('patient_city').value);
-      document.getElementById('patient_city').value = city;
+      
+      if(patient.get("pharmacy").get("pharmacyInfo").get("pricing") != undefined){
+      	document.getElementById('patient_city_select').value = city;
+      }else{
+      	document.getElementById('patient_city_input').value = city;
+      }
+      
       document.getElementById('patient_postalCode').value = postalCode;
       document.getElementById('patient_state').value = state;
       document.getElementById('patient_telephone').value = telephone;
