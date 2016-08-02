@@ -323,6 +323,43 @@ function getDeliveriesFromDatabaseForSpecificDate(date){
 
             var cost = results[i].get("cost");
 
+            //for backwards integration
+            if(cost == undefined || cost == ""){
+              distanceFromPharmacy = patient.get("distanceFromPharmacy");
+              if(results[i].get("pharmacyID").get("pharmacyInfo").get("pricing") == undefined){
+
+                if(distanceFromPharmacy < 10){
+                  results[i].set("cost",pharmacyObject[0].get("priceRate"));
+                }else if(distanceFromPharmacy >= 10 && distanceFromPharmacy < 20){
+                  results[i].set("cost",pharmacyObject[0].get("priceRateOver10Km"));
+                }else if(distanceFromPharmacy >= 20 && distanceFromPharmacy < 30){
+                  results[i].set("cost",pharmacyObject[0].get("priceRateOver20Km"));
+                }else{
+                  results[i].set("cost",pharmacyObject[0].get("priceRateOver30Km"));
+                }
+
+              }else{
+
+                var pharmacyPricingJSON = JSON.parse(results[i].get("pharmacyID").get("pharmacyInfo").get("pricing"));
+
+                for (var i = 0; i < pharmacyPricingJSON.cities.length; i++){
+                  
+                  if (pharmacyPricingJSON.cities[i].name == city){
+                    if(distanceFromPharmacy < 10){
+                      results[i].set("cost",pharmacyPricingJSON.cities[i].rates[0]);
+                    }else if(distanceFromPharmacy > 10 && distanceFromPharmacy < 20){
+                      results[i].set("cost",pharmacyPricingJSON.cities[i].rates[1]);
+                    }else{
+                      results[i].set("cost",pharmacyPricingJSON.cities[i].rates[2]);
+                    }
+                  }
+                }
+
+              }
+              results[i].save();
+              cost = results[i].get("cost");
+            }
+
             if(driverComment === undefined){
               driverComment = "";
             }
