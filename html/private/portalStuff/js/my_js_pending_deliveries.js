@@ -329,22 +329,22 @@ function getDeliveriesFromDatabaseForSpecificDate(date){
               if(results[i].get("pharmacyID").get("pharmacyInfo").get("pricing") == undefined){
 
                 if(distanceFromPharmacy < 10){
-                  results[i].set("cost",pharmacyObject[0].get("priceRate"));
+                  results[i].set("cost",pharmacyInfo.get("priceRate"));
                 }else if(distanceFromPharmacy >= 10 && distanceFromPharmacy < 20){
-                  results[i].set("cost",pharmacyObject[0].get("priceRateOver10Km"));
+                  results[i].set("cost",pharmacyInfo.get("priceRateOver10Km"));
                 }else if(distanceFromPharmacy >= 20 && distanceFromPharmacy < 30){
-                  results[i].set("cost",pharmacyObject[0].get("priceRateOver20Km"));
+                  results[i].set("cost",pharmacyInfo.get("priceRateOver20Km"));
                 }else{
-                  results[i].set("cost",pharmacyObject[0].get("priceRateOver30Km"));
+                  results[i].set("cost",pharmacyInfo.get("priceRateOver30Km"));
                 }
 
               }else{
 
-                var pharmacyPricingJSON = JSON.parse(results[i].get("pharmacyID").get("pharmacyInfo").get("pricing"));
+                var pharmacyPricingJSON = JSON.parse(pharmacyInfo.get("pricing"));
 
                 for (var i = 0; i < pharmacyPricingJSON.cities.length; i++){
                   
-                  if (pharmacyPricingJSON.cities[i].name == city){
+                  if (pharmacyPricingJSON.cities[i].name == patient.get("city")){
                     if(distanceFromPharmacy < 10){
                       results[i].set("cost",pharmacyPricingJSON.cities[i].rates[0]);
                     }else if(distanceFromPharmacy > 10 && distanceFromPharmacy < 20){
