@@ -285,7 +285,7 @@ function getDeliveriesFromDatabaseForSpecificDate(date){
   var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
   ];
   var dayNames = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-  OrdersQuery.equalTo("pharmacyId", Parse.User.current());
+  OrdersQuery.equalTo("pharmacyID", Parse.User.current());
   //query conditions
   //OrdersQuery.equalTo("deliveryDate", date);
   OrdersQuery.include("pharmacyId");
