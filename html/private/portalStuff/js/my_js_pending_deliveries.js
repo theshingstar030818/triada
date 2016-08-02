@@ -282,11 +282,10 @@ function get_deliveries(){
 function getDeliveriesFromDatabaseForSpecificDate(date){
   var Orders = Parse.Object.extend("Orders");
   var OrdersQuery = new Parse.Query(Orders);
-  var monthNames = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+  var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
   ];
   var dayNames = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-  //OrdersQuery.equalTo("pharmacyId", Parse.User.current().id);
+  OrdersQuery.equalTo("pharmacyId", Parse.User.current());
   //query conditions
   //OrdersQuery.equalTo("deliveryDate", date);
   OrdersQuery.include("pharmacyId");
@@ -489,8 +488,7 @@ function edit_orders_div_hide(){
 }
 
 function saveOrder(orderId){
-  var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   var dayNames = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
   var orders = Parse.Object.extend("Orders");
   var query = new Parse.Query(orders);
