@@ -185,7 +185,40 @@ function postOrder(dateOfOrder,patientId){
         ordersObject.set("patientId", patient);
 
         //set order cost here 
-        ordersObject.set("cost",patient.get("cost"));
+        if(patient.get("cost") == undefined){
+
+          var distanceFromPharmacy = patient.get("distanceFromPharmacy");
+
+          if(patient.get("pharmacy").get("pharmacyInfo").get("pricing") == undefined){
+            if(distanceFromPharmacy < 10){
+              patientObject.set("cost",pharmacyObject[0].get("priceRate"));
+            }else if(distanceFromPharmacy >= 10 && distanceFromPharmacy < 20){
+              patientObject.set("cost",pharmacyObject[0].get("priceRateOver10Km"));
+            }else if(distanceFromPharmacy >= 20 && distanceFromPharmacy < 30){
+              patientObject.set("cost",pharmacyObject[0].get("priceRateOver20Km"));
+            }else{
+              patientObject.set("cost",pharmacyObject[0].get("priceRateOver30Km"));
+            }
+          }else{
+            var pharmacyPricingJSON = JSON.parse(patient.get("pharmacy").get("pharmacyInfo").get("pricing"));
+            for (var i = 0; i < pharmacyPricingJSON.cities.length; i++){
+              
+              if (pharmacyPricingJSON.cities[i].name == patient.get("city")){
+                if(distanceFromPharmacy < 10){
+                  patient.set("cost",pharmacyPricingJSON.cities[i].rates[0]);
+                }else if(distanceFromPharmacy > 10 && distanceFromPharmacy < 20){
+                  patient.set("cost",pharmacyPricingJSON.cities[i].rates[1]);
+                }else{
+                  patient.set("cost",pharmacyPricingJSON.cities[i].rates[2]);
+                }
+              }
+            }
+          }
+
+        }else{
+          ordersObject.set("cost",patient.get("cost"));
+        }
+        
         
         //set ACL on the object 
         //all drivers can access the patient info and also edit them
