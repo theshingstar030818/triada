@@ -152,7 +152,16 @@ function updatePatientInfo(patientID){
 			var aptNum = document.getElementById('patient_aptNum').value;
 			var buildingNum = document.getElementById('patient_buildingNum').value;
 			var streetName = document.getElementById('patient_streetName').value;
-			var city = document.getElementById('patient_city').value;
+
+			if(patient.get("pharmacy").get("pharmacyInfo").get("pricing") != undefined){
+				var city = document.getElementById('patient_city_select').value;
+			}else{
+				var city = document.getElementById('patient_city_input').value;
+			}
+
+			
+			
+
 			var postalCode = document.getElementById('patient_postalCode').value;
 			var state = document.getElementById('patient_state').value;
 			var telephone = document.getElementById('patient_telephone').value;
@@ -213,20 +222,36 @@ function updatePatientInfo(patientID){
 								var distanceFromPharmacy = total_distance/1000;
 								patient.set("distanceFromPharmacy",distanceFromPharmacy);
 
-								var pharmacyPricingJSON = JSON.parse(pharmacyInfo.get("pricing"));
 
-								for (var i = 0; i < pharmacyPricingJSON.cities.length; i++){
-								  
-								  if (pharmacyPricingJSON.cities[i].name == city){
-								  	if(distanceFromPharmacy < 10){
-										patient.set("cost",pharmacyPricingJSON.cities[i].rates[0]);
-								  	}else if(distanceFromPharmacy > 10 && distanceFromPharmacy < 20){
-								  		patient.set("cost",pharmacyPricingJSON.cities[i].rates[1]);
-								  	}else{
-								  		patient.set("cost",pharmacyPricingJSON.cities[i].rates[2]);
-								  	}
-								  }
+								if(pharmacyInfo.get("pricing") !=undefined){
+									var pharmacyPricingJSON = JSON.parse(pharmacyInfo.get("pricing"));
+
+									for (var i = 0; i < pharmacyPricingJSON.cities.length; i++){
+									  
+									  if (pharmacyPricingJSON.cities[i].name == city){
+									  	if(distanceFromPharmacy < 10){
+											patient.set("cost",pharmacyPricingJSON.cities[i].rates[0]);
+									  	}else if(distanceFromPharmacy > 10 && distanceFromPharmacy < 20){
+									  		patient.set("cost",pharmacyPricingJSON.cities[i].rates[1]);
+									  	}else{
+									  		patient.set("cost",pharmacyPricingJSON.cities[i].rates[2]);
+									  	}
+									  }
+									}
+								}else{
+									if(distanceFromPharmacy < 10){
+										patient.set("cost",pharmacyInfo.get("priceRate"));
+									}else if(distanceFromPharmacy >= 10 && distanceFromPharmacy < 20){
+										patient.set("cost",pharmacyInfo.get("priceRateOver10Km"));
+									}else if(distanceFromPharmacy >= 20 && distanceFromPharmacy < 30){
+										patient.set("cost",pharmacyInfo.get("priceRateOver20Km"));
+									}else{
+										patient.set("cost",pharmacyInfo.get("priceRateOver30Km"));
+									}
 								}
+								
+
+
 
 
 		                        patient.save(null, {
