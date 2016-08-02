@@ -286,8 +286,7 @@ function getDeliveriesFromDatabaseForSpecificDate(date){
   ];
   var dayNames = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
   OrdersQuery.equalTo("pharmacyID", Parse.User.current());
-  //query conditions
-  //OrdersQuery.equalTo("deliveryDate", date);
+  OrdersQuery.equalTo("deliveryDate", date);
   OrdersQuery.include("pharmacyId");
   OrdersQuery.include("pharmacyID.pharmacyInfo");
   OrdersQuery.include("patientId");
