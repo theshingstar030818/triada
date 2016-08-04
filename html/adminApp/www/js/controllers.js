@@ -13,11 +13,11 @@ angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $state, $ionicActionSheet, ParseService, $ionicLoading, scopeService, $ionicPopup, $ionicModal, $timeout) {
   
-  var start = new Date().getTime();
-  var end = start;
-  while(end < start + 100) {
-    end = new Date().getTime();
-  }
+  // var start = new Date().getTime();
+  // var end = start;
+  // while(end < start + 100) {
+  //   end = new Date().getTime();
+  // }
 
   if(Parse.User.current() == null){
     window.location.replace("index.html");
@@ -100,11 +100,11 @@ angular.module('starter.controllers', [])
     window.location.replace("index.html");
   }
 
-  var start = new Date().getTime();
-  var end = start;
-  while(end < start + 100) {
-    end = new Date().getTime();
-  }
+  // var start = new Date().getTime();
+  // var end = start;
+  // while(end < start + 100) {
+  //   end = new Date().getTime();
+  // }
 
   $scope.title = "Daily Stats";
 
