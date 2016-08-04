@@ -12,12 +12,6 @@ currDate = new Date(currDate.getYear()+1900, currDate.getMonth(), currDate.getDa
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $state, $ionicActionSheet, ParseService, $ionicLoading, scopeService, $ionicPopup, $ionicModal, $timeout) {
-  
-  // var start = new Date().getTime();
-  // var end = start;
-  // while(end < start + 100) {
-  //   end = new Date().getTime();
-  // }
 
   if(Parse.User.current() == null){
     window.location.replace("index.html");
@@ -405,8 +399,7 @@ angular.module('starter.controllers', [])
             notification.params = {};
             notification.params.driver = scopeService.getAllDriversMap().get(scopeService.getCurrDriver().objectId);
             notification.params.orders = scopeService.getCurrentOrders();
-            sendNotification(notification);
-            window.location.replace("home.html");
+            sendNotification(notification, $ionicLoading);
           }
           console.log("save successful");
         },
@@ -594,9 +587,7 @@ angular.module('starter.controllers', [])
             notification.params = {};
             notification.params.driver = scopeService.getAllDriversMap().get(scopeService.getCurrDriver().objectId);
             notification.params.orders = scopeService.getCurrentOrders();
-            sendNotification(notification);
-            $ionicLoading.hide();
-            window.location.replace("home.html");
+            sendNotification(notification, $ionicLoading);
           }
         },
         error: function(myObject, error) {
@@ -1209,10 +1200,10 @@ function checkCost(order){
   }
 }
 
-function sendNotification(notification){
+function sendNotification(notification, ionicLoading){
   switch (notification.type) {
     case 'notifyDriver':
-        notifyDriver(notification.params);
+        notifyDriver(notification.params, ionicLoading);
         break;
     case 'someOtherFunction':
         notifyDriver(notification.params);
@@ -1223,11 +1214,13 @@ function sendNotification(notification){
 
 //notification functions
 
-function notifyDriver(params){
+function notifyDriver(params, ionicLoading){
 
   Parse.Cloud.run('notifyDriver', { params: JSON.stringify(params)}, {
     success: function(result) {
       var jsonResult = JSON.stringify(result);
+      ionicLoading.hide();
+      window.location.replace("home.html");
     },
     error: function(error) {
       var jsonResult = JSON.stringify(error);
