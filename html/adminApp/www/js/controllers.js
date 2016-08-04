@@ -394,8 +394,8 @@ angular.module('starter.controllers', [])
             notification.params = {};
             notification.params.driver = scopeService.getAllDriversMap().get(scopeService.getCurrDriver().objectId);
             notification.params.orders = scopeService.getCurrentOrders();
-
             sendNotification(notification);
+            $ionicLoading.hide();
             window.location.replace("home.html#/app/stats");
           }
           console.log("save successful");
