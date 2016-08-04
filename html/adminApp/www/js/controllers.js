@@ -94,12 +94,6 @@ angular.module('starter.controllers', [])
     window.location.replace("index.html");
   }
 
-  // var start = new Date().getTime();
-  // var end = start;
-  // while(end < start + 100) {
-  //   end = new Date().getTime();
-  // }
-
   $scope.title = "Daily Stats";
 
   $ionicLoading.show({
@@ -1219,6 +1213,11 @@ function notifyDriver(params, ionicLoading){
   Parse.Cloud.run('notifyDriver', { params: JSON.stringify(params)}, {
     success: function(result) {
       var jsonResult = JSON.stringify(result);
+      var start = new Date().getTime();
+      var end = start;
+      while(end < start + 100) {
+        end = new Date().getTime();
+      }
       ionicLoading.hide();
       window.location.replace("home.html");
     },
