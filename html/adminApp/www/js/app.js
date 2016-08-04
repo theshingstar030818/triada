@@ -86,6 +86,14 @@ angular.module('starter', ['ionic', 'starter.controllers'])
    currPharmacyOrdersDetailArray: null,
    clientToEdit: null,
    employeeToEdit: null,
+   ordersCounter: null,
+
+   getOrdersCounter: function(){
+    return this.ordersCounter;
+   },
+   setOrdersCounter: function(counterValue){
+    this.ordersCounter = counterValue;
+   },
 
    getClientToEdit: function() {
      return this.clientToEdit;
