@@ -405,7 +405,7 @@ angular.module('starter.controllers', [])
             notification.params = {};
             notification.params.driver = scopeService.getAllDriversMap().get(scopeService.getCurrDriver().objectId);
             notification.params.orders = scopeService.getCurrentOrders();
-            //sendNotification(notification);
+            sendNotification(notification);
             window.location.replace("home.html");
           }
           console.log("save successful");
@@ -594,7 +594,7 @@ angular.module('starter.controllers', [])
             notification.params = {};
             notification.params.driver = scopeService.getAllDriversMap().get(scopeService.getCurrDriver().objectId);
             notification.params.orders = scopeService.getCurrentOrders();
-            //sendNotification(notification);
+            sendNotification(notification);
             $ionicLoading.hide();
             window.location.replace("home.html");
           }
