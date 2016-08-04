@@ -1021,12 +1021,16 @@ function loadMaps($scope){
   var pharmacyOrdersMap = new Map();
   var pharmacyOrdersArray = [], pharmacyInfoItem;
 
+  var driverOrdersMap = new Map();
+  var driverOrdersArray = [], driverItem;
+
   var totalPending = [0,0];
   var totalPickupInProgress = [0,0];
   var totalInProgress = [0,0];
   var totalCompleted = [0,0];
   
   var driverMap = new Map();
+  var driverArray = [], driverUserItem;
   var patientMap = new Map();
 
   for (var i = 0; i < deliveries.length; i++) {
@@ -1051,6 +1055,14 @@ function loadMaps($scope){
         var tempValue = pharmacyOrdersMap.get(deliveries[i].get("pharmacyID").id);
         tempValue.push(deliveries[i]);
         pharmacyOrdersMap.set(deliveries[i].get("pharmacyID").id, tempValue);
+      }
+
+      if(driverOrdersMap.get(deliveries[i].get("driverId").id) == undefined){
+        driverOrdersMap.set(deliveries[i].get("driverId").id, [deliveries[i]]);
+      }else{
+        var tempValue = driverOrdersMap.get(deliveries[i].get("driverId").id);
+        tempValue.push(deliveries[i]);
+        driverOrdersMap.set(deliveries[i].get("driverId").id, tempValue);
       }
 
       if(deliveries[i].get("deliveryStatus") == "pending"){
@@ -1078,6 +1090,18 @@ function loadMaps($scope){
       pharmacyUserItem.object = item;
       pharmacyInfoArray.push(pharmacyUserItem);
   });
+  
+  driverMap.forEach(function (item, key, mapObj) {
+      driverUserItem = {};
+      driverUserItem.id = key;
+      driverUserItem.object = item;
+      driverArray.push(driverUserItem);
+  });
+
+  driverOrdersMap.forEach(function (item, key, mapObj) {
+    driverOrdersArray = assessItem(item, key, mapObj,driverOrdersArray);
+  });
+
   pharmacyOrdersMap.forEach(function (item, key, mapObj) {
       pharmacyInfoItem = {};
       pharmacyInfoItem.id = key;
@@ -1143,6 +1167,10 @@ function loadMaps($scope){
   $scope.activeDriversMap = driverMap;
   $scope.patientsMap = patientMap;
 
+  $scope.driverOrdersMap = driverOrdersMap;
+  $scope.driverOrdersArray = driverOrdersArray;
+  $scope.driverArray = driverArray;
+
   $scope.totalPending = totalPending;
   $scope.totalInProgress = totalInProgress;
   $scope.totalCompleted = totalCompleted;
@@ -1171,6 +1199,64 @@ function loadMaps($scope){
 //       });
 //   });
 // }
+
+function assessItem(item, key, mapObj,ordersArray){
+  itemToPush = {};
+  itemToPush.id = key;
+  itemToPush.object = item;
+
+  itemToPush.pending = [];
+  itemToPush.pickupInProgress = [];
+  itemToPush.inProgress = [];
+  itemToPush.completed = [];
+  
+  itemToPush.totalCost = 0;
+
+  itemToPush.under10Km = [0,0];
+  itemToPush.under20Km = [0,0];
+  itemToPush.under30Km = [0,0];
+  itemToPush.over30Km = [0,0];
+
+
+  for(var x=0; x<item.length; x++){
+    
+    //update cost
+    itemToPush.totalCost += item[x].get("cost");
+
+    //update distance counter
+    var distanceFromPharmacy = item[x].get("patientId").get("distanceFromPharmacy");
+    if(distanceFromPharmacy < 10){
+      itemToPush.under10Km[0]++;
+      itemToPush.under10Km[1] += item[x].get("cost");
+    }else if(distanceFromPharmacy < 20){
+      itemToPush.under20Km[0]++;
+      itemToPush.under20Km[1] += item[x].get("cost");
+    }else if(distanceFromPharmacy < 30){
+      itemToPush.under30Km[0]++;
+      itemToPush.under30Km[1] += item[x].get("cost");
+    }else if(distanceFromPharmacy > 29){
+      itemToPush.over30Km[0]++;
+      itemToPush.over30Km[1] += item[x].get("cost");
+    }
+
+    if(item[x].get("deliveryStatus") == "pending"){
+      itemToPush.pending.push(item[x]);
+    }
+    if(item[x].get("deliveryStatus") == "In progress"){
+      if(item[x].get("pickup")){
+        itemToPush.pickupInProgress.push(item[x]);
+      }else{
+        itemToPush.inProgress.push(item[x]);
+      }
+    }
+    if(item[x].get("deliveryStatus") == "Completed"){
+      itemToPush.completed.push(item[x]);
+    }
+  }
+  
+  ordersArray.push(itemToPush);
+  return ordersArray;
+}
 
 function checkCost(order){
   if(order.get("cost") == undefined){
