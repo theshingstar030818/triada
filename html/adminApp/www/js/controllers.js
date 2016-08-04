@@ -311,11 +311,28 @@ angular.module('starter.controllers', [])
         { text: 'Yes', 
           type: 'button-balanced',
           onTap: function(e) {
+            var count = 0;
+            $ionicLoading.show({
+              template: 'Loading...'
+            });
             for(var i=0; i<$scope.pharmacyOrdersArray[0].inProgress.length; i++){
               $scope.pharmacyOrdersArray[0].inProgress[i].set("pickup",true);
-              $scope.pharmacyOrdersArray[0].inProgress[i].save();
+              $scope.pharmacyOrdersArray[0].inProgress[i].save(null, {
+                success: function(order) {
+                  count++;
+                  scopeService.getCurrentOrders()[i].save();
+                  if(count == $scope.pharmacyOrdersArray[0].inProgress.length){
+                    //send notification here
+                    window.location.replace("home.html");
+                    $ionicLoading.hide();
+                  }
+                },
+                error: function(myObject, error) {
+                  alert("error saving the object");
+                }
+              });
             }
-            window.location.replace("home.html");
+            
           }
         },
       ]
@@ -357,21 +374,37 @@ angular.module('starter.controllers', [])
   $scope.assigneDriverFinalize = function(){
     var driver = scopeService.getAllDriversMap().get(scopeService.getCurrDriver().objectId);
     var orders = scopeService.getCurrentOrders();
+    var count = 0;
+    $ionicLoading.show({
+      template: 'Loading...'
+    });
     for(var i=0; i<orders.length; i++){
+      
       orders[i].set('driverId',driver);
       orders[i].set('deliveryStatus','In progress');
-      orders[i].save();
-    }
-    //send notification here
-    notification = {};
-    
-    notification.type = "notifyDriver";
-    notification.params = {};
-    notification.params.driver = driver;
-    notification.params.orders = orders;
+      orders[i].save(null, {
+        success: function(order) {
+          count++;
+          if(count == orders.length){
+            //send notification here
+            notification = {};
+            
+            notification.type = "notifyDriver";
+            notification.params = {};
+            notification.params.driver = driver;
+            notification.params.orders = orders;
 
-    sendNotification(notification);
-    window.location.replace("home.html");
+            sendNotification(notification);
+            window.location.replace("home.html");
+          }
+          console.log("save successful");
+        },
+        error: function(myObject, error) {
+          console.log("error saving the object");
+        }
+      });
+    }
+    
   }
 })
 
@@ -530,21 +563,36 @@ angular.module('starter.controllers', [])
   $scope.assigneDriverFinalize = function(){
     var driver = scopeService.getAllDriversMap().get(scopeService.getCurrDriver().objectId);
     var orders = scopeService.getCurrentOrders();
+    
+    $ionicLoading.show({
+      template: 'Loading...'
+    });
+    var count = 0;
     for(var i=0; i<orders.length; i++){
+      
       scopeService.getCurrentOrders()[i].set('driverId',driver);
       scopeService.getCurrentOrders()[i].set('deliveryStatus','In progress');
-      scopeService.getCurrentOrders()[i].save();
-    }
-    //send notification here
-    notification = {};
-    
-    notification.type = "notifyDriver";
-    notification.params = {};
-    notification.params.driver = driver;
-    notification.params.orders = orders;
-
-    sendNotification(notification);
-    window.location.replace("home.html");
+      scopeService.getCurrentOrders()[i].save(null, {
+        success: function(order) {
+          count++;
+          scopeService.getCurrentOrders()[i].save();
+          if(count == orders.length){
+            //send notification here
+            notification = {};
+            notification.type = "notifyDriver";
+            notification.params = {};
+            notification.params.driver = driver;
+            notification.params.orders = orders;
+            sendNotification(notification);
+            $ionicLoading.hide();
+            window.location.replace("home.html");
+          }
+        },
+        error: function(myObject, error) {
+          alert("error saving the object");
+        }
+      });
+    }    
   }
 
   $scope.editPatient = function(){
