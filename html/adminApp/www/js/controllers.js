@@ -311,7 +311,7 @@ angular.module('starter.controllers', [])
         { text: 'Yes', 
           type: 'button-balanced',
           onTap: function(e) {
-            var count = 0;
+            scopeService.setOrdersCounter(0);
             $ionicLoading.show({
               template: 'Loading...'
             });
@@ -319,9 +319,9 @@ angular.module('starter.controllers', [])
               $scope.pharmacyOrdersArray[0].inProgress[i].set("pickup",true);
               $scope.pharmacyOrdersArray[0].inProgress[i].save(null, {
                 success: function(order) {
-                  count++;
-                  scopeService.getCurrentOrders()[i].save();
-                  if(count == $scope.pharmacyOrdersArray[0].inProgress.length){
+                  scopeService.setOrdersCounter(scopeService.getOrdersCounter()+1);
+                  order.save();
+                  if(scopeService.getOrdersCounter() == $scope.pharmacyOrdersArray[0].inProgress.length){
                     //send notification here
                     window.location.replace("home.html");
                     $ionicLoading.hide();
@@ -374,7 +374,7 @@ angular.module('starter.controllers', [])
   $scope.assigneDriverFinalize = function(){
     var driver = scopeService.getAllDriversMap().get(scopeService.getCurrDriver().objectId);
     var orders = scopeService.getCurrentOrders();
-    var count = 0;
+    scopeService.setOrdersCounter(0);
     $ionicLoading.show({
       template: 'Loading...'
     });
@@ -384,8 +384,9 @@ angular.module('starter.controllers', [])
       orders[i].set('deliveryStatus','In progress');
       orders[i].save(null, {
         success: function(order) {
-          count++;
-          if(count == orders.length){
+          order.save();
+          scopeService.setOrdersCounter(scopeService.getOrdersCounter()+1);
+          if(scopeService.getOrdersCounter() == scopeService.getCurrentOrders().length){
             //send notification here
             notification = {};
             
@@ -567,22 +568,22 @@ angular.module('starter.controllers', [])
     $ionicLoading.show({
       template: 'Loading...'
     });
-    var count = 0;
+    scopeService.setOrdersCounter(0);
     for(var i=0; i<orders.length; i++){
       
       scopeService.getCurrentOrders()[i].set('driverId',driver);
       scopeService.getCurrentOrders()[i].set('deliveryStatus','In progress');
       scopeService.getCurrentOrders()[i].save(null, {
         success: function(order) {
-          count++;
-          scopeService.getCurrentOrders()[i].save();
-          if(count == orders.length){
+          scopeService.setOrdersCounter(scopeService.getOrdersCounter()+1);
+          order.save();
+          if(scopeService.getOrdersCounter() == scopeService.getCurrentOrders().length){
             //send notification here
             notification = {};
             notification.type = "notifyDriver";
             notification.params = {};
-            notification.params.driver = driver;
-            notification.params.orders = orders;
+            notification.params.driver = scopeService.getAllDriversMap().get(scopeService.getCurrDriver().objectId);
+            notification.params.orders = scopeService.getCurrentOrders();
             sendNotification(notification);
             $ionicLoading.hide();
             window.location.replace("home.html");
