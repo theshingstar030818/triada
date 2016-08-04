@@ -1215,7 +1215,7 @@ function notifyDriver(params, ionicLoading){
       var jsonResult = JSON.stringify(result);
       var start = new Date().getTime();
       var end = start;
-      while(end < start + 100) {
+      while(end < start + 300) {
         end = new Date().getTime();
       }
       ionicLoading.hide();
