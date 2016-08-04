@@ -322,9 +322,8 @@ angular.module('starter.controllers', [])
                   scopeService.setOrdersCounter(scopeService.getOrdersCounter()+1);
                   order.save();
                   if(scopeService.getOrdersCounter() == $scope.pharmacyOrdersArray[0].inProgress.length){
-                    //send notification here
-                    window.location.replace("home.html");
                     $ionicLoading.hide();
+                    window.location.replace("home.html");
                   }
                 },
                 error: function(myObject, error) {
@@ -394,9 +393,7 @@ angular.module('starter.controllers', [])
             notification.params = {};
             notification.params.driver = scopeService.getAllDriversMap().get(scopeService.getCurrDriver().objectId);
             notification.params.orders = scopeService.getCurrentOrders();
-
-            sendNotification(notification);
-            window.location.replace("home.html#/app/stats");
+            sendNotification(notification, $ionicLoading);
           }
           console.log("save successful");
         },
@@ -539,7 +536,7 @@ angular.module('starter.controllers', [])
       $scope.deliveryStatusColor = "energized"
       $scope.isInProgress = true;
       $scope.showSignature = false;
-      $scope.showDriverSelector = false;
+      $scope.showDriverSelector = true;
       $scope.completeDeliveryButton = true;
     }
 
@@ -584,9 +581,7 @@ angular.module('starter.controllers', [])
             notification.params = {};
             notification.params.driver = scopeService.getAllDriversMap().get(scopeService.getCurrDriver().objectId);
             notification.params.orders = scopeService.getCurrentOrders();
-            sendNotification(notification);
-            $ionicLoading.hide();
-            window.location.replace("home.html#/app/stats");
+            sendNotification(notification, $ionicLoading);
           }
         },
         error: function(myObject, error) {
@@ -1199,10 +1194,10 @@ function checkCost(order){
   }
 }
 
-function sendNotification(notification){
+function sendNotification(notification, ionicLoading){
   switch (notification.type) {
     case 'notifyDriver':
-        notifyDriver(notification.params);
+        notifyDriver(notification.params, ionicLoading);
         break;
     case 'someOtherFunction':
         notifyDriver(notification.params);
@@ -1213,11 +1208,18 @@ function sendNotification(notification){
 
 //notification functions
 
-function notifyDriver(params){
+function notifyDriver(params, ionicLoading){
 
   Parse.Cloud.run('notifyDriver', { params: JSON.stringify(params)}, {
     success: function(result) {
       var jsonResult = JSON.stringify(result);
+      var start = new Date().getTime();
+      var end = start;
+      while(end < start + 3500) {
+        end = new Date().getTime();
+      }
+      ionicLoading.hide();
+      window.location.replace("home.html");
     },
     error: function(error) {
       var jsonResult = JSON.stringify(error);
