@@ -484,6 +484,7 @@ angular.module('starter.controllers', [])
   $scope.isInProgress = false;
   $scope.isPending = false;
   $scope.showDriverSelector = false;
+  $scope.showDriverCard = false;
   $scope.deliveryStatusColor = "assertive"
   $scope.completeDeliveryButton = false;
   $scope.showPatientInfo = false;
@@ -529,7 +530,8 @@ angular.module('starter.controllers', [])
       $scope.deliveryStatusColor = "assertive"
       $scope.isPending = true;
       $scope.showSignature = false;
-      $scope.showDriverSelector = true;;
+      $scope.showDriverSelector = true;
+      $scope.showDriverCard = false;
     } 
 
     if($scope.currentOrders[0].get("deliveryStatus") == "In progress"){
@@ -538,6 +540,7 @@ angular.module('starter.controllers', [])
       $scope.showSignature = false;
       $scope.showDriverSelector = true;
       $scope.completeDeliveryButton = true;
+      $scope.showDriverCard = true;
     }
 
     if($scope.currentOrders[0].get("deliveryStatus") == "Completed"){
@@ -547,6 +550,7 @@ angular.module('starter.controllers', [])
       $scope.signatureImage = $scope.currentOrders[0].get("patientSignature");
       $scope.signatureTimeStamp = $scope.currentOrders[0].get("patientSignatureTimeStamp");
       $scope.showDriverSelector = false;
+      $scope.showDriverCard = true;
     }
 
   }else{
