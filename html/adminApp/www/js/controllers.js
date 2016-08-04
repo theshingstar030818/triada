@@ -15,7 +15,7 @@ angular.module('starter.controllers', [])
   
   var start = new Date().getTime();
   var end = start;
-  while(end < start + 1500) {
+  while(end < start + 100) {
     end = new Date().getTime();
   }
 
@@ -102,7 +102,7 @@ angular.module('starter.controllers', [])
 
   var start = new Date().getTime();
   var end = start;
-  while(end < start + 1500) {
+  while(end < start + 100) {
     end = new Date().getTime();
   }
 
