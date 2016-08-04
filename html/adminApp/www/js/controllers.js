@@ -536,7 +536,7 @@ angular.module('starter.controllers', [])
       $scope.deliveryStatusColor = "energized"
       $scope.isInProgress = true;
       $scope.showSignature = false;
-      $scope.showDriverSelector = false;
+      $scope.showDriverSelector = true;
       $scope.completeDeliveryButton = true;
     }
 
