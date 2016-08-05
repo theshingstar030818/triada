@@ -88,9 +88,9 @@ angular.module('starter.controllers', [])
 
   $scope.title = "Daily Stats";
 
-  $scope.pharmacyButtonClass = "button-dark";
-  $scope.driverButtonClass = "button-outline button-dark";
-  $scope.allButtonClass = "button-outline button-dark";
+  $scope.pharmacyButtonClass = "button-assertive";
+  $scope.driverButtonClass = "button-outline button-assertive";
+  $scope.allButtonClass = "button-outline button-assertive";
 
   $scope.showDailyStatsDetails = false;
   $scope.showByPharmacy = true;
@@ -125,25 +125,25 @@ angular.module('starter.controllers', [])
     $scope.showByPharmacy = true;
     $scope.showByDriver = false;
     $scope.showByAll = false;
-    $scope.pharmacyButtonClass = "button-dark";
-    $scope.driverButtonClass = "button-outline button-dark";
-    $scope.allButtonClass = "button-outline button-dark";
+    $scope.pharmacyButtonClass = "button-assertive";
+    $scope.driverButtonClass = "button-outline button-assertive";
+    $scope.allButtonClass = "button-outline button-assertive";
   }
   $scope.filterByDriver = function(){
     $scope.showByPharmacy = false;
     $scope.showByDriver = true;
     $scope.showByAll = false;
-    $scope.pharmacyButtonClass = "button-outline button-dark";
-    $scope.driverButtonClass = "button-dark";
-    $scope.allButtonClass = "button-outline button-dark";
+    $scope.pharmacyButtonClass = "button-outline button-assertive";
+    $scope.driverButtonClass = "button-assertive";
+    $scope.allButtonClass = "button-outline button-assertive";
   }
   $scope.filterByAll = function(){
     $scope.showByPharmacy = false;
     $scope.showByDriver = false;
     $scope.showByAll = true;
-    $scope.pharmacyButtonClass = "button-outline button-dark";
-    $scope.driverButtonClass = "button-outline button-dark";
-    $scope.allButtonClass = "button-dark";
+    $scope.pharmacyButtonClass = "button-outline button-assertive";
+    $scope.driverButtonClass = "button-outline button-assertive";
+    $scope.allButtonClass = "button-assertive";
   }
 
   $scope.assignDriverSingleDelivery = function(order){
