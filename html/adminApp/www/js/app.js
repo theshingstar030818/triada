@@ -20,7 +20,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       var Orders = Parse.Object.extend("Orders");
       var OrdersQuery = new Parse.Query(Orders);
       OrdersQuery.equalTo("deliveryDate", queryDate);
-
+      OrdersQuery.descending("createdAt");
       if(!Parse.User.current().get("isAdmin") && Parse.User.current().get("driverInfo") != undefined){
         //driver user
         OrdersQuery.equalTo("driverId", Parse.User.current().get("driverInfo"));
@@ -84,6 +84,9 @@ angular.module('starter', ['ionic', 'starter.controllers'])
    allClientsMap: null,
    allDeliveriesForTodayMap: null,
    currPharmacyOrdersDetailArray: null,
+   currDriverOrdersDetailArray: null,
+   driverOrdersArray: null,
+   driverOrdersMap: null,
    clientToEdit: null,
    employeeToEdit: null,
    ordersCounter: null,
@@ -93,6 +96,22 @@ angular.module('starter', ['ionic', 'starter.controllers'])
    },
    setOrdersCounter: function(counterValue){
     this.ordersCounter = counterValue;
+   },
+
+   getDriverOrdersArray: function(){
+    return this.driverOrdersArray;
+   },
+
+   updateDriverOrdersArray: function(driverOrdersArray){
+    this.driverOrdersArray = driverOrdersArray;
+   },
+
+   getDriverOrdersMap: function(){
+    return this.driverOrdersMap;
+   },
+
+   updateDriverOrdersMap: function(driverOrdersMap){
+    this.driverOrdersMap = driverOrdersMap;
    },
 
    getClientToEdit: function() {
@@ -132,6 +151,9 @@ angular.module('starter', ['ionic', 'starter.controllers'])
    getCurrPharmacyOrdersDetailArray: function(){
     return this.currPharmacyOrdersDetailArray;
    },
+   getCurrDriverOrdersDetailArray: function(){
+    return this.currDriverOrdersDetailArray;
+   },
 
    updateClientToEdit: function(clientToEdit) {
      this.clientToEdit = clientToEdit;
@@ -169,6 +191,9 @@ angular.module('starter', ['ionic', 'starter.controllers'])
    },
    updateCurrPharmacyOrdersDetailArray: function(currPharmacyOrdersDetailArray){
     this.currPharmacyOrdersDetailArray = currPharmacyOrdersDetailArray;
+   },
+   updateCurrDriverOrdersDetailArray: function(currDriverOrdersDetailArray){
+    this.currDriverOrdersDetailArray = currDriverOrdersDetailArray;
    }
 
  }
@@ -254,6 +279,15 @@ angular.module('starter', ['ionic', 'starter.controllers'])
      'menuContent': {
        templateUrl: "templates/viewPharmacy.html",
        controller: 'viewPharmacyCtrl'
+     }
+   }
+ })
+ .state('app.viewByDriver', {
+   url: "/viewByDriver",
+   views: {
+     'menuContent': {
+       templateUrl: "templates/viewByDriver.html",
+       controller: 'viewByDriverCtrl'
      }
    }
  })
