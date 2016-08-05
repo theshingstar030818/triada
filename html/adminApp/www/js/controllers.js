@@ -72,14 +72,6 @@ angular.module('starter.controllers', [])
      $ionicLoading.hide();
   });
 
-  $scope.viewPharmacy = function(pharmacy, currPharmacyOrdersDetailArray) {
-    $scope.currentPharmacy = pharmacy;
-    $scope.currPharmacyOrdersDetailArray = currPharmacyOrdersDetailArray;
-    scopeService.updatecurrentPharmacy(pharmacy);
-    scopeService.updateCurrPharmacyOrdersDetailArray(currPharmacyOrdersDetailArray);
-    $state.go("app.viewPharmacy");
-  };
-
   $scope.logout = function (){
     Parse.User.logOut();
     $scope.currentUser = Parse.User.current();
@@ -96,6 +88,15 @@ angular.module('starter.controllers', [])
 
   $scope.title = "Daily Stats";
 
+  $scope.pharmacyButtonClass = "button-dark";
+  $scope.driverButtonClass = "button-outline button-dark";
+  $scope.allButtonClass = "button-outline button-dark";
+
+  $scope.showDailyStatsDetails = false;
+  $scope.showByPharmacy = true;
+  $scope.showByDriver = false;
+  $scope.showByAll = false;
+
   $ionicLoading.show({
     template: 'Loading...'
   });
@@ -107,7 +108,7 @@ angular.module('starter.controllers', [])
       allDeliveriesForTodayMap.set(response[i].id,response[i]);
     }
     scopeService.updateAllDeliveriesForTodayMap(allDeliveriesForTodayMap);
-    $scope = loadMaps($scope);
+    $scope = loadMaps($scope, scopeService);
     $ionicLoading.hide();
   });
 
@@ -115,6 +116,59 @@ angular.module('starter.controllers', [])
   if(!$scope.isAdmin){
     //driver user logged in
   }
+
+  $scope.flipShowDailyStatsDetails = function(){
+    $scope.showDailyStatsDetails = !$scope.showDailyStatsDetails;
+  }
+
+  $scope.filterByPharmacy = function(){
+    $scope.showByPharmacy = true;
+    $scope.showByDriver = false;
+    $scope.showByAll = false;
+    $scope.pharmacyButtonClass = "button-dark";
+    $scope.driverButtonClass = "button-outline button-dark";
+    $scope.allButtonClass = "button-outline button-dark";
+  }
+  $scope.filterByDriver = function(){
+    $scope.showByPharmacy = false;
+    $scope.showByDriver = true;
+    $scope.showByAll = false;
+    $scope.pharmacyButtonClass = "button-outline button-dark";
+    $scope.driverButtonClass = "button-dark";
+    $scope.allButtonClass = "button-outline button-dark";
+  }
+  $scope.filterByAll = function(){
+    $scope.showByPharmacy = false;
+    $scope.showByDriver = false;
+    $scope.showByAll = true;
+    $scope.pharmacyButtonClass = "button-outline button-dark";
+    $scope.driverButtonClass = "button-outline button-dark";
+    $scope.allButtonClass = "button-dark";
+  }
+
+  $scope.assignDriverSingleDelivery = function(order){
+    var allDeliveriesForTodayMap = scopeService.getAllDeliveriesForTodayMap();
+    var tmpArray = [allDeliveriesForTodayMap.get(order.objectId)];
+    scopeService.updatecurrentPharmacy($scope.pharmacyInfoMap.get(order.pharmacyID.objectId));
+    scopeService.updateCurrentOrders(tmpArray);
+    $state.go("app.viewSingleDelivery");
+  }
+
+  $scope.viewPharmacy = function(pharmacy, currPharmacyOrdersDetailArray) {
+    $scope.currentPharmacy = pharmacy;
+    $scope.currPharmacyOrdersDetailArray = currPharmacyOrdersDetailArray;
+    scopeService.updatecurrentPharmacy(pharmacy);
+    scopeService.updateCurrPharmacyOrdersDetailArray(currPharmacyOrdersDetailArray);
+    $state.go("app.viewPharmacy");
+  };
+
+  $scope.viewDriver = function(driver, currDriverOrdersDetailArray) {
+    $scope.currentDriver = driver;
+    $scope.currDriverOrdersDetailArray = currDriverOrdersDetailArray;
+    scopeService.updateCurrDriver(driver);
+    scopeService.updateCurrDriverOrdersDetailArray(currDriverOrdersDetailArray);
+    $state.go("app.viewByDriver");
+  };
 
 })
 
@@ -203,10 +257,101 @@ angular.module('starter.controllers', [])
 
 })
 
+.controller('viewByDriverCtrl', function($scope, $state, $ionicActionSheet, $ionicLoading, ParseService, scopeService, $ionicPopup) {
+  $scope.currDriver = scopeService.getCurrDriver();
+
+  if(Parse.User.current() == null){
+    window.location.replace("index.html");
+  }
+
+  $scope.isAdmin = Parse.User.current().get("isAdmin");
+  if(!$scope.isAdmin){
+    //driver user logged in
+  }
+
+  //set UI ng-show flags
+  $scope.showPending = false;
+  $scope.showInProgress = false;
+  $scope.showPickupInProgress = false;
+  $scope.showCompleted = false;
+  $scope.noPendingOrdersCard = false;
+  $scope.noInProgressOrdersCard = false;
+  $scope.noPickupInProgressOrdersCard = false;
+  $scope.noCompletedOrdersCard = false;
+  $scope.details = false;
+  $scope.showAssignAllButton = false;
+
+  $scope.loadData = function(){
+    $scope.currDriverOrdersDetailArray = scopeService.getCurrDriverOrdersDetailArray();
+    $scope.currDate = scopeService.getCurrDate();
+    if($scope.currDriver != null){
+      $scope.title = $scope.currDriver.get("firstName").toUpperCase() + " " + $scope.currDriver.get("lastName").toUpperCase();
+      $ionicLoading.show({template: 'Loading...'});
+
+      $scope.deliveries = $scope.currDriverOrdersDetailArray.all;
+      $scope = loadMaps($scope, scopeService);
+      $scope.drivers = scopeService.getAllDriversArray();
+      $ionicLoading.hide();
+    
+    }else{
+      window.location.replace("home.html");
+    }
+  }
+  $scope.loadData();
+
+  $scope.assignDriverSingleDelivery = function(order){
+    var allDeliveriesForTodayMap = scopeService.getAllDeliveriesForTodayMap();
+    var tmpArray = [allDeliveriesForTodayMap.get(order.objectId)];
+    scopeService.updateCurrentOrders(tmpArray);
+    $state.go("app.viewSingleDelivery");
+  }
+
+  $scope.flipShowPending = function(){
+    if($scope.currDriverOrdersDetailArray.pending.length == 0){
+      $scope.noPendingOrdersCard = !$scope.noPendingOrdersCard;
+    }else{
+      $scope.showPending = !$scope.showPending;
+    }
+  }
+
+  $scope.flipShowInProgress = function(){
+    
+    if($scope.currDriverOrdersDetailArray.inProgress.length == 0){
+      $scope.noInProgressOrdersCard = !$scope.noInProgressOrdersCard;
+    }else{
+      $scope.showInProgress = !$scope.showInProgress;
+    }
+  }
+
+  $scope.flipShowPickupInProgress = function(){
+    if($scope.currDriverOrdersDetailArray.pickupInProgress.length == 0){
+      $scope.noPickupInProgressOrdersCard = !$scope.noPickupInProgressOrdersCard;
+    }else{
+      $scope.showPickupInProgress = !$scope.showPickupInProgress;
+    }
+  }
+
+  $scope.flipShowCompleted = function(){
+    
+    if($scope.currDriverOrdersDetailArray.completed.length == 0){
+      $scope.noCompletedOrdersCard = !$scope.noCompletedOrdersCard;
+    }else{
+      $scope.showCompleted = !$scope.showCompleted;
+    }
+  }
+  $scope.flipDetails = function(){
+    $scope.details = !$scope.details;
+  }
+
+})
 
 .controller('viewPharmacyCtrl', function($scope, $state, $ionicActionSheet, $ionicLoading, ParseService, scopeService, $ionicPopup) {
   $scope.currentPharmacy = scopeService.getCurrentPharmacy();
   
+  if(Parse.User.current() == null){
+    window.location.replace("index.html");
+  }
+
   $scope.isAdmin = Parse.User.current().get("isAdmin");
   if(!$scope.isAdmin){
     //driver user logged in
@@ -230,17 +375,16 @@ angular.module('starter.controllers', [])
     if($scope.currentPharmacy != null){
       $scope.title = $scope.currentPharmacy.get("pharmacyInfo").get("businessName");
       $ionicLoading.show({template: 'Loading...'});
-      ParseService.fetchDataForSpecificDatePharmacy($scope.currDate, $scope.currentPharmacy)
-      .then(function(response) {
-        $scope.deliveries = response;
-        $scope = loadMaps($scope);
-        $scope.drivers = scopeService.getAllDriversArray();
-        $ionicLoading.hide();
-        $scope.title = $scope.pharmacyInfoArray[0].object.get("businessName");
-        if($scope.currPharmacyOrdersDetailArray.pending.length > 0){
-          $scope.showAssignAllButton = true;
-        }             
-      });
+
+      $scope.deliveries = $scope.currPharmacyOrdersDetailArray.all;
+      $scope = loadMaps($scope, scopeService);
+      $scope.drivers = scopeService.getAllDriversArray();
+      $ionicLoading.hide();
+      $scope.title = $scope.pharmacyInfoArray[0].object.get("businessName");
+      if($scope.currPharmacyOrdersDetailArray.pending.length > 0){
+        $scope.showAssignAllButton = true;
+      }
+    
     }else{
       window.location.replace("home.html");
     }
@@ -1010,7 +1154,7 @@ angular.module('starter.controllers', [])
 
 })
 
-function loadMaps($scope){
+function loadMaps($scope, scopeService){
   
   var deliveries = $scope.deliveries;
 
@@ -1022,16 +1166,19 @@ function loadMaps($scope){
   var pharmacyOrdersArray = [], pharmacyInfoItem;
 
   var driverOrdersMap = new Map();
+  // driverOrdersMap.set("undecided", []);
+
   var driverOrdersArray = [], driverItem;
 
-  var totalPending = [0,0];
-  var totalPickupInProgress = [0,0];
-  var totalInProgress = [0,0];
-  var totalCompleted = [0,0];
+  var totalPending = [0,0,[]];
+  var totalPickupInProgress = [0,0,[]];
+  var totalInProgress = [0,0,[]];
+  var totalCompleted = [0,0,[]];
   
   var driverMap = new Map();
   var driverArray = [], driverUserItem;
   var patientMap = new Map();
+
 
   for (var i = 0; i < deliveries.length; i++) {
 
@@ -1057,13 +1204,21 @@ function loadMaps($scope){
         pharmacyOrdersMap.set(deliveries[i].get("pharmacyID").id, tempValue);
       }
 
-      if(driverOrdersMap.get(deliveries[i].get("driverId").id) == undefined){
-        driverOrdersMap.set(deliveries[i].get("driverId").id, [deliveries[i]]);
+      if(deliveries[i].get("driverId") != undefined){
+        if(driverOrdersMap.get(deliveries[i].get("driverId").id) == undefined){
+          driverOrdersMap.set(deliveries[i].get("driverId").id, [deliveries[i]]);
+        }else{
+          var tempValue = driverOrdersMap.get(deliveries[i].get("driverId").id);
+          tempValue.push(deliveries[i]);
+          driverOrdersMap.set(deliveries[i].get("driverId").id, tempValue);
+        }
       }else{
-        var tempValue = driverOrdersMap.get(deliveries[i].get("driverId").id);
-        tempValue.push(deliveries[i]);
-        driverOrdersMap.set(deliveries[i].get("driverId").id, tempValue);
+        // var tempValue = driverOrdersMap.get("undecided");
+        // tempValue.push(deliveries[i]);
+        // driverOrdersMap.set("undecided", tempValue);
       }
+
+      
 
       if(deliveries[i].get("deliveryStatus") == "pending"){
         totalPending[0]++;
@@ -1103,60 +1258,7 @@ function loadMaps($scope){
   });
 
   pharmacyOrdersMap.forEach(function (item, key, mapObj) {
-      pharmacyInfoItem = {};
-      pharmacyInfoItem.id = key;
-      pharmacyInfoItem.object = item;
-
-      pharmacyInfoItem.pending = [];
-      pharmacyInfoItem.pickupInProgress = [];
-      pharmacyInfoItem.inProgress = [];
-      pharmacyInfoItem.completed = [];
-      
-      pharmacyInfoItem.totalCost = 0;
-
-      pharmacyInfoItem.under10Km = [0,0];
-      pharmacyInfoItem.under20Km = [0,0];
-      pharmacyInfoItem.under30Km = [0,0];
-      pharmacyInfoItem.over30Km = [0,0];
-
-
-      for(var x=0; x<item.length; x++){
-        
-        //update cost
-        pharmacyInfoItem.totalCost += item[x].get("cost");
-
-        //update distance counter
-        var distanceFromPharmacy = item[x].get("patientId").get("distanceFromPharmacy");
-        if(distanceFromPharmacy < 10){
-          pharmacyInfoItem.under10Km[0]++;
-          pharmacyInfoItem.under10Km[1] += item[x].get("cost");
-        }else if(distanceFromPharmacy < 20){
-          pharmacyInfoItem.under20Km[0]++;
-          pharmacyInfoItem.under20Km[1] += item[x].get("cost");
-        }else if(distanceFromPharmacy < 30){
-          pharmacyInfoItem.under30Km[0]++;
-          pharmacyInfoItem.under30Km[1] += item[x].get("cost");
-        }else if(distanceFromPharmacy > 29){
-          pharmacyInfoItem.over30Km[0]++;
-          pharmacyInfoItem.over30Km[1] += item[x].get("cost");
-        }
-
-        if(item[x].get("deliveryStatus") == "pending"){
-          pharmacyInfoItem.pending.push(item[x]);
-        }
-        if(item[x].get("deliveryStatus") == "In progress"){
-          if(item[x].get("pickup")){
-            pharmacyInfoItem.pickupInProgress.push(item[x]);
-          }else{
-            pharmacyInfoItem.inProgress.push(item[x]);
-          }
-        }
-        if(item[x].get("deliveryStatus") == "Completed"){
-          pharmacyInfoItem.completed.push(item[x]);
-        }
-      }
-      
-      pharmacyOrdersArray.push(pharmacyInfoItem);
+      pharmacyOrdersArray = assessItem(item, key, mapObj,pharmacyOrdersArray);
   });
 
   $scope.pharmacyInfoArray = pharmacyInfoArray;
@@ -1168,7 +1270,9 @@ function loadMaps($scope){
   $scope.patientsMap = patientMap;
 
   $scope.driverOrdersMap = driverOrdersMap;
+  scopeService.updateDriverOrdersMap(driverOrdersMap);
   $scope.driverOrdersArray = driverOrdersArray;
+  scopeService.updateDriverOrdersArray(driverOrdersArray);
   $scope.driverArray = driverArray;
 
   $scope.totalPending = totalPending;
@@ -1205,6 +1309,7 @@ function assessItem(item, key, mapObj,ordersArray){
   itemToPush.id = key;
   itemToPush.object = item;
 
+  itemToPush.all = [];
   itemToPush.pending = [];
   itemToPush.pickupInProgress = [];
   itemToPush.inProgress = [];
@@ -1222,7 +1327,7 @@ function assessItem(item, key, mapObj,ordersArray){
     
     //update cost
     itemToPush.totalCost += item[x].get("cost");
-
+    itemToPush.all.push(item[x]);
     //update distance counter
     var distanceFromPharmacy = item[x].get("patientId").get("distanceFromPharmacy");
     if(distanceFromPharmacy < 10){

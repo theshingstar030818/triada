@@ -1,14 +1,16 @@
 <ion-view view-title="{{title}}">
+
    <ion-content ng-controller="AppCtrl">
+
    		<div class="list card">
 
-		  <div class="item item-avatar">
+		  <div class="item item-avatar" ng-click="flipShowDailyStatsDetails()">
 		    <img src="img/logo.svg">
-		    <h2>Welcome {{currentUser.username}}</h2>
+		    <h2>WELCOME {{currentUser.username.toUpperCase()}}</h2>
 		    <p>{{day}}, {{currDate.month}} {{currDate.date}}</p>
 		  </div>
 
-		  <div class="item item-body">
+		  <div class="item item-body" ng-show="showDailyStatsDetails">
 		    <!-- <img class="full-image" src=""> -->
 		    <p>
 		      <b>
@@ -34,17 +36,42 @@
 
 		</div>
 
-		<ion-list>
-		    <ion-item ng-repeat="pharmacy in pharmacyOrdersArray">
+		<ion-list ng-repeat="pharmacy in pharmacyOrdersArray" ng-show="showByPharmacy">
+		    
 		        <a class="item item-icon-left" ng-click="viewPharmacy(pharmacyUserMap.get(pharmacy.id),pharmacy)">
 				    <i class="icon ion-ios-pulse-strong"></i>
-				    	<b><p>{{pharmacyInfoMap.get(pharmacy.id).get("businessName")}}</p></b>
+				    	<p>{{pharmacyInfoMap.get(pharmacy.id).get("businessName").toUpperCase()}}</p>
 					<span ng-show="isAdmin" class="badge badge-assertive">{{pharmacy.pending.length}}</span>
-					<span ng-hide="isAdmin" class="badge badge-assertive">{{pharmacy.inProgress.length}}</span>
 				 </a>
-		    </ion-item>
+		</ion-list>
+
+		<ion-list ng-repeat="driver in driverOrdersArray" ng-show="showByDriver">
+		        <a class="item item-icon-left" ng-click="viewDriver(activeDriversMap.get(driver.id),driver)">
+				    <i class="icon ion-model-s"></i>
+				    	<p>{{activeDriversMap.get(driver.id).get("firstName").toUpperCase()}} {{activeDriversMap.get(driver.id).get("lastName").toUpperCase()}}</p>
+					<span ng-show="isAdmin" class="badge badge-stable">{{driver.all.length}}</span>
+				 </a>
+		</ion-list>
+
+		<ion-list ng-repeat="order in deliveries" ng-show="showByAll">
+		        <a class="item" ng-click="assignDriverSingleDelivery({{order}})">
+				  <p>{{order.get("pharmacyID").get("pharmacyInfo").get("businessName").toUpperCase()}} - {{patientsMap.get(order.get("patientId").id).get("name").toUpperCase()}}</p>
+				  <h4><p>{{patientsMap.get(order.get("patientId").id).get("address")}}</p></h4>
+				  <h4 class="subdued"><p>Distance : {{patientsMap.get(order.get("patientId").id).get("distanceFromPharmacy").toFixed(2)}} KM</p></h4>
+				  <h4 class="subdued ">Status : {{order.get("deliveryStatus")}}</h4>
+				</a>
 		</ion-list>
 		
 
    </ion-content>
+   <ion-footer-bar class="bar" ng-show="isAdmin">
+		<div class="button-bar">
+		  <a class="button {{pharmacyButtonClass}}" ng-click="filterByPharmacy()">Pharmacy</a>
+		  <a class="button {{driverButtonClass}}" ng-click="filterByDriver()">Driver</a>
+		  <a class="button {{allButtonClass}}" ng-click="filterByAll()">All</a>
+		</div>
+	</ion-footer-bar>
+    
+    
+
 </ion-view>
