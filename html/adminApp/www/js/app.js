@@ -212,8 +212,6 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-    Parse.initialize("aeabfaa3a49e340251e16e04b573f9dd0ae6a07b", "acb0ac1ee21e335a9c273e1498af5375a73377f4");
-    Parse.serverURL = 'https://portal.bilgramigroup.com/parse';
   });
 })
 
