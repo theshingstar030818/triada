@@ -210,7 +210,9 @@
 			    						success: function(pharmacyObject){
 								      		if(pharmacyObject.length > 0){
 
-								      			if(pharmacyObject[0].get("pricing") != undefined){
+								      			if(pharmacyObject[0].get("pricing") == undefined || pharmacyObject[0].get("pricing") == ""){
+								      				$("#patient_city_input").show();
+								      			}else{
 								      				$("#patient_city_select").show();
 								      				var pharmacyPricing = JSON.parse(pharmacyObject[0].get("pricing"));
 									      			pharmacyPricing.cities.forEach(function(entry) {
@@ -219,8 +221,7 @@
 														option.value = entry.name;
 														edit_select.add(option);
 													});
-								      			}else{
-								      				$("#patient_city_input").show();
+								      				
 								      			}
 								      			
 								      		}

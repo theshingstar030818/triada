@@ -115,10 +115,11 @@ function editPatient(patientID){
       document.getElementById('patient_streetName').value = streetName;
       console.log("patient_city = " + document.getElementById('patient_city').value);
       
-      if(patient.get("pharmacy").get("pharmacyInfo").get("pricing") != undefined){
-      	document.getElementById('patient_city_select').value = city;
-      }else{
+      if(patient.get("pharmacy").get("pharmacyInfo").get("pricing") == undefined || patient.get("pharmacy").get("pharmacyInfo").get("pricing") == ""){
       	document.getElementById('patient_city_input').value = city;
+      }else{
+      	document.getElementById('patient_city_select').value = city;
+      	
       }
       
       document.getElementById('patient_postalCode').value = postalCode;
@@ -159,10 +160,10 @@ function updatePatientInfo(patientID){
 			var buildingNum = document.getElementById('patient_buildingNum').value;
 			var streetName = document.getElementById('patient_streetName').value;
 
-			if(patient.get("pharmacy").get("pharmacyInfo").get("pricing") != undefined){
-				var city = document.getElementById('patient_city_select').value;
-			}else{
+			if(patient.get("pharmacy").get("pharmacyInfo").get("pricing") == undefined || patient.get("pharmacy").get("pharmacyInfo").get("pricing") == ""){
 				var city = document.getElementById('patient_city_input').value;
+			}else{
+				var city = document.getElementById('patient_city_select').value;
 			}
 
 			
@@ -229,7 +230,18 @@ function updatePatientInfo(patientID){
 								patient.set("distanceFromPharmacy",distanceFromPharmacy);
 
 
-								if(pharmacyInfo.get("pricing") !=undefined){
+								if(pharmacyInfo.get("pricing") == undefined || pharmacyInfo.get("pricing") == ""){
+									if(distanceFromPharmacy < 10){
+										patient.set("cost",pharmacyInfo.get("priceRate"));
+									}else if(distanceFromPharmacy >= 10 && distanceFromPharmacy < 20){
+										patient.set("cost",pharmacyInfo.get("priceRateOver10Km"));
+									}else if(distanceFromPharmacy >= 20 && distanceFromPharmacy < 30){
+										patient.set("cost",pharmacyInfo.get("priceRateOver20Km"));
+									}else{
+										patient.set("cost",pharmacyInfo.get("priceRateOver30Km"));
+									}
+								}else{
+
 									var pharmacyPricingJSON = JSON.parse(pharmacyInfo.get("pricing"));
 
 									for (var i = 0; i < pharmacyPricingJSON.cities.length; i++){
@@ -244,16 +256,8 @@ function updatePatientInfo(patientID){
 									  	}
 									  }
 									}
-								}else{
-									if(distanceFromPharmacy < 10){
-										patient.set("cost",pharmacyInfo.get("priceRate"));
-									}else if(distanceFromPharmacy >= 10 && distanceFromPharmacy < 20){
-										patient.set("cost",pharmacyInfo.get("priceRateOver10Km"));
-									}else if(distanceFromPharmacy >= 20 && distanceFromPharmacy < 30){
-										patient.set("cost",pharmacyInfo.get("priceRateOver20Km"));
-									}else{
-										patient.set("cost",pharmacyInfo.get("priceRateOver30Km"));
-									}
+									
+									
 								}
 								
 

@@ -189,7 +189,7 @@ function postOrder(dateOfOrder,patientId){
 
           var distanceFromPharmacy = patient.get("distanceFromPharmacy");
 
-          if(patient.get("pharmacy").get("pharmacyInfo").get("pricing") == undefined){
+          if(patient.get("pharmacy").get("pharmacyInfo").get("pricing") == undefined || patient.get("pharmacy").get("pharmacyInfo").get("pricing") == ""){
             if(distanceFromPharmacy < 10){
               patient.set("cost",patient.get("pharmacy").get("pharmacyInfo").get("priceRate"));
             }else if(distanceFromPharmacy >= 10 && distanceFromPharmacy < 20){
@@ -326,7 +326,7 @@ function getDeliveriesFromDatabaseForSpecificDate(date){
             //for backwards integration
             if(cost == undefined || cost == ""){
               distanceFromPharmacy = patient.get("distanceFromPharmacy");
-              if(results[i].get("pharmacyID").get("pharmacyInfo").get("pricing") == undefined){
+              if(results[i].get("pharmacyID").get("pharmacyInfo").get("pricing") == undefined || results[i].get("pharmacyID").get("pharmacyInfo").get("pricing") == ""){
 
                 if(distanceFromPharmacy < 10){
                   results[i].set("cost",pharmacyInfo.get("priceRate"));
