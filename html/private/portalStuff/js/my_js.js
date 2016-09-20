@@ -49,10 +49,10 @@ function postPatient(){
         var buildingNum = document.getElementById("new_patient_building").value;
         var streetName = document.getElementById("new_patient_street").value;
 
-        if(pharmacyObject[0].get("pricing") != undefined){
-          var city = document.getElementById("new_patient_city_select").value;
-        }else{
+        if(pharmacyObject[0].get("pricing") == undefined || pharmacyObject[0].get("pricing") == ""){
           var city = document.getElementById("new_patient_city_input").value;
+        }else{
+          var city = document.getElementById("new_patient_city_select").value;
         }
 
         
