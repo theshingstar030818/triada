@@ -127,7 +127,18 @@ function postPatient(){
                             
                             //set cost for the patient here and also change the updatePatient function
                             
-                            if(pharmacyObject[0].get("pricing") != undefined){
+                            if(pharmacyObject[0].get("pricing") == undefined || pharmacyObject[0].get("pricing") == ""){
+                              if(distanceFromPharmacy < 10){
+                                patientObject.set("cost",pharmacyObject[0].get("priceRate"));
+                              }else if(distanceFromPharmacy >= 10 && distanceFromPharmacy < 20){
+                                patientObject.set("cost",pharmacyObject[0].get("priceRateOver10Km"));
+                              }else if(distanceFromPharmacy >= 20 && distanceFromPharmacy < 30){
+                                patientObject.set("cost",pharmacyObject[0].get("priceRateOver20Km"));
+                              }else{
+                                patientObject.set("cost",pharmacyObject[0].get("priceRateOver30Km"));
+                              }
+                            }else{
+
                               var pharmacyPricingJSON = JSON.parse(pharmacyObject[0].get("pricing"));
 
                               for (var i = 0; i < pharmacyPricingJSON.cities.length; i++){
@@ -142,16 +153,8 @@ function postPatient(){
                                   }
                                 }
                               }
-                            }else{
-                              if(distanceFromPharmacy < 10){
-                                patientObject.set("cost",pharmacyObject[0].get("priceRate"));
-                              }else if(distanceFromPharmacy >= 10 && distanceFromPharmacy < 20){
-                                patientObject.set("cost",pharmacyObject[0].get("priceRateOver10Km"));
-                              }else if(distanceFromPharmacy >= 20 && distanceFromPharmacy < 30){
-                                patientObject.set("cost",pharmacyObject[0].get("priceRateOver20Km"));
-                              }else{
-                                patientObject.set("cost",pharmacyObject[0].get("priceRateOver30Km"));
-                              }
+                              
+                              
                             }
                             
 
