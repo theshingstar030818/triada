@@ -46,20 +46,20 @@
 
 				  <div class="item item-avatar">
 				    <img src="{{currentAvatar}}">
-				    <h2><b>{{currentPharmacy.get("pharmacyInfo").get("businessName")}}</b></h2>
-				    <p><b>Telephone: </b> {{currentPharmacy.get("pharmacyInfo").get("businessNumber")}}</p>
+				    <h2><b>{{pharmacyInfo.get("businessName")}}</b></h2>
+				    <p><b>Telephone: </b> {{pharmacyInfo.get("businessNumber")}}</p>
 				  </div>
 
 				  <div class="item item-body">
 				    <p>
-				      <b>Address: </b> {{currentPharmacy.get("pharmacyInfo").get("businessAddress")}}
+				      <b>Address: </b> {{pharmacyInfo.get("businessAddress")}}
 				    </p>
 				    <p>
 				      
 				    </p>
 				    <p>
-				      <a href='tel:{{currentPharmacy.get("pharmacyInfo").get("businessNumber")}}' class="subdued">Call <i class="icon ion-ios-telephone"></i></a>
-				      <a href='http://maps.google.com/?q={{currentPharmacy.get("pharmacyInfo").get("businessAddress")}}' class="subdued">Navigate <i class="icon ion-ios-navigate"></i></a>
+				      <a href='tel:{{pharmacyInfo.get("businessNumber")}}' class="subdued">Call <i class="icon ion-ios-telephone"></i></a>
+				      <a href='http://maps.google.com/?q={{pharmacyInfo.get("businessAddress")}}' class="subdued">Navigate <i class="icon ion-ios-navigate"></i></a>
 				    </p>
 				  </div>
 
