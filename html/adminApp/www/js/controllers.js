@@ -629,7 +629,7 @@ angular.module('starter.controllers', [])
               $scope.currentOrders[0].get("patientId").set("address",$scope.data.address);
               $scope.currentOrders[0].get("patientId").set("cost",$scope.data.cost);
               $scope.currentOrders[0].get("patientId").set("distanceFromPharmacy",$scope.data.distance);
-              $scope.currentOrders[0].get("patientId")$scope.currentOrders[0].save(null, {
+              $scope.currentOrders[0].save(null, {
                 success: function(order) {
                   console.log("save successful");
                   //also update the cost of this order accordingly
