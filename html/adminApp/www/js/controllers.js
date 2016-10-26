@@ -443,8 +443,16 @@ angular.module('starter.controllers', [])
         $scope.currentOrders[0].set("patientSignature", $scope.signature);
         $scope.currentOrders[0].set("patientSignatureTimeStamp",timeStamp);
         $scope.currentOrders[0].set("driverComment", $scope.submitData.comment);
-        $scope.currentOrders[0].save();
-        window.location.replace("home.html");
+        $scope.currentOrders[0].save(null, {
+          success: function(order) {
+            console.log("save successful");
+            window.location.replace("home.html");
+          },
+          error: function(myObject, error) {
+            alert("error saving the object");
+            window.location.replace("home.html");
+          }
+        });
       }
   }
 
@@ -621,11 +629,25 @@ angular.module('starter.controllers', [])
               $scope.currentOrders[0].get("patientId").set("address",$scope.data.address);
               $scope.currentOrders[0].get("patientId").set("cost",$scope.data.cost);
               $scope.currentOrders[0].get("patientId").set("distanceFromPharmacy",$scope.data.distance);
-              $scope.currentOrders[0].get("patientId").save();
-              //also update the cost of this order accordingly
-              $scope.currentOrders[0].set("cost",$scope.data.cost);
-              $scope.currentOrders[0].save();
-              return true;
+              $scope.currentOrders[0].get("patientId")$scope.currentOrders[0].save(null, {
+                success: function(order) {
+                  console.log("save successful");
+                  //also update the cost of this order accordingly
+                  $scope.currentOrders[0].set("cost",$scope.data.cost);
+                  $scope.currentOrders[0].save(null, {
+                    success: function(order) {
+                      console.log("save successful");
+                      return true;
+                    },
+                    error: function(myObject, error) {
+                      alert("error saving the object");
+                    }
+                  });
+                },
+                error: function(myObject, error) {
+                  alert("error saving the object");
+                }
+              });
             }
           }
         },
@@ -757,8 +779,16 @@ angular.module('starter.controllers', [])
     pricing += ']}';
 
     $scope.clientToEdit.set("pricing",pricing);
-    $scope.clientToEdit.save();
-    $state.go("app.clients");
+    $scope.clientToEdit.save(null, {
+      success: function(order) {
+        console.log("save successful");
+        $state.go("app.clients");
+      },
+      error: function(myObject, error) {
+        alert("error saving the object");
+      }
+    });
+    
   }
 
   $scope.flipShowClientInfo = function(){
@@ -941,8 +971,15 @@ angular.module('starter.controllers', [])
     $scope.employeeToEdit.set("driverAddressPostalCode",$scope.submitData.postalCode);
     $scope.employeeToEdit.set("username",$scope.submitData.username);
     $scope.employeeToEdit.set("password",$scope.submitData.password);
-    $scope.employeeToEdit.save();
-    $state.go("app.employees");
+    $scope.employeeToEdit.save(null, {
+      success: function(order) {
+        console.log("save successful");
+        $state.go("app.employees");
+      },
+      error: function(myObject, error) {
+        alert("error saving the object");
+      }
+    });
   }
 
   $scope.flipShowPersonalInfo = function(){
@@ -1190,7 +1227,14 @@ function checkCost(order){
       cost = cost * order.get("numberOfNoShows");
     }
     order.set("cost",cost);
-    order.save();
+    order.save(null, {
+      success: function(order) {
+        console.log("save successful");
+      },
+      error: function(myObject, error) {
+        alert("error saving the object");
+      }
+    });
   }
 }
 
