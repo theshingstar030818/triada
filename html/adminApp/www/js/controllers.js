@@ -837,6 +837,7 @@ angular.module('starter.controllers', [])
       var city = $scope.priceRates[i].name;
       var under10 = $scope.priceRates[i].under10Km;
       var over10 = $scope.priceRates[i].over10Km;
+      var over20 = $scope.priceRates[i].over20;
       pricing += '{"name" : "'+city+'", "rates" : ['+under10+','+over10+','+over20+']},';
     }
     
