@@ -134,11 +134,11 @@
                 Parse.Cloud.run('inquirySubmit', {name: inquiry_user_name, contactInfo: inquiry_contact_info, message: inquiry_message, objectId: inquiryObject.id}, {
                   success: function(result) {
                     // result is 'Hello world!'
-                    var jsonResult = JSON.stringify(result);
-                    alert(jsonResult);
+                    //var jsonResult = JSON.stringify(result);
+                    //alert(jsonResult);
                   },
                   error: function(error) {
-                    var jsonResult = JSON.stringify(error);
+                    //var jsonResult = JSON.stringify(error);
                     //alert("something went wrong sending the request : " + jsonResult);
                   }
                 });
