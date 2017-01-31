@@ -123,6 +123,9 @@ function postPatient(){
                             }
                             
                             var distanceFromPharmacy = total_distance/1000;
+			    if(distanceFromPharmacy%10 >0.69){
+				distanceFromPharmacy+=0.5;
+			    }
                             patientObject.set("distanceFromPharmacy",distanceFromPharmacy);
                             
                             //set cost for the patient here and also change the updatePatient function

@@ -225,7 +225,7 @@ function updatePatientInfo(patientID){
 									}
 								}
 								
-								var distanceFromPharmacy = total_distance/1000;
+								var distanceFromPharmacy = (total_distance/1000)+0.5;
 								patient.set("distanceFromPharmacy",distanceFromPharmacy);
 
 

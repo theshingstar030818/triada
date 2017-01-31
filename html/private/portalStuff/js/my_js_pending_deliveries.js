@@ -374,7 +374,7 @@ function getDeliveriesFromDatabaseForSpecificDate(date){
             var Collectables = results[i].get("Collectables");
             var comments = results[i].get("comments");
 
-            var content =  '<tr onClick="editTableEntry(\''+objectId+'\')"><td class="user-name">'+simpleDate+'</td><td class="user-email">'+patient.get("name")+'</td><td class="user-phone">'+deliveryStatus+'</td><td class="user-mobile">'+pickupTime+'</td><td class="user-mobile">'+clientSignature+'</td><td class="user-mobile">'+driverComment+'</td><td class="user-phone">'+RX+'</td><td class="user-phone">'+Collectables+'</td><td class="user-mobile">'+comments+'</td><td class="user-mobile"> $ '+cost+'</td> </tr>';
+            var content =  '<tr onClick="editTableEntry(\''+objectId+'\')"><td class="user-name">'+simpleDate+'</td><td class="user-email">'+patient.get("name")+'</td><td class="user-phone">'+deliveryStatus+'</td><td class="user-mobile">'+pickupTime+'</td><td class="user-mobile">'+clientSignature+'</td><td class="user-mobile">'+driverComment+'</td><td class="user-phone">'+RX+'</td><td class="user-phone">'+Collectables+'</td><td class="user-mobile">'+comments+'</td></tr>';
             $("#pending_delivery_table_body").append(content);
           }
         }
